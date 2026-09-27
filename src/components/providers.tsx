@@ -1,0 +1,36 @@
+"use client";
+import { useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { WagmiProvider, createConfig, http } from "wagmi";
+import { injected } from "wagmi/connectors";
+import { MotionConfig } from "motion/react";
+import { Toaster } from "sonner";
+import { chain } from "@/lib/blockchain/config";
+export function Providers({ children }: { children: React.ReactNode }) {
+  const [query] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: { staleTime: 15_000, retry: 1, refetchOnWindowFocus: true },
+        },
+      }),
+  );
+  const [config] = useState(() =>
+    createConfig({
+      chains: [chain],
+      connectors: [injected({ target: "metaMask" })],
+      transports: { [chain.id]: http() },
+      ssr: true,
+    }),
+  );
+  return (
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={query}>
+        <MotionConfig reducedMotion="user">
+          {children}
+          <Toaster theme="dark" richColors closeButton />
+        </MotionConfig>
+      </QueryClientProvider>
+    </WagmiProvider>
+  );
+}

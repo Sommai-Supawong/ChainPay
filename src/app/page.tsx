@@ -1,69 +1,223 @@
-import Image from "next/image";
-
+﻿import Link from "next/link";
+import {
+  ArrowUpRight,
+  ArrowRight,
+  ShieldCheck,
+  Wallet,
+  Link2,
+  Check,
+  Globe2,
+  ReceiptText,
+} from "lucide-react";
+import { Brand } from "@/components/layout/brand";
+import { Button } from "@/components/ui/button";
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="landing">
+      <header className="landing-nav">
+        <Brand />
+        <nav aria-label="Marketing">
+          <a href="#how-it-works">How it works</a>
+          <a href="#built-for-trust">Built for trust</a>
+        </nav>
+        <Button asChild variant="secondary">
+          <Link href="/login">
+            Open ChainPay
+            <ArrowUpRight size={16} />
+          </Link>
+        </Button>
+      </header>
+      <main id="main">
+        <section className="hero">
+          <div className="hero-copy">
+            <span className="hero-tag">
+              <span className="network-dot" />A clearer way to pay on Ethereum
+            </span>
+            <h1>
+              Less complexity.
+              <br />
+              <span>More connection.</span>
+            </h1>
+            <p>
+              Send a payment. Share a request. Know where it stands.
+              <br className="desktop-break" />
+              Your everyday payments, with the clarity of blockchain.
+            </p>
+            <div className="button-row">
+              <Button asChild>
+                <Link href="/login">
+                  Get started
+                  <ArrowUpRight size={18} />
+                </Link>
+              </Button>
+              <a href="#how-it-works" className="text-link">
+                See how it works
+                <ArrowRight size={17} />
+              </a>
+            </div>
+            <div className="hero-proof">
+              <ShieldCheck size={17} />
+              Non-custodial
+              <span />
+              Sepolia testnet
+              <span />
+              No account needed to pay a link
+            </div>
+          </div>
+          <div
+            className="hero-visual"
+            aria-label="ChainPay payment journey illustration"
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <div className="orbit orbit-one" />
+            <div className="orbit orbit-two" />
+            <div className="hero-payment-card">
+              <div className="payment-card-top">
+                <span className="brand-mark">
+                  <Link2 />
+                </span>
+                <span>PAYMENTS, CONNECTED</span>
+                <span className="badge">ETH</span>
+              </div>
+              <div className="illustration-wallet">
+                <span className="mini-label">YOUR WALLET</span>
+                <Wallet size={28} />
+                <strong>You’re in control.</strong>
+                <p>Connect. Review. Pay.</p>
+              </div>
+              <div className="journey-line">
+                <span>
+                  <Check size={13} />
+                </span>
+                <i />
+                <span>
+                  <ArrowUpRight size={13} />
+                </span>
+                <i />
+                <span>
+                  <ShieldCheck size={13} />
+                </span>
+              </div>
+              <div className="journey-labels">
+                <span>Your wallet</span>
+                <span>Payment</span>
+                <span>Ethereum</span>
+              </div>
+              <div className="illustration-footer">
+                <ShieldCheck size={16} />
+                Every confirmation has a receipt.
+              </div>
+            </div>
+            <div className="floating-note">
+              <div className="feature-icon">
+                <ReceiptText size={19} />
+              </div>
+              <div>
+                <strong>A link. A QR. A simpler request.</strong>
+                <p>Ready to share, easy to track.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <div className="value-strip">
+          <span>
+            <Wallet />
+            Your keys stay yours
+          </span>
+          <span>
+            <Globe2 />
+            Built on Ethereum
+          </span>
+          <span>
+            <ShieldCheck />
+            Independently verified
+          </span>
+          <span>
+            <ReceiptText />
+            History that stays with you
+          </span>
         </div>
+        <section id="how-it-works" className="landing-section">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">FROM WALLET TO WELL-ORGANIZED</p>
+              <h2>
+                Everything a payment needs.
+                <br />
+                Nothing that gets in the way.
+              </h2>
+            </div>
+            <p className="muted">
+              A thoughtful home for the moments
+              <br />
+              before, during, and after you pay.
+            </p>
+          </div>
+          <div className="feature-grid">
+            {[
+              {
+                n: "01",
+                icon: Wallet,
+                title: "Make it yours",
+                copy: "Sign in with Google, connect MetaMask, and verify your wallet with a signature. Your account and your wallet, connected securely.",
+              },
+              {
+                n: "02",
+                icon: Link2,
+                title: "Send it. Share it.",
+                copy: "Pay a wallet or create a payment link with a QR code. Your recipient gets the details. Your payer doesn’t need an account.",
+              },
+              {
+                n: "03",
+                icon: ReceiptText,
+                title: "Know where it stands",
+                copy: "Follow a payment from submitted to confirmed. Find your history across devices and verify each receipt on Ethereum.",
+              },
+            ].map(({ n, icon: Icon, title, copy }) => (
+              <article className="feature-card" key={n}>
+                <div>
+                  <span className="feature-icon">
+                    <Icon size={24} />
+                  </span>
+                  <span className="step-number">{n}</span>
+                </div>
+                <h3>{title}</h3>
+                <p>{copy}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+        <section id="built-for-trust" className="trust-section">
+          <div className="trust-symbol">
+            <ShieldCheck size={72} strokeWidth={1} />
+          </div>
+          <div>
+            <p className="eyebrow">TRUST YOU CAN CHECK</p>
+            <h2>
+              Your money moves on-chain.
+              <br />
+              Your private details don’t.
+            </h2>
+            <p>
+              MetaMask signs your payments. Ethereum settles them. ChainPay
+              verifies the result and keeps your payment details organized.
+            </p>
+            <p className="small muted">
+              Currently available on Ethereum Sepolia with test ETH.
+            </p>
+          </div>
+          <Button asChild variant="secondary">
+            <Link href="/login">
+              Start with ChainPay
+              <ArrowUpRight size={17} />
+            </Link>
+          </Button>
+        </section>
       </main>
+      <footer className="landing-footer">
+        <Brand />
+        <span>Pay with blockchain, without the complexity.</span>
+        <span>Ethereum Sepolia · Testnet</span>
+      </footer>
     </div>
   );
 }
