@@ -1,0 +1,10 @@
+{
+  "contracts/ChainPay.sol": {
+    "__sources__": {
+      "contracts/ChainPay.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.24;\n\n/// @notice Non-custodial ETH forwarding. No personal data or administrator.\ncontract ChainPay {\n    mapping(bytes32 => bool) public completed;\n    bool private entered;\n    event PaymentCompleted(bytes32 indexed paymentId, address indexed payer, address indexed merchant, uint256 amount, uint256 timestamp);\n    error InvalidPayment();\n    error AlreadyPaid();\n    error TransferFailed();\n    error Reentrancy();\n\n    function pay(bytes32 paymentId, address payable merchant) external payable {\n        if (entered) revert Reentrancy();\n        if (msg.value == 0 || merchant == address(0) || merchant == msg.sender || paymentId == bytes32(0)) revert InvalidPayment();\n        // Scope replay protection to the payer: another address cannot consume an intent.\n        bytes32 key = keccak256(abi.encode(msg.sender, paymentId));\n        if (completed[key]) revert AlreadyPaid();\n        entered = true;\n        completed[key] = true;\n        (bool ok,) = merchant.call{value: msg.value}(\"\");\n        if (!ok) revert TransferFailed();\n        emit PaymentCompleted(paymentId, msg.sender, merchant, msg.value, block.timestamp);\n        entered = false;\n    }\n}\n",
+        "file": "contracts/ChainPay.sol"
+      }
+    }
+  }
+}
