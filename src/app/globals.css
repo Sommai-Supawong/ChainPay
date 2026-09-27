@@ -320,7 +320,7 @@ input:disabled {
   white-space: nowrap;
 }
 .brand-mark {
-  background: var(--primary);
+  background: #e7edf8;
   border-radius: 10px;
   display: inline-flex;
   align-items: center;
@@ -328,6 +328,16 @@ input:disabled {
   width: 35px;
   height: 35px;
   color: #0a1530;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.brand-logo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Center the artwork within the original PNG's transparent margins. */
+  transform: translateY(-4%);
 }
 .brand-dot {
   color: var(--primary);

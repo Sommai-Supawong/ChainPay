@@ -4,7 +4,9 @@ test("landing, login and protected navigation", async ({ page }, testInfo) => {
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: /Less complexity/ }),
+    page.getByRole("heading", {
+      name: /Pay with blockchain, without the complexity/,
+    }),
   ).toBeVisible();
   expect(
     await page.evaluate(
@@ -15,7 +17,10 @@ test("landing, login and protected navigation", async ({ page }, testInfo) => {
     path: `artifacts/landing-${testInfo.project.name}.png`,
     fullPage: true,
   });
-  await page.getByRole("link", { name: /Get started/ }).click();
+  await page
+    .getByRole("link", { name: /Get started/i })
+    .first()
+    .click();
   await expect(
     page.getByRole("button", { name: "Continue with Google" }),
   ).toBeVisible();
