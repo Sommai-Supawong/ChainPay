@@ -5,7 +5,9 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { api, friendlyError } from "@/lib/client-api";
 import { submitSchema } from "@/lib/validation";
+import { useTranslation } from "@/i18n";
 export function RecoverPayment() {
+  const t = useTranslation();
   const router = useRouter(),
     [busy, setBusy] = useState(false);
   return (
@@ -17,7 +19,7 @@ export function RecoverPayment() {
         try {
           const raw = sessionStorage.getItem("chainpay-submission");
           if (!raw) {
-            toast.info("No unsaved transaction was found in this tab.");
+            toast.info(t("No unsaved transaction was found in this tab."));
             return;
           }
           const input = submitSchema.parse(JSON.parse(raw));
@@ -25,13 +27,13 @@ export function RecoverPayment() {
           sessionStorage.removeItem("chainpay-submission");
           router.push(`/tx/${input.hash}`);
         } catch (error) {
-          toast.error(friendlyError(error));
+          toast.error(t(friendlyError(error)));
         } finally {
           setBusy(false);
         }
       }}
     >
-      {busy ? "Recovering payment…" : "Recover my submitted payment"}
+      {t(busy ? "Recovering payment…" : "Recover my submitted payment")}
     </Button>
   );
 }

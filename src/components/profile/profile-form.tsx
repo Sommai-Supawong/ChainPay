@@ -1,4 +1,5 @@
 "use client";
+import { T, useTranslation } from "@/i18n";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -17,6 +18,7 @@ export function ProfileForm({
   accountType: "personal" | "merchant";
   email: string;
 }) {
+  const t = useTranslation();
   const router = useRouter();
   const form = useForm<z.input<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
@@ -28,10 +30,10 @@ export function ProfileForm({
       onSubmit={form.handleSubmit(async (input) => {
         try {
           await api("profile", { method: "PATCH", body: input });
-          toast.success("Profile updated");
+          toast.success(t("Profile updated"));
           router.refresh();
         } catch (error) {
-          toast.error(friendlyError(error));
+          toast.error(t(friendlyError(error)));
         }
       })}
     >
@@ -45,16 +47,22 @@ export function ProfileForm({
       </Field>
       <Field name="email" label="Google account">
         <input id="email" value={email} disabled />
-        <p className="small muted">Managed by your Google account.</p>
+        <p className="small muted">
+          <T value="Managed by your Google account." />
+        </p>
       </Field>
       <Field name="accountType" label="Account type">
         <select id="accountType" {...form.register("accountType")}>
-          <option value="personal">Personal</option>
-          <option value="merchant">Merchant</option>
+          <option value="personal">
+            <T value="Personal" />
+          </option>
+          <option value="merchant">
+            <T value="Merchant" />
+          </option>
         </select>
       </Field>
       <Button disabled={form.formState.isSubmitting}>
-        {form.formState.isSubmitting ? "Saving…" : "Save profile"}
+        {t(form.formState.isSubmitting ? "Saving…" : "Save profile")}
       </Button>
     </form>
   );

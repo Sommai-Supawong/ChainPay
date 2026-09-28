@@ -1,4 +1,5 @@
 "use client";
+import { T, useTranslation } from "@/i18n";
 import Link from "next/link";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -19,6 +20,7 @@ import {
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import type { ContactModel } from "@/types/models";
 export function ContactManager() {
+  const t = useTranslation();
   const cache = useQueryClient(),
     [editing, setEditing] = useState<string | null>(null);
   const contacts = useQuery({
@@ -38,24 +40,24 @@ export function ContactManager() {
       await cache.invalidateQueries({ queryKey: ["contacts"] });
       form.reset();
       setEditing(null);
-      toast.success("Contact saved");
+      toast.success(t("Contact saved"));
     } catch (error) {
-      toast.error(friendlyError(error));
+      toast.error(t(friendlyError(error)));
     }
   }
   async function remove(id: string) {
     try {
       await api(`contacts/${id}`, { method: "DELETE" });
       await cache.invalidateQueries({ queryKey: ["contacts"] });
-      toast.success("Contact removed");
+      toast.success(t("Contact removed"));
     } catch (error) {
-      toast.error(friendlyError(error));
+      toast.error(t(friendlyError(error)));
     }
   }
   return (
     <div className="two-column">
       <GlassCard>
-        <h2>{editing ? "Edit contact" : "Add a familiar face"}</h2>
+        <h2>{t(editing ? "Edit contact" : "Add a familiar face")}</h2>
         <form onSubmit={form.handleSubmit(save)} className="stack">
           <Field
             name="name"
@@ -65,7 +67,7 @@ export function ContactManager() {
             <input
               id="name"
               {...form.register("name")}
-              placeholder="Contact name"
+              placeholder={t("Contact name")}
             />
           </Field>
           <Field
@@ -75,6 +77,7 @@ export function ContactManager() {
           >
             <input
               id="walletAddress"
+              className="technical-text"
               {...form.register("walletAddress")}
               placeholder="0x…"
             />
@@ -87,11 +90,11 @@ export function ContactManager() {
             <input
               id="label"
               {...form.register("label")}
-              placeholder="e.g. Designer"
+              placeholder={t("e.g. Designer")}
             />
           </Field>
           <Button disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? "Saving…" : "Save contact"}
+            {t(form.formState.isSubmitting ? "Saving…" : "Save contact")}
           </Button>
           {editing && (
             <Button
@@ -102,18 +105,20 @@ export function ContactManager() {
                 form.reset({ name: "", walletAddress: "", label: "" });
               }}
             >
-              Cancel editing
+              <T value="Cancel editing" />
             </Button>
           )}
         </form>
       </GlassCard>
       <GlassCard>
-        <h2>Your contacts</h2>
+        <h2>
+          <T value="Your contacts" />
+        </h2>
         {contacts.isPending ? (
           <LoadingState text="Loading contacts…" />
         ) : contacts.error ? (
           <p className="error-banner" role="alert">
-            {contacts.error.message}
+            {t(contacts.error.message)}
           </p>
         ) : !contacts.data?.length ? (
           <EmptyState
@@ -132,7 +137,7 @@ export function ContactManager() {
                 <Button asChild variant="ghost" size="icon">
                   <Link
                     href={`/pay?to=${c.walletAddress}`}
-                    aria-label={`Pay ${c.name}`}
+                    aria-label={t("Pay {name}", { name: c.name })}
                   >
                     <ArrowUpRight size={17} />
                   </Link>
@@ -140,7 +145,7 @@ export function ContactManager() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  aria-label={`Edit ${c.name}`}
+                  aria-label={t("Edit {name}", { name: c.name })}
                   onClick={() => {
                     setEditing(c.id);
                     form.reset(c);
@@ -149,13 +154,13 @@ export function ContactManager() {
                   <Pencil size={16} />
                 </Button>
                 <ConfirmDialog
-                  title={`Remove ${c.name}?`}
+                  title={t("Remove {name}?", { name: c.name })}
                   description="You can add this contact again later."
                   trigger={
                     <Button
                       variant="ghost"
                       size="icon"
-                      aria-label={`Remove ${c.name}`}
+                      aria-label={t("Remove {name}", { name: c.name })}
                     >
                       <Trash2 size={16} />
                     </Button>

@@ -10,20 +10,22 @@ test("homepage preview, navigation and help remain usable", async ({
     "Pay with blockchain,without the complexity.",
   );
   if (testInfo.project.name === "mobile") {
-    const toggle = page.getByRole("button", {
-      name: /^(Open|Close) navigation$/,
+    const mobileNav = page.locator(".marketing-bottom-nav");
+    const more = mobileNav.getByRole("button", {
+      name: "More",
+      includeHidden: true,
     });
-    await toggle.click();
-    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+    await expect(mobileNav.getByRole("link")).toHaveCount(4);
+    await more.click();
+    await expect(more).toHaveAttribute("aria-expanded", "true");
+    await expect(page.getByRole("dialog", { name: "More" })).toBeVisible();
     await page.keyboard.press("Escape");
-    await expect(toggle).toHaveAttribute("aria-expanded", "false");
-    await expect(toggle).toBeFocused();
-    await toggle.click();
-    await page
-      .getByRole("navigation", { name: "Mobile navigation" })
-      .getByRole("link", { name: "Product", exact: true })
+    await expect(more).toHaveAttribute("aria-expanded", "false");
+    await expect(more).toBeFocused();
+    await mobileNav
+      .getByRole("link", { name: "Features", exact: true })
       .click();
-    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await expect(page).toHaveURL(/#features$/);
   }
   const request = page.getByRole("tab", { name: "Request", exact: true });
   await request.click();
@@ -50,6 +52,36 @@ test("homepage preview, navigation and help remain usable", async ({
     page.getByText("Sommai Devcodejeng", { exact: true }),
   ).toBeVisible();
   expect(errors).toEqual([]);
+});
+
+test("responsive navigation stays usable across requested widths and languages", async ({
+  page,
+}) => {
+  await page.goto("/");
+  for (const width of [320, 375, 390, 430, 768, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 812 });
+    const mobile = page.locator(".marketing-bottom-nav");
+    if (width <= 800) await expect(mobile).toBeVisible();
+    else await expect(mobile).toBeHidden();
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    if (width === 320) {
+      await mobile.getByRole("button", { name: "More" }).click();
+      const sheet = page.getByRole("dialog", { name: "More" });
+      await expect(sheet).toBeVisible();
+      await sheet.getByRole("button", { name: "Switch to Thai" }).click();
+      await expect(page.locator("html")).toHaveAttribute("lang", "th");
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
+        ),
+      ).toBe(true);
+      await page.keyboard.press("Escape");
+    }
+  }
 });
 
 test("reduced motion is readable at mobile, tablet and desktop widths", async ({

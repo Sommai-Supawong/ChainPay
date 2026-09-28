@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowUpRight, Inbox, LoaderCircle } from "lucide-react";
 import { cn, shortAddress } from "@/lib/utils";
 import { Button } from "./button";
+import { T } from "@/i18n";
 export function GlassCard({
   children,
   className,
@@ -14,20 +15,32 @@ export function GlassCard({
 export function PageHeader({
   eyebrow,
   title,
+  titleValues,
   description,
   action,
 }: {
   eyebrow?: string;
   title: string;
+  titleValues?: Record<string, string | number>;
   description?: string;
   action?: React.ReactNode;
 }) {
   return (
     <header className="page-header">
       <div>
-        {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-        <h1>{title}</h1>
-        {description && <p className="muted">{description}</p>}
+        {eyebrow && (
+          <p className="eyebrow">
+            <T value={eyebrow} />
+          </p>
+        )}
+        <h1>
+          <T value={title} values={titleValues} />
+        </h1>
+        {description && (
+          <p className="muted">
+            <T value={description} />
+          </p>
+        )}
       </div>
       {action}
     </header>
@@ -45,7 +58,7 @@ export function StatusBadge({ status }: { status: string }) {
             : "badge-muted",
       )}
     >
-      {status}
+      <T value={status} />
     </span>
   );
 }
@@ -65,12 +78,16 @@ export function EmptyState({
       <div className="empty-icon">
         <Inbox size={25} />
       </div>
-      <h3>{title}</h3>
-      <p className="muted">{description}</p>
+      <h3>
+        <T value={title} />
+      </h3>
+      <p className="muted">
+        <T value={description} />
+      </p>
       {href && (
         <Button asChild variant="secondary">
           <Link href={href}>
-            {action}
+            {action && <T value={action} />}
             <ArrowUpRight size={16} />
           </Link>
         </Button>
@@ -86,7 +103,7 @@ export function LoadingState({
   return (
     <div className="loading-state" role="status">
       <LoaderCircle className="spin" size={22} />
-      {text}
+      <T value={text} />
     </div>
   );
 }
@@ -118,12 +135,18 @@ export function Field({
 }) {
   return (
     <div className="field">
-      <label htmlFor={name}>{label}</label>
+      <label htmlFor={name}>
+        <T value={label} />
+      </label>
       {children}
-      {hint && <p className="field-hint">{hint}</p>}
+      {hint && (
+        <p className="field-hint">
+          <T value={hint} />
+        </p>
+      )}
       {error && (
         <p className="field-error" role="alert">
-          {error}
+          <T value={error} />
         </p>
       )}
     </div>

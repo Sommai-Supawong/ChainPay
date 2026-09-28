@@ -1,4 +1,5 @@
 "use client";
+import { T } from "@/i18n";
 
 import { useRef, useState } from "react";
 import Link from "next/link";
@@ -23,11 +24,13 @@ import { BrandLogo } from "@/components/layout/brand-logo";
 import { GlassCard, EmptyState } from "@/components/ui/primitives";
 import { Reveal } from "@/components/motion/reveal";
 import { TextEmerge } from "@/components/motion/text-emerge";
+import { useTranslation } from "@/i18n";
 
 const tabs = ["Send", "Request", "Activity"] as const;
 type PreviewTab = (typeof tabs)[number];
 
 export function ProductPreview() {
+  const t = useTranslation();
   const [tab, setTab] = useState<PreviewTab>("Send");
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const reduced = useReducedMotion();
@@ -42,29 +45,33 @@ export function ProductPreview() {
       aria-labelledby="preview-heading"
     >
       <Reveal className="cp-preview-copy">
-        <p className="eyebrow">A LITTLE MORE FAMILIAR</p>
+        <p className="eyebrow">
+          <T value="A LITTLE MORE FAMILIAR" />
+        </p>
         <div id="preview-heading">
           <TextEmerge
             lines={["Everything in its place.", "Including peace of mind."]}
           />
         </div>
         <p className="cp-section-intro">
-          A thoughtful workspace for the moments before, during, and after you
-          pay.
+          <T value="A thoughtful workspace for the moments before, during, and after you pay." />
         </p>
         <ul className="cp-check-list">
           <li>
-            <ShieldCheck size={18} /> Review before your wallet signs
+            <ShieldCheck size={18} />{" "}
+            <T value="Review before your wallet signs" />
           </li>
           <li>
-            <Link2 size={18} /> Requests that are easy to share
+            <Link2 size={18} /> <T value="Requests that are easy to share" />
           </li>
           <li>
-            <ReceiptText size={18} /> Receipts you can independently check
+            <ReceiptText size={18} />{" "}
+            <T value="Receipts you can independently check" />
           </li>
         </ul>
         <a className="text-link" href="#how-it-works">
-          Meet your new payment flow <ArrowUpRight size={17} />
+          <T value="Meet your new payment flow" />
+          <ArrowUpRight size={17} />
         </a>
       </Reveal>
       <Reveal className="cp-preview-stage">
@@ -93,9 +100,11 @@ export function ProductPreview() {
                   <span className="cp-preview-brand-mark">
                     <BrandLogo />
                   </span>{" "}
-                  ChainPay
+                  <T value="ChainPay" />
                 </span>
-                <span className="cp-preview-label">INTERFACE PREVIEW</span>
+                <span className="cp-preview-label">
+                  <T value="INTERFACE PREVIEW" />
+                </span>
               </div>
               <div className="cp-preview-workspace">
                 <div className="cp-preview-rail" aria-hidden="true">
@@ -106,12 +115,16 @@ export function ProductPreview() {
                 </div>
                 <div className="cp-preview-body">
                   <div className="cp-preview-title">
-                    <h3>Your payments</h3>
-                    <span className="badge">Sepolia</span>
+                    <h3>
+                      <T value="Your payments" />
+                    </h3>
+                    <span className="badge">
+                      <T value="Sepolia" />
+                    </span>
                   </div>
                   <div
                     role="tablist"
-                    aria-label="Explore the payment interface"
+                    aria-label={t("Explore the payment interface")}
                     className="cp-preview-tabs"
                   >
                     {tabs.map((name, index) => (
@@ -141,7 +154,7 @@ export function ProductPreview() {
                           tabRefs.current[next]?.focus();
                         }}
                       >
-                        {name}
+                        {t(name)}
                       </button>
                     ))}
                   </div>
@@ -155,28 +168,34 @@ export function ProductPreview() {
                     {tab === "Send" ? (
                       <>
                         <div className="cp-preview-field">
-                          <span>Recipient</span>
+                          <span>
+                            <T value="Recipient" />
+                          </span>
                           <div>
-                            <Wallet size={16} /> A wallet address or saved
-                            contact
+                            <Wallet size={16} />{" "}
+                            <T value="A wallet address or saved contact" />
                           </div>
                         </div>
                         <div className="cp-preview-field">
-                          <span>Amount</span>
+                          <span>
+                            <T value="Amount" />
+                          </span>
                           <div>
                             <span className="cp-placeholder">
-                              Enter an amount
+                              <T value="Enter an amount" />
                             </span>
-                            <b>ETH</b>
+                            <b>
+                              <T value="ETH" />
+                            </b>
                           </div>
                         </div>
                         <p className="cp-preview-hint">
-                          <ShieldCheck size={14} /> Review the details before
-                          signing.
+                          <ShieldCheck size={14} />{" "}
+                          <T value="Review the details before signing." />
                         </p>
                         <Button asChild className="full-width">
                           <Link href="/pay">
-                            Open send payment
+                            <T value="Open send payment" />
                             <ArrowUpRight size={16} />
                           </Link>
                         </Button>
@@ -184,20 +203,24 @@ export function ProductPreview() {
                     ) : tab === "Request" ? (
                       <>
                         <div className="cp-preview-field">
-                          <span>What’s it for?</span>
-                          <div>A description your payer will recognize</div>
+                          <span>
+                            <T value="What’s it for?" />
+                          </span>
+                          <div>
+                            <T value="A description your payer will recognize" />
+                          </div>
                         </div>
                         <div className="cp-preview-request">
                           <Link2 size={28} />
                           <p>
-                            Set an amount.
+                            <T value="Set an amount." />
                             <br />
-                            Publish a link. Share it anywhere.
+                            <T value="Publish a link. Share it anywhere." />
                           </p>
                         </div>
                         <Button asChild className="full-width">
                           <Link href="/request/new">
-                            Create a payment request
+                            <T value="Create a payment request" />
                             <ArrowUpRight size={16} />
                           </Link>
                         </Button>
@@ -220,13 +243,17 @@ export function ProductPreview() {
               <ShieldCheck size={21} />
             </span>
             <div>
-              <strong>Your keys stay yours.</strong>
-              <p>Payments are approved in your wallet.</p>
+              <strong>
+                <T value="Your keys stay yours." />
+              </strong>
+              <p>
+                <T value="Payments are approved in your wallet." />
+              </p>
             </div>
           </div>
         </div>
         <p className="cp-preview-disclaimer">
-          Explore the interface · No connected account or live payment data
+          <T value="Explore the interface · No connected account or live payment data" />
         </p>
       </Reveal>
     </section>

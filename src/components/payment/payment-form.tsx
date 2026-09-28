@@ -1,4 +1,5 @@
 "use client";
+import { T, useTranslation } from "@/i18n";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -29,6 +30,7 @@ export function PaymentForm({
   request?: { slug: string; receiver: string; amount: string; title: string };
   recipient?: string;
 }) {
+  const t = useTranslation();
   const router = useRouter();
   const account = useConnection(),
     client = usePublicClient({ chainId: chain.id }),
@@ -53,7 +55,7 @@ export function PaymentForm({
   });
   async function prepare(input: PaymentInput) {
     setError("");
-    setBusy("Preparing your payment…");
+    setBusy(t("Preparing your payment…"));
     try {
       if (!account.address || account.chainId !== chain.id || !client)
         throw new Error("Connect your wallet and switch to Ethereum Sepolia.");
@@ -80,20 +82,20 @@ export function PaymentForm({
         );
       setReview({ intent, fee, note: input.note });
     } catch (err) {
-      setError(friendlyError(err));
+      setError(t(friendlyError(err)));
     } finally {
       setBusy("");
     }
   }
   async function persist(value: Submission) {
-    setBusy("Saving your submitted transaction…");
+    setBusy(t("Saving your submitted transaction…"));
     try {
       await api("transactions", { method: "POST", body: value });
       sessionStorage.removeItem("chainpay-submission");
       router.push(`/tx/${value.hash}`);
     } catch (err) {
       setError(
-        `${friendlyError(err)} Your transaction was already broadcast. Retry saving; do not pay again.`,
+        `${t(friendlyError(err))} ${t("Your transaction was already broadcast. Retry saving; do not pay again.")}`,
       );
     } finally {
       setBusy("");
@@ -102,7 +104,7 @@ export function PaymentForm({
   async function pay() {
     if (!review) return;
     setError("");
-    setBusy("Waiting for MetaMask…");
+    setBusy(t("Waiting for MetaMask…"));
     try {
       const i = review.intent;
       if (
@@ -135,11 +137,11 @@ export function PaymentForm({
       try {
         sessionStorage.setItem("chainpay-submission", JSON.stringify(value));
       } catch {
-        toast.error("Keep this transaction hash until it has been saved.");
+        toast.error(t("Keep this transaction hash until it has been saved."));
       }
       await persist(value);
     } catch (err) {
-      setError(friendlyError(err));
+      setError(t(friendlyError(err)));
     } finally {
       setBusy("");
     }
@@ -154,22 +156,27 @@ export function PaymentForm({
       <div className="card-heading">
         <div>
           <p className="eyebrow">
-            {review ? "02 / REVIEW" : "01 / PAYMENT DETAILS"}
+            {t(review ? "02 / REVIEW" : "01 / PAYMENT DETAILS")}
           </p>
           <h2>
-            {submission
-              ? "Transaction submitted"
-              : review
-                ? "A moment to double-check."
-                : "Where are we sending?"}
+            {t(
+              submission
+                ? "Transaction submitted"
+                : review
+                  ? "A moment to double-check."
+                  : "Where are we sending?",
+            )}
           </h2>
         </div>
-        <span className="badge">Sepolia ETH</span>
+        <span className="badge">
+          <T value="Sepolia ETH" />
+        </span>
       </div>
       <ConnectWallet />
       {account.address && (
         <p className="small muted">
-          Available on Sepolia: <WalletBalance address={account.address} />
+          <T value="Available on Sepolia:" />
+          <WalletBalance address={account.address} />
         </p>
       )}
       {error && (
@@ -180,7 +187,7 @@ export function PaymentForm({
       {submission ? (
         <div className="stack">
           <p>
-            Your transaction has been broadcast. Save it to track confirmation.
+            <T value="Your transaction has been broadcast. Save it to track confirmation." />
           </p>
           <WalletAddress address={submission.hash} full />
           <div className="button-row">
@@ -191,13 +198,13 @@ export function PaymentForm({
                 rel="noreferrer"
                 href={explorerTx(submission.hash)}
               >
-                Explorer
+                <T value="Explorer" />
                 <ExternalLink size={16} />
               </a>
             </Button>
           </div>
           <Button disabled={Boolean(busy)} onClick={() => persist(submission)}>
-            {busy || "Retry saving transaction"}
+            {busy || t("Retry saving transaction")}
           </Button>
         </div>
       ) : review ? (
@@ -208,55 +215,75 @@ export function PaymentForm({
         >
           <div className="review-amount">
             {formatEther(parseEther(review.intent.amount))}
-            <span>ETH</span>
+            <span>
+              <T value="ETH" />
+            </span>
           </div>
           <dl className="detail-list">
             <div>
-              <dt>From</dt>
+              <dt>
+                <T value="From" />
+              </dt>
               <dd>
                 <WalletAddress address={review.intent.fromAddress} full />
               </dd>
             </div>
             <div>
-              <dt>To</dt>
+              <dt>
+                <T value="To" />
+              </dt>
               <dd>
                 <WalletAddress address={review.intent.toAddress} full />
               </dd>
             </div>
             <div>
-              <dt>Network</dt>
-              <dd>Ethereum Sepolia</dd>
-            </div>
-            <div>
-              <dt>Estimated network fee</dt>
-              <dd>{formatEther(review.fee)} ETH</dd>
-            </div>
-            <div>
-              <dt>Estimated total</dt>
+              <dt>
+                <T value="Network" />
+              </dt>
               <dd>
-                {formatEther(parseEther(review.intent.amount) + review.fee)} ETH
+                <T value="Ethereum Sepolia" />
+              </dd>
+            </div>
+            <div>
+              <dt>
+                <T value="Estimated network fee" />
+              </dt>
+              <dd>
+                {formatEther(review.fee)} <T value="ETH" />
+              </dd>
+            </div>
+            <div>
+              <dt>
+                <T value="Estimated total" />
+              </dt>
+              <dd>
+                {formatEther(parseEther(review.intent.amount) + review.fee)}{" "}
+                <T value="ETH" />
               </dd>
             </div>
             {review.intent.title && (
               <div>
-                <dt>For</dt>
+                <dt>
+                  <T value="For" />
+                </dt>
                 <dd>{review.intent.title}</dd>
               </div>
             )}
             {review.note && (
               <div>
-                <dt>Private note</dt>
+                <dt>
+                  <T value="Private note" />
+                </dt>
                 <dd>{review.note}</dd>
               </div>
             )}
           </dl>
           <p className="small muted">
-            Fee includes a 20% estimate buffer. MetaMask shows the final fee.
-            Confirm the recipient carefully; transfers cannot be undone.
+            <T value="Fee includes a 20% estimate buffer. MetaMask shows the final fee. Confirm the recipient carefully; transfers cannot be undone." />
           </p>
           {changed && (
             <p role="alert" className="field-error">
-              Wallet changed. Go back and review again.
+              <T value="Wallet changed. Go back and review again." />
             </p>
           )}
           <div className="button-row">
@@ -266,10 +293,10 @@ export function PaymentForm({
               onClick={() => setReview(null)}
             >
               <ArrowLeft size={16} />
-              Back
+              <T value="Back" />
             </Button>
             <Button disabled={Boolean(busy) || Boolean(changed)} onClick={pay}>
-              {busy || "Confirm & pay"}
+              {busy || t("Confirm & pay")}
               <ArrowRight size={16} />
             </Button>
           </div>
@@ -288,7 +315,7 @@ export function PaymentForm({
                 }
               >
                 <option value="" disabled>
-                  Choose a contact
+                  <T value="Choose a contact" />
                 </option>
                 {contacts.data?.map((c) => (
                   <option key={c.id} value={c.walletAddress}>
@@ -305,6 +332,7 @@ export function PaymentForm({
           >
             <input
               id="toAddress"
+              className="technical-text"
               placeholder="0x…"
               readOnly={Boolean(request)}
               {...form.register("toAddress")}
@@ -333,7 +361,7 @@ export function PaymentForm({
           >
             <input
               id="title"
-              placeholder="What’s this payment for?"
+              placeholder={t("What’s this payment for?")}
               readOnly={Boolean(request)}
               {...form.register("title")}
             />
@@ -346,7 +374,7 @@ export function PaymentForm({
             >
               <textarea
                 id="note"
-                placeholder="Just for your records"
+                placeholder={t("Just for your records")}
                 {...form.register("note")}
               />
             </Field>
@@ -357,7 +385,7 @@ export function PaymentForm({
             }
             type="submit"
           >
-            {busy || "Review payment"}
+            {busy || t("Review payment")}
             <ArrowRight size={17} />
           </Button>
           <Button
@@ -368,29 +396,33 @@ export function PaymentForm({
               try {
                 const raw = sessionStorage.getItem("chainpay-submission");
                 if (!raw) {
-                  toast.info("No unsaved transaction in this tab.");
+                  toast.info(t("No unsaved transaction in this tab."));
                   return;
                 }
                 const value = JSON.parse(raw) as Submission;
                 setSubmission(value);
               } catch {
-                toast.error("Could not recover the transaction from this tab.");
+                toast.error(
+                  t("Could not recover the transaction from this tab."),
+                );
               }
             }}
           >
-            Recover a submitted payment
+            <T value="Recover a submitted payment" />
           </Button>
         </form>
       )}
       <div className="security-note">
         <ShieldCheck size={18} />
-        <p>Your wallet signs. Ethereum settles. ChainPay verifies.</p>
+        <p>
+          <T value="Your wallet signs. Ethereum settles. ChainPay verifies." />
+        </p>
       </div>
       {!request && (
         <p className="small muted">
-          Wallet not verified yet?{" "}
+          <T value="Wallet not verified yet?" />{" "}
           <Link className="text-link" href="/wallets">
-            Manage wallets
+            <T value="Manage wallets" />
           </Link>
         </p>
       )}

@@ -1,3 +1,4 @@
+import { T } from "@/i18n";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -20,7 +21,8 @@ export function HeroSection() {
       <div className="cp-container cp-hero-content">
         <Reveal delay={0.08}>
           <span className="cp-pill">
-            <span className="network-dot" /> A simpler connection to Ethereum{" "}
+            <span className="network-dot" />{" "}
+            <T value="A simpler connection to Ethereum" />{" "}
             <ArrowUpRight size={13} />
           </span>
         </Reveal>
@@ -33,37 +35,42 @@ export function HeroSection() {
         </div>
         <Reveal delay={0.32}>
           <p className="cp-hero-description">
-            Send, request, and track payments in one calm, connected place.
-            <br className="cp-desktop-break" /> All the transparency of
-            blockchain. A more familiar way to pay.
+            <T value="Send, request, and track payments in one calm, connected place." />
+            <br className="cp-desktop-break" />{" "}
+            <T value="All the transparency of blockchain. A more familiar way to pay." />
           </p>
         </Reveal>
         <Reveal delay={0.44} className="cp-hero-buttons">
           <SessionCta />
           <Button asChild variant="secondary">
             <a href="#product-preview">
-              Explore ChainPay
+              <T value="Explore ChainPay" />
               <ArrowRight size={17} />
             </a>
           </Button>
         </Reveal>
         <Reveal delay={0.52}>
           <p className="cp-hero-note">
-            <ShieldCheck size={14} /> Non-custodial{" "}
-            <span aria-hidden="true">·</span> Ethereum Sepolia Testnet
+            <ShieldCheck size={14} /> <T value="Non-custodial" />{" "}
+            <span aria-hidden="true">·</span>{" "}
+            <T value="Ethereum Sepolia Testnet" />
           </p>
         </Reveal>
         <Reveal delay={0.62} className="cp-connection-wrap">
-          <div
-            className="cp-connection"
-            aria-label="Payment flow: your wallet, ChainPay, Ethereum"
-          >
+          <div className="cp-connection" aria-labelledby="payment-flow-label">
+            <span id="payment-flow-label" className="sr-only">
+              <T value="Payment flow: your wallet, ChainPay, Ethereum" />
+            </span>
             <div>
               <span className="cp-node-icon">
                 <Wallet size={23} />
               </span>
-              <strong>Your wallet</strong>
-              <small>You stay in control</small>
+              <strong>
+                <T value="Your wallet" />
+              </strong>
+              <small>
+                <T value="You stay in control" />
+              </small>
             </div>
             <span className="cp-connector" aria-hidden="true">
               <i />
@@ -73,8 +80,12 @@ export function HeroSection() {
               <span className="cp-node-icon cp-node-brand">
                 <BrandLogo />
               </span>
-              <strong>ChainPay</strong>
-              <small>Clarity at every step</small>
+              <strong>
+                <T value="ChainPay" />
+              </strong>
+              <small>
+                <T value="Clarity at every step" />
+              </small>
             </div>
             <span className="cp-connector" aria-hidden="true">
               <i />
@@ -84,8 +95,12 @@ export function HeroSection() {
               <span className="cp-node-icon">
                 <Fingerprint size={24} />
               </span>
-              <strong>Ethereum</strong>
-              <small>Settlement you can verify</small>
+              <strong>
+                <T value="Ethereum" />
+              </strong>
+              <small>
+                <T value="Settlement you can verify" />
+              </small>
             </div>
           </div>
         </Reveal>

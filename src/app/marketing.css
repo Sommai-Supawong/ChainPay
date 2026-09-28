@@ -149,6 +149,9 @@
 .cp-mobile-nav {
   display: none;
 }
+.cp-mobile-language {
+  display: none;
+}
 .cp-hero {
   position: relative;
   isolation: isolate;
@@ -1220,6 +1223,14 @@
     display: inline-flex;
     padding: 0;
   }
+  .cp-nav-actions .language-toggle {
+    display: none;
+  }
+  .cp-mobile-language {
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px 0 14px;
+  }
   .cp-desktop-nav {
     display: none;
   }
@@ -1553,5 +1564,28 @@
   }
   .cp-arc {
     animation: none;
+  }
+}
+html[lang="th"] .cp-hero h1 {
+  line-height: 1.2;
+}
+html[lang="th"] .cp-home h2 {
+  line-height: 1.3;
+}
+@media (max-width: 800px) {
+  .cp-home {
+    padding-bottom: calc(100px + env(safe-area-inset-bottom));
+  }
+  .cp-desktop-nav,
+  .cp-nav-actions .language-toggle,
+  .cp-nav-actions .cp-menu-toggle,
+  .cp-mobile-nav {
+    display: none;
+  }
+  .cp-nav-inner {
+    height: 68px;
+  }
+  .cp-nav-actions .button {
+    min-height: 44px;
   }
 }

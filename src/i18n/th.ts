@@ -1,0 +1,665 @@
+// English UI copy is the stable lookup key. Values here are the only Thai UI copy.
+export const th: Record<string, string> = {
+  "ChainPay — Payments, made clear": "ChainPay — จ่ายเงินได้อย่างชัดเจน",
+  "A simpler way to send, request, and track Ethereum payments. Non-custodial. Built on Sepolia.":
+    "ส่ง ขอรับ และติดตามการชำระเงินบน Ethereum ได้ง่ายขึ้น โดยคุณดูแลเงินด้วยตัวเองบน Sepolia",
+  Product: "ผลิตภัณฑ์",
+  "How it works": "วิธีใช้งาน",
+  Security: "ความปลอดภัย",
+  Dashboard: "แดชบอร์ด",
+  "Open ChainPay": "เปิด ChainPay",
+  "Open navigation": "เปิดเมนู",
+  "Close navigation": "ปิดเมนู",
+  "Main navigation": "เมนูหลัก",
+  "Mobile navigation": "เมนูบนมือถือ",
+  "Get Started": "เริ่มใช้งาน",
+  "View Dashboard": "ไปที่แดชบอร์ด",
+  Overview: "ภาพรวม",
+  Home: "หน้าแรก",
+  Pay: "จ่าย",
+  More: "เพิ่มเติม",
+  Language: "ภาษา",
+  Features: "ฟีเจอร์",
+  How: "วิธีใช้",
+  Trust: "ปลอดภัย",
+  "Send payment": "ส่งเงิน",
+  "Payment requests": "คำขอรับชำระเงิน",
+  Activity: "ประวัติ",
+  Wallets: "กระเป๋าเงิน",
+  Contacts: "ผู้ติดต่อ",
+  Settings: "การตั้งค่า",
+  "YOUR WORKSPACE": "พื้นที่ทำงานของคุณ",
+  "Your keys. Your control.": "กุญแจอยู่กับคุณ ควบคุมได้เอง",
+  "Test network · Test ETH only": "เครือข่ายทดสอบ · ใช้ ETH ทดสอบเท่านั้น",
+  "Payments, made clear.": "จ่ายเงินได้อย่างชัดเจน",
+  "Non-custodial by design": "คุณเป็นผู้ดูแลเงินของตัวเอง",
+  "Skip to content": "ข้ามไปยังเนื้อหา",
+  "Sign out": "ออกจากระบบ",
+  "Sign in with Google": "เข้าสู่ระบบด้วย Google",
+  "Signing in…": "กำลังเข้าสู่ระบบ…",
+  "Signing out…": "กำลังออกจากระบบ…",
+
+  "Your keys stay yours": "กุญแจอยู่กับคุณ",
+  "Verified against Ethereum": "ตรวจสอบกับ Ethereum แล้ว",
+  "History that stays with you": "เก็บประวัติให้คุณเสมอ",
+  "A simpler connection to Ethereum": "เชื่อมต่อกับ Ethereum ได้ง่ายขึ้น",
+  "Pay with blockchain,": "จ่ายเงินผ่านบล็อกเชน",
+  "without the complexity.": "โดยไม่ต้องยุ่งยาก",
+  "Send, request, and track payments in one calm, connected place.":
+    "ส่งเงิน ขอรับเงิน และติดตามรายการได้ในที่เดียว",
+  "All the transparency of blockchain. A more familiar way to pay.":
+    "โปร่งใสแบบบล็อกเชน ใช้งานง่ายเหมือนการจ่ายเงินทั่วไป",
+  "Explore ChainPay": "สำรวจ ChainPay",
+  "Non-custodial": "คุณดูแลเงินของตัวเอง",
+  "Your wallet": "กระเป๋าของคุณ",
+  "You stay in control": "คุณยังควบคุมได้เอง",
+  "Clarity at every step": "ชัดเจนทุกขั้นตอน",
+  "Settlement you can verify": "ตรวจสอบการชำระเงินได้",
+  "Payment flow: your wallet, ChainPay, Ethereum":
+    "ขั้นตอนชำระเงิน: กระเป๋าของคุณ ChainPay และ Ethereum",
+  "THE PAYMENT, NOT THE COMPLEXITY": "จ่ายเงินง่าย ไม่ต้องกังวลเรื่องเทคนิค",
+  "Blockchain underneath.": "เบื้องหลังคือบล็อกเชน",
+  "Simplicity on top.": "เบื้องหน้าคือความง่าย",
+  "Who it’s for. How much. Where it stands.":
+    "จ่ายให้ใคร เท่าไร และถึงขั้นตอนไหน",
+  "The details you need, right where you expect them.":
+    "ข้อมูลสำคัญอยู่ตรงที่คุณต้องการ",
+  "A clearer way to send.": "ส่งเงินได้อย่างมั่นใจ",
+  "Choose a recipient, add a note, and review the amount and estimated fee before approving in MetaMask.":
+    "เลือกผู้รับ ใส่บันทึก แล้วตรวจสอบยอดและค่าธรรมเนียมก่อนยืนยันใน MetaMask",
+  "Send payment steps": "ขั้นตอนส่งเงิน",
+  "Choose a recipient": "เลือกผู้รับ",
+  "Review & pay": "ตรวจสอบและจ่าย",
+  "YOUR PAYMENT. YOUR APPROVAL.": "เงินของคุณ คุณเป็นผู้อนุมัติ",
+  "One link. Less back-and-forth.": "ลิงก์เดียว จบเรื่องการทวงถาม",
+  "Create a payment request with an amount and description. Share a public link your payer can use without a ChainPay account.":
+    "สร้างคำขอพร้อมยอดและรายละเอียด แล้วแชร์ลิงก์ให้ผู้จ่ายได้ แม้ไม่มีบัญชี ChainPay",
+  "Your request. Ready to share.": "คำขอของคุณ พร้อมแชร์แล้ว",
+  "From screen to scan.": "สแกนแล้วจ่ายได้เลย",
+  "Every published request has a QR code. Open it on another device and pay through your wallet.":
+    "ทุกคำขอที่เผยแพร่มี QR code เปิดจากอุปกรณ์อื่นแล้วจ่ายผ่านกระเป๋าได้",
+  "QR payments": "จ่ายด้วย QR",
+  "A wallet that’s truly yours.": "กระเป๋าที่เป็นของคุณจริง ๆ",
+  "Link MetaMask with a signed ownership challenge. Verification proves control without moving funds.":
+    "เชื่อม MetaMask ด้วยการเซ็นข้อความเพื่อยืนยันความเป็นเจ้าของ โดยไม่มีการโอนเงิน",
+  "Verified wallets": "กระเป๋าที่ยืนยันแล้ว",
+  "Keep the whole story.": "เก็บประวัติครบทุกขั้นตอน",
+  "Find payment activity across devices, with readable receipts and a link to the on-chain transaction.":
+    "ดูรายการจากทุกอุปกรณ์ พร้อมใบเสร็จที่อ่านง่ายและลิงก์ธุรกรรมบนบล็อกเชน",
+  "History & receipts": "ประวัติและใบเสร็จ",
+  "From first request to final receipt. One connected payment experience.":
+    "ตั้งแต่คำขอแรกจนถึงใบเสร็จ ทุกขั้นตอนอยู่ในที่เดียว",
+  "A LITTLE MORE FAMILIAR": "ใช้งานได้อย่างคุ้นเคย",
+  "Everything in its place.": "ทุกอย่างอยู่เป็นที่",
+  "Including peace of mind.": "รวมถึงความสบายใจ",
+  "A thoughtful workspace for the moments before, during, and after you pay.":
+    "พื้นที่เดียวสำหรับทุกช่วงก่อน ระหว่าง และหลังจ่ายเงิน",
+  "Review before your wallet signs": "ตรวจสอบก่อนเซ็นในกระเป๋า",
+  "Requests that are easy to share": "แชร์คำขอได้ง่าย",
+  "Receipts you can independently check": "ตรวจสอบใบเสร็จได้ด้วยตัวเอง",
+  "Meet your new payment flow": "รู้จักวิธีจ่ายแบบใหม่",
+  "INTERFACE PREVIEW": "ตัวอย่างหน้าจอ",
+  "Your payments": "รายการชำระเงินของคุณ",
+  "Explore the payment interface": "สำรวจหน้าจอชำระเงิน",
+  Send: "ส่งเงิน",
+  Request: "ขอรับเงิน",
+  Recipient: "ผู้รับ",
+  "A wallet address or saved contact":
+    "ที่อยู่กระเป๋าหรือผู้ติดต่อที่บันทึกไว้",
+  Amount: "จำนวนเงิน",
+  "Enter an amount": "กรอกจำนวนเงิน",
+  "Review the details before signing.": "ตรวจสอบรายละเอียดก่อนเซ็นยืนยัน",
+  "Open send payment": "เปิดหน้าส่งเงิน",
+  "What’s it for?": "จ่ายค่าอะไร?",
+  "A description your payer will recognize": "รายละเอียดที่ผู้จ่ายเข้าใจได้",
+  "Set an amount.": "กำหนดยอดเงิน",
+  "Publish a link. Share it anywhere.": "เผยแพร่ลิงก์ แล้วแชร์ได้ทุกที่",
+  "Create a payment request": "สร้างคำขอรับชำระเงิน",
+  "A home for your payment history": "พื้นที่เก็บประวัติการชำระเงิน",
+  "Your saved payments and their receipts appear here when you use ChainPay.":
+    "รายการและใบเสร็จที่บันทึกไว้จะแสดงที่นี่เมื่อคุณใช้ ChainPay",
+  "Open activity": "เปิดประวัติ",
+  "Your keys stay yours.": "กุญแจยังอยู่กับคุณ",
+  "Payments are approved in your wallet.": "อนุมัติการจ่ายเงินในกระเป๋าของคุณ",
+  "Explore the interface · No connected account or live payment data":
+    "ดูตัวอย่างหน้าจอ · ไม่มีบัญชีหรือข้อมูลชำระเงินจริง",
+  "FROM HELLO TO PAYMENT HISTORY": "เริ่มต้นจนถึงประวัติการจ่าย",
+  "Four steps. One simpler flow.": "สี่ขั้นตอน จ่ายได้ง่ายขึ้น",
+  "Start with an account. Stay in control with your wallet.":
+    "เริ่มด้วยบัญชี แล้วควบคุมเงินด้วยกระเป๋าของคุณ",
+  "Make yourself at home": "เริ่มใช้งานได้เลย",
+  "Continue with Google to keep your wallets, requests, and history together.":
+    "ใช้ Google เพื่อเก็บกระเป๋า คำขอ และประวัติไว้ด้วยกัน",
+  "Sign in": "เข้าสู่ระบบ",
+  "Connect. Then verify.": "เชื่อมต่อ แล้วยืนยัน",
+  "Connect MetaMask and sign a message to prove wallet ownership. No funds move.":
+    "เชื่อม MetaMask และเซ็นข้อความยืนยันว่าเป็นเจ้าของกระเป๋า ไม่มีการโอนเงิน",
+  "Connect & verify": "เชื่อมต่อและยืนยัน",
+  "Send it. Or request it.": "ส่งเงินหรือขอรับเงิน",
+  "Review a payment before signing, or share a request by link or QR code.":
+    "ตรวจสอบก่อนเซ็น หรือแชร์คำขอผ่านลิงก์และ QR code",
+  "Send or request": "ส่งหรือขอรับเงิน",
+  "Know where it stands": "รู้ความคืบหน้าเสมอ",
+  "ChainPay checks Ethereum confirmations and saves a readable payment record.":
+    "ChainPay ตรวจสอบการยืนยันบน Ethereum และบันทึกรายการให้อ่านง่าย",
+  "Verify & track": "ยืนยันและติดตาม",
+  "TRUST YOU CAN CHECK": "ความปลอดภัยที่ตรวจสอบได้",
+  "A confirmation should": "การยืนยันต้อง",
+  "mean something.": "ตรวจสอบได้จริง",
+  "Your wallet signs. Ethereum settles. ChainPay checks the transaction against the chain before marking it confirmed.":
+    "กระเป๋าของคุณเซ็น Ethereum ทำรายการ และ ChainPay ตรวจสอบกับบล็อกเชนก่อนระบุว่ายืนยันแล้ว",
+  "See what gets verified": "ดูสิ่งที่ตรวจสอบ",
+  "Behind every confirmation": "เบื้องหลังการยืนยัน",
+  "Server-side checks, not just a browser success message.":
+    "ตรวจสอบที่เซิร์ฟเวอร์ ไม่อาศัยเพียงข้อความสำเร็จในเบราว์เซอร์",
+  "Expected sender, recipient & amount":
+    "ผู้ส่ง ผู้รับ และยอดเงินตรงตามที่กำหนด",
+  "Correct network & payment contract": "เครือข่ายและสัญญาชำระเงินถูกต้อง",
+  "Matching payment event": "เหตุการณ์ชำระเงินตรงกัน",
+  "Successful receipt & two confirmations": "ธุรกรรมสำเร็จและยืนยันสองครั้ง",
+  "Ownership, verified": "ยืนยันความเป็นเจ้าของ",
+  "A single-use signed wallet challenge.":
+    "เซ็นข้อความยืนยันกระเป๋าแบบใช้ครั้งเดียว",
+  "Always non-custodial": "คุณดูแลเงินของตัวเองเสมอ",
+  "Private keys remain in your wallet.": "กุญแจส่วนตัวยังอยู่ในกระเป๋าของคุณ",
+  "History that stays": "ประวัติที่เก็บไว้ให้คุณ",
+  "Account records stored in PostgreSQL.": "บันทึกข้อมูลบัญชีไว้ใน PostgreSQL",
+  "Built for exploring payments with test ETH. ChainPay is not an audited mainnet payment service.":
+    "สร้างขึ้นเพื่อทดลองจ่ายด้วย ETH ทดสอบ ChainPay ยังไม่ใช่บริการชำระเงินบน mainnet ที่ผ่านการตรวจสอบ",
+  "FAMILIAR NEEDS. A NEW WAY TO PAY.": "เรื่องที่คุ้นเคย วิธีจ่ายแบบใหม่",
+  "Built around people.": "ออกแบบเพื่อผู้คน",
+  "Not just wallet addresses.": "ไม่ใช่แค่ที่อยู่กระเป๋า",
+  "Explore everyday payment workflows": "ลองวิธีจ่ายเงินในชีวิตประจำวัน",
+  "on Ethereum Sepolia.": "บน Ethereum Sepolia",
+  "For individuals": "สำหรับบุคคลทั่วไป",
+  "Save a contact, send a payment, and find the receipt without digging through a block explorer.":
+    "บันทึกผู้ติดต่อ ส่งเงิน และหาใบเสร็จได้โดยไม่ต้องค้นใน block explorer",
+  "For freelancers": "สำหรับฟรีแลนซ์",
+  "Give a project milestone its own payment link, description, and easy-to-follow status.":
+    "สร้างลิงก์ชำระเงินให้แต่ละงวดงาน พร้อมรายละเอียดและสถานะที่ติดตามง่าย",
+  "For small merchants": "สำหรับร้านค้าขนาดเล็ก",
+  "Create separate requests for orders. Share a QR code and keep payment records organized.":
+    "แยกคำขอแต่ละคำสั่งซื้อ แชร์ QR code และจัดเก็บประวัติให้เป็นระเบียบ",
+  "For the Web3 curious": "สำหรับผู้สนใจ Web3",
+  "Learn the flow with test ETH, clear review screens, and a wallet that stays in your hands.":
+    "ลองใช้ ETH ทดสอบ พร้อมหน้าตรวจสอบที่ชัดเจนและกระเป๋าที่คุณควบคุมเอง",
+  "A FEW THINGS TO KNOW": "เรื่องที่ควรรู้",
+  "Clear from the start.": "ชัดเจนตั้งแต่เริ่ม",
+  "What do I need to get started?": "เริ่มใช้งานต้องทำอะไรบ้าง?",
+  "Sign in with Google, connect MetaMask, and verify your wallet. To try a payment, select Ethereum Sepolia and add test ETH to cover the payment and network fee.":
+    "เข้าสู่ระบบด้วย Google เชื่อม MetaMask และยืนยันกระเป๋า หากต้องการทดลองจ่าย ให้เลือก Ethereum Sepolia และเตรียม ETH ทดสอบสำหรับยอดเงินกับค่าธรรมเนียม",
+  "Can I use real ETH?": "ใช้ ETH จริงได้ไหม?",
+  "ChainPay currently supports Ethereum Sepolia only. Use Sepolia test ETH, which has no monetary value. Mainnet, fiat payments, and tokens are not supported.":
+    "ตอนนี้ ChainPay รองรับเฉพาะ Ethereum Sepolia ใช้ ETH ทดสอบซึ่งไม่มีมูลค่าจริง ยังไม่รองรับ mainnet เงินทั่วไป หรือโทเคน",
+  "Does someone need an account to pay my link?":
+    "ผู้จ่ายผ่านลิงก์ต้องมีบัญชีไหม?",
+  "No. Anyone with a compatible MetaMask wallet and enough Sepolia test ETH can open an active public request, review the details, and approve the payment.":
+    "ไม่ต้อง ผู้ที่มี MetaMask และ ETH ทดสอบเพียงพอสามารถเปิดคำขอสาธารณะ ตรวจสอบข้อมูล และอนุมัติการจ่ายได้",
+  "Does ChainPay hold my funds?": "ChainPay เก็บเงินของฉันไหม?",
+  "No. You approve payments in MetaMask. The payment contract forwards ETH to the recipient; ChainPay does not store your private keys or seed phrase.":
+    "ไม่ คุณอนุมัติใน MetaMask สัญญาจะส่ง ETH ไปยังผู้รับ และ ChainPay ไม่เก็บกุญแจส่วนตัวหรือ seed phrase",
+  "YOUR NEXT PAYMENT, SIMPLIFIED": "การจ่ายครั้งต่อไป ง่ายขึ้น",
+  "Less friction.": "ขั้นตอนน้อยลง",
+  "More connection.": "เชื่อมต่อมากขึ้น",
+  "Create your account, connect a wallet, and explore":
+    "สร้างบัญชี เชื่อมกระเป๋า แล้วลอง",
+  "a more thoughtful way to pay.": "วิธีจ่ายเงินที่เข้าใจคุณมากขึ้น",
+  "Learn how it works": "ดูวิธีใช้งาน",
+  "Modern Web3 payments.": "การจ่ายเงินแบบ Web3",
+  "Transparent settlement.": "ตรวจสอบธุรกรรมได้",
+  "A simpler everyday experience.": "ใช้ได้ง่ายในทุกวัน",
+  "Resources & support": "ข้อมูลและความช่วยเหลือ",
+  "Getting started": "เริ่มต้นใช้งาน",
+  "Security & verification": "ความปลอดภัยและการยืนยัน",
+  "Help & FAQs": "ช่วยเหลือและคำถามที่พบบ่อย",
+  "Smart contract": "สมาร์ตคอนแทรกต์",
+  "On the network": "ข้อมูลเครือข่าย",
+  "Copy contract": "คัดลอกสัญญา",
+  "View contract": "ดูสัญญา",
+  "Testnet payments only": "ชำระเงินบนเครือข่ายทดสอบเท่านั้น",
+  "Back to top ↑": "กลับขึ้นด้านบน ↑",
+  "Designed & Developed by": "ออกแบบและพัฒนาโดย",
+
+  "A LITTLE SIMPLER. A LOT CLEARER.": "ง่ายขึ้นอีกนิด ชัดเจนขึ้นมาก",
+  "Your payments.": "การจ่ายเงินของคุณ",
+  "All connected.": "เชื่อมทุกอย่างไว้ด้วยกัน",
+  "One place to send, request, and keep track.":
+    "ส่ง ขอรับ และติดตามเงินได้ในที่เดียว",
+  "With a wallet that stays yours.": "พร้อมกระเป๋าที่คุณเป็นเจ้าของ",
+  "Verified on Ethereum": "ตรวจสอบบน Ethereum",
+  "Ready to share": "พร้อมแชร์",
+  "Built for Ethereum Sepolia · Test ETH only":
+    "สำหรับ Ethereum Sepolia · ใช้ ETH ทดสอบเท่านั้น",
+  "Back to home": "กลับหน้าแรก",
+  "WELCOME TO CHAINPAY": "ยินดีต้อนรับสู่ CHAINPAY",
+  "Make yourself at home.": "เริ่มใช้งานได้เลย",
+  "Sign in to keep your wallets, requests, and payment history together.":
+    "เข้าสู่ระบบเพื่อเก็บกระเป๋า คำขอ และประวัติการชำระเงินไว้ด้วยกัน",
+  "YOUR ACCOUNT ≠ YOUR WALLET": "บัญชีของคุณ ≠ กระเป๋าของคุณ",
+  "Google securely signs you into ChainPay. You’ll connect and verify MetaMask separately when you’re ready to make a payment.":
+    "Google ใช้เข้าสู่ ChainPay อย่างปลอดภัย ส่วน MetaMask จะเชื่อมต่อและยืนยันแยกต่างหากก่อนจ่ายเงิน",
+  "We never ask for your seed phrase or private key.":
+    "เราไม่ขอ seed phrase หรือกุญแจส่วนตัวของคุณ",
+  "Sepolia is a test network. Test ETH has no monetary value.":
+    "Sepolia เป็นเครือข่ายทดสอบ และ ETH ทดสอบไม่มีมูลค่าจริง",
+
+  "YOUR MONEY, WITH MORE CLARITY": "เห็นเงินของคุณได้ชัดขึ้น",
+  "Here’s where everything comes together.": "ทุกอย่างรวมอยู่ที่นี่",
+  "YOUR PRIMARY WALLET": "กระเป๋าหลักของคุณ",
+  Verified: "ยืนยันแล้ว",
+  "A home for your wallet.": "เริ่มต้นด้วยกระเป๋าของคุณ",
+  "Connect and verify MetaMask to see your balance and start paying.":
+    "เชื่อมและยืนยัน MetaMask เพื่อดูยอดเงินและเริ่มจ่าย",
+  "Connect a wallet": "เชื่อมต่อกระเป๋า",
+  "MAKE YOUR NEXT MOVE": "เริ่มขั้นตอนต่อไป",
+  "What’s on your mind?": "วันนี้คุณต้องการทำอะไร?",
+  Receive: "รับเงิน",
+  Scan: "สแกน",
+  "Payments and requests, just a tap away.":
+    "ส่งเงินหรือขอรับเงินได้ในไม่กี่แตะ",
+  Sent: "ส่งแล้ว",
+  Received: "รับแล้ว",
+  "Confirmed payments · excluding fees":
+    "รายการที่ยืนยันแล้ว · ไม่รวมค่าธรรมเนียม",
+  "Confirmed incoming payments": "เงินเข้าที่ได้รับการยืนยันแล้ว",
+  "Open requests": "คำขอที่เปิดอยู่",
+  "Waiting for payment or confirmation": "รอชำระเงินหรือยืนยัน",
+  "Recent activity": "รายการล่าสุด",
+  "Every payment has a story.": "ทุกการจ่ายมีประวัติ",
+  "View all": "ดูทั้งหมด",
+  "A fresh start": "เริ่มต้นใหม่",
+  "Your payments will appear here after your first transaction.":
+    "รายการจะปรากฏที่นี่หลังจากทำธุรกรรมครั้งแรก",
+  "Make your first payment": "เริ่มจ่ายเงินครั้งแรก",
+  "Only Ethereum-verified payments are marked confirmed. Overview totals cover your latest 500 payments.":
+    "เฉพาะรายการที่ตรวจสอบกับ Ethereum แล้วจึงแสดงว่ายืนยัน ยอดภาพรวมครอบคลุม 500 รายการล่าสุด",
+  "Send a payment": "ส่งเงิน",
+  "SEND WITH CONFIDENCE": "ส่งเงินอย่างมั่นใจ",
+  "A clear review before anything leaves your wallet.":
+    "ตรวจสอบให้ชัดก่อนเงินออกจากกระเป๋า",
+  "A SIMPLE WAY TO GET PAID": "รับเงินได้ง่ายขึ้น",
+  "One link. All the details. Ready to share.":
+    "ลิงก์เดียว รายละเอียดครบ พร้อมแชร์",
+  "New request": "สร้างคำขอ",
+  "Your profile": "โปรไฟล์ของคุณ",
+  "The details that make your account yours.": "ข้อมูลที่เป็นตัวคุณบนบัญชีนี้",
+  Profile: "โปรไฟล์",
+  "Account security": "ความปลอดภัยของบัญชี",
+  "Clear boundaries. Control stays with you.": "ขอบเขตชัดเจน คุณยังควบคุมเอง",
+  "Google protects your sign-in": "Google ช่วยปกป้องการเข้าสู่ระบบ",
+  "Your ChainPay session expires after five days. Enable two-step verification in your Google account for stronger sign-in protection.":
+    "เซสชัน ChainPay หมดอายุในห้าวัน เปิดการยืนยันสองขั้นตอนในบัญชี Google เพื่อความปลอดภัยยิ่งขึ้น",
+  "Manage Google security ↗": "จัดการความปลอดภัย Google ↗",
+  "Your keys never leave your wallet": "กุญแจไม่ออกจากกระเป๋าของคุณ",
+  "ChainPay never stores private keys or seed phrases. Wallet signatures prove ownership, and MetaMask approves each payment.":
+    "ChainPay ไม่เก็บกุญแจส่วนตัวหรือ seed phrase การเซ็นยืนยันความเป็นเจ้าของ และ MetaMask อนุมัติการจ่ายแต่ละครั้ง",
+  "Manage verified wallets →": "จัดการกระเป๋าที่ยืนยันแล้ว →",
+  "This session": "เซสชันนี้",
+  "Sign out to remove the ChainPay session from this browser.":
+    "ออกจากระบบเพื่อลบเซสชัน ChainPay จากเบราว์เซอร์นี้",
+
+  "Loading your account…": "กำลังโหลดบัญชี…",
+  "Loading payment requests…": "กำลังโหลดคำขอรับชำระเงิน…",
+  "Loading verified wallets…": "กำลังโหลดกระเป๋าที่ยืนยันแล้ว…",
+  "Loading request…": "กำลังโหลดคำขอ…",
+  "Loading activity…": "กำลังโหลดประวัติ…",
+  "Loading wallets…": "กำลังโหลดกระเป๋า…",
+  "Loading contacts…": "กำลังโหลดผู้ติดต่อ…",
+  "Preparing your payment…": "กำลังเตรียมรายการชำระเงิน…",
+  "Saving your submitted transaction…": "กำลังบันทึกธุรกรรม…",
+  "Waiting for MetaMask…": "กำลังรอ MetaMask…",
+  "Review payment": "ตรวจสอบรายการ",
+  "Confirm & pay": "ยืนยันและจ่าย",
+  "Retry saving transaction": "ลองบันทึกธุรกรรมอีกครั้ง",
+  "Recover a submitted payment": "กู้คืนรายการที่ส่งแล้ว",
+  "Where are we sending?": "ต้องการส่งเงินไปที่ไหน?",
+  "A moment to double-check.": "ตรวจสอบอีกครั้งก่อนจ่าย",
+  "Transaction submitted": "ส่งธุรกรรมแล้ว",
+  "01 / PAYMENT DETAILS": "01 / รายละเอียดการชำระเงิน",
+  "02 / REVIEW": "02 / ตรวจสอบ",
+  "Available on Sepolia:": "ยอดคงเหลือบน Sepolia:",
+  "Your transaction has been broadcast. Save it to track confirmation.":
+    "ส่งธุรกรรมแล้ว บันทึกเพื่อติดตามการยืนยัน",
+  Explorer: "ตัวสำรวจธุรกรรม",
+  From: "จาก",
+  To: "ถึง",
+  Network: "เครือข่าย",
+  "Estimated network fee": "ค่าธรรมเนียมโดยประมาณ",
+  "Estimated total": "ยอดรวมโดยประมาณ",
+  For: "สำหรับ",
+  "Private note": "บันทึกส่วนตัว",
+  "Fee includes a 20% estimate buffer. MetaMask shows the final fee. Confirm the recipient carefully; transfers cannot be undone.":
+    "ค่าธรรมเนียมเผื่อไว้ 20% โดยประมาณ MetaMask จะแสดงยอดจริง ตรวจสอบผู้รับให้ดี เพราะย้อนรายการไม่ได้",
+  "Wallet changed. Go back and review again.":
+    "กระเป๋าเปลี่ยนไป โปรดย้อนกลับและตรวจสอบอีกครั้ง",
+  Back: "กลับ",
+  "Saved contact": "ผู้ติดต่อที่บันทึกไว้",
+  "Choose a contact": "เลือกผู้ติดต่อ",
+  "Recipient wallet": "กระเป๋าผู้รับ",
+  "Amount · ETH": "จำนวนเงิน · ETH",
+  "Sepolia test ETH only. Network fee is calculated in the next step.":
+    "ใช้ ETH ทดสอบบน Sepolia เท่านั้น ค่าธรรมเนียมจะคำนวณในขั้นตอนถัดไป",
+  "Payment title (optional)": "หัวข้อการจ่าย (ไม่บังคับ)",
+  "What’s this payment for?": "จ่ายค่าอะไร?",
+  "Private note (optional)": "บันทึกส่วนตัว (ไม่บังคับ)",
+  "Just for your records": "สำหรับบันทึกของคุณ",
+  "Your wallet signs. Ethereum settles. ChainPay verifies.":
+    "กระเป๋าของคุณเซ็น Ethereum ดำเนินรายการ ChainPay ตรวจสอบ",
+  "Wallet not verified yet?": "ยังไม่ได้ยืนยันกระเป๋า?",
+  "Manage wallets": "จัดการกระเป๋า",
+  "Connect your wallet and switch to Ethereum Sepolia.":
+    "เชื่อมกระเป๋าและเปลี่ยนไป Ethereum Sepolia",
+  "Your wallet needs enough ETH for this payment and its estimated network fee.":
+    "กระเป๋าต้องมี ETH เพียงพอสำหรับยอดเงินและค่าธรรมเนียมโดยประมาณ",
+  "Your transaction was already broadcast. Retry saving; do not pay again.":
+    "ส่งธุรกรรมแล้ว โปรดลองบันทึกใหม่ อย่าจ่ายซ้ำ",
+  "Your wallet or network changed. Go back and review the payment again.":
+    "กระเป๋าหรือเครือข่ายเปลี่ยน โปรดย้อนกลับและตรวจสอบอีกครั้ง",
+  "Your review expired. Go back and prepare a new review.":
+    "รายการตรวจสอบหมดเวลา โปรดย้อนกลับและเริ่มใหม่",
+  "This request is no longer available for payment.":
+    "คำขอนี้ไม่พร้อมรับชำระเงินแล้ว",
+  "Keep this transaction hash until it has been saved.":
+    "เก็บ hash ธุรกรรมนี้ไว้จนกว่าจะบันทึกสำเร็จ",
+  "No unsaved transaction in this tab.": "ไม่มีธุรกรรมที่ยังไม่บันทึกในแท็บนี้",
+  "Could not recover the transaction from this tab.":
+    "กู้คืนธุรกรรมจากแท็บนี้ไม่ได้",
+
+  "Good things start with a request": "เริ่มต้นด้วยคำขอรับชำระเงิน",
+  "Create a payment link, share it with anyone, and follow the payment here.":
+    "สร้างลิงก์ แชร์ให้ใครก็ได้ แล้วติดตามการชำระเงินที่นี่",
+  "Create a request": "สร้างคำขอ",
+  "Payment request": "คำขอรับชำระเงิน",
+  "No expiration": "ไม่หมดอายุ",
+  "Payment request created": "สร้างคำขอแล้ว",
+  "First, add a verified wallet": "เพิ่มกระเป๋าที่ยืนยันแล้วก่อน",
+  "Your payment request needs a wallet that belongs to you.":
+    "คำขอต้องใช้กระเป๋าที่เป็นของคุณ",
+  "What’s the payment for?": "ขอรับเงินค่าอะไร?",
+  "e.g. Website design": "เช่น ออกแบบเว็บไซต์",
+  "Description (optional)": "รายละเอียด (ไม่บังคับ)",
+  "The title and description are visible to anyone with the link.":
+    "ทุกคนที่มีลิงก์จะเห็นหัวข้อและรายละเอียด",
+  "Give your payer a little context": "อธิบายให้ผู้จ่ายเข้าใจสักนิด",
+  "Receive into": "รับเงินเข้ากระเป๋า",
+  "Choose a verified wallet": "เลือกกระเป๋าที่ยืนยันแล้ว",
+  "Primary · ": "หลัก · ",
+  "Expires after": "หมดอายุหลัง",
+  "1 hour": "1 ชั่วโมง",
+  "24 hours": "24 ชั่วโมง",
+  "7 days": "7 วัน",
+  Availability: "สถานะคำขอ",
+  "Ready to pay": "พร้อมรับชำระ",
+  "Save as draft": "บันทึกเป็นฉบับร่าง",
+  "Creating request…": "กำลังสร้างคำขอ…",
+  "Request updated": "อัปเดตคำขอแล้ว",
+  "Request not found.": "ไม่พบคำขอ",
+  "PAYMENT REQUEST": "คำขอรับชำระเงิน",
+  "Scan to open the payment request": "สแกนเพื่อเปิดคำขอรับชำระเงิน",
+  "Scan to view this request. No ChainPay account needed.":
+    "สแกนเพื่อดูคำขอ ไม่ต้องมีบัญชี ChainPay",
+  "Public payment URL": "ลิงก์ชำระเงินสาธารณะ",
+  Link: "ลิงก์",
+  "Open public page": "เปิดหน้าสาธารณะ",
+  Expiration: "วันหมดอายุ",
+  "Publish request": "เผยแพร่คำขอ",
+  "Cancel this payment request?": "ยกเลิกคำขอนี้หรือไม่?",
+  "The shared link will no longer offer payment. A transaction already signed in a wallet cannot be recalled.":
+    "ลิงก์ที่แชร์จะจ่ายเงินไม่ได้อีก แต่ธุรกรรมที่เซ็นในกระเป๋าแล้วเรียกคืนไม่ได้",
+  "Cancel request": "ยกเลิกคำขอ",
+  "Payment submitted. Open its receipt from Activity to verify confirmation.":
+    "ส่งรายการแล้ว เปิดใบเสร็จจากประวัติเพื่อตรวจสอบการยืนยัน",
+  active: "ใช้งานอยู่",
+  pending: "รอยืนยัน",
+  draft: "ฉบับร่าง",
+  cancelled: "ยกเลิกแล้ว",
+  expired: "หมดอายุ",
+  paid: "ชำระแล้ว",
+  confirmed: "ยืนยันแล้ว",
+  failed: "ไม่สำเร็จ",
+  primary: "กระเป๋าหลัก",
+  verified: "ยืนยันแล้ว",
+  all: "ทั้งหมด",
+  sent: "ส่งแล้ว",
+  received: "รับแล้ว",
+  "Filter activity": "กรองประวัติ",
+  "Search transactions": "ค้นหาธุรกรรม",
+  "Search payments…": "ค้นหารายการชำระเงิน…",
+  Payment: "การชำระเงิน",
+  "No matching payments": "ไม่พบรายการที่ตรงกัน",
+  "Your story starts with a payment": "ประวัติของคุณเริ่มจากการจ่ายครั้งแรก",
+  "Your ChainPay payments will appear here, ready whenever you sign in.":
+    "รายการชำระเงินของคุณจะแสดงที่นี่ทุกครั้งที่เข้าสู่ระบบ",
+  "Showing up to 500 recent payments. Network fees are excluded from totals.":
+    "แสดงสูงสุด 500 รายการล่าสุด ยอดรวมไม่รวมค่าธรรมเนียมเครือข่าย",
+  "EVERY PAYMENT, IN ONE PLACE": "ทุกการจ่ายอยู่ในที่เดียว",
+  "A clear record of what you’ve sent and received.":
+    "ดูประวัติเงินเข้าออกได้ชัดเจน",
+  "CONNECTED, SECURELY": "เชื่อมต่ออย่างปลอดภัย",
+  "Your wallets": "กระเป๋าของคุณ",
+  "Keep your keys. Connect your accounts.":
+    "เก็บกุญแจไว้กับคุณ แล้วเชื่อมบัญชีเข้าด้วยกัน",
+  "PAY PEOPLE, NOT ADDRESSES": "จ่ายให้คน ไม่ใช่แค่ที่อยู่",
+  "Familiar names for the wallets you pay most.":
+    "บันทึกชื่อคนที่คุณจ่ายให้บ่อย",
+  "CREATE A PAYMENT LINK": "สร้างลิงก์ชำระเงิน",
+  "Request a payment": "ขอรับชำระเงิน",
+  "A little context makes getting paid a little easier.":
+    "เพิ่มรายละเอียดสักนิด รับเงินได้ง่ายขึ้น",
+  "Request details": "รายละเอียดคำขอ",
+  "Share it. Track it. Keep things clear.": "แชร์ ติดตาม และดูทุกอย่างให้ชัด",
+  "No account needed": "ไม่ต้องมีบัญชี",
+  "Your wallet. Your control. · Sepolia test ETH only":
+    "กระเป๋าของคุณ ควบคุมเอง · ใช้ ETH ทดสอบบน Sepolia เท่านั้น",
+  "Non-custodial payments · Ethereum Sepolia":
+    "คุณดูแลเงินเอง · Ethereum Sepolia",
+  "Contact saved": "บันทึกผู้ติดต่อแล้ว",
+  "Contact removed": "ลบผู้ติดต่อแล้ว",
+  "Edit contact": "แก้ไขผู้ติดต่อ",
+  "Add a familiar face": "เพิ่มผู้ติดต่อ",
+  Name: "ชื่อ",
+  "Contact name": "ชื่อผู้ติดต่อ",
+  "Ethereum wallet": "กระเป๋า Ethereum",
+  "Label (optional)": "ป้ายกำกับ (ไม่บังคับ)",
+  "e.g. Designer": "เช่น นักออกแบบ",
+  "Saving…": "กำลังบันทึก…",
+  "Save contact": "บันทึกผู้ติดต่อ",
+  "Cancel editing": "ยกเลิกการแก้ไข",
+  "Your contacts": "ผู้ติดต่อของคุณ",
+  "Keep your people close": "เก็บผู้ติดต่อไว้ใกล้มือ",
+  "Save a wallet address for quicker, more familiar payments.":
+    "บันทึกที่อยู่กระเป๋าเพื่อจ่ายได้เร็วและคุ้นเคยขึ้น",
+  "Pay {name}": "จ่ายเงินให้ {name}",
+  "Edit {name}": "แก้ไข {name}",
+  "Remove {name}": "ลบ {name}",
+  "Remove {name}?": "ลบ {name} หรือไม่?",
+  "You can add this contact again later.": "เพิ่มผู้ติดต่อนี้ใหม่ภายหลังได้",
+  "Profile updated": "อัปเดตโปรไฟล์แล้ว",
+  "Display name": "ชื่อที่แสดง",
+  "This name appears on your public payment requests.":
+    "ชื่อนี้จะแสดงบนคำขอชำระเงินสาธารณะของคุณ",
+  "Google account": "บัญชี Google",
+  "Managed by your Google account.": "จัดการผ่านบัญชี Google ของคุณ",
+  "Account type": "ประเภทบัญชี",
+  Personal: "ส่วนตัว",
+  Merchant: "ร้านค้า",
+  "Save profile": "บันทึกโปรไฟล์",
+  "MetaMask was not detected. Install it or open this page in the MetaMask browser.":
+    "ไม่พบ MetaMask โปรดติดตั้งหรือเปิดหน้านี้ในเบราว์เซอร์ MetaMask",
+  "Connecting wallet…": "กำลังเชื่อมกระเป๋า…",
+  "Connect MetaMask": "เชื่อมต่อ MetaMask",
+  "Switching…": "กำลังเปลี่ยนเครือข่าย…",
+  "Switch to Sepolia": "เปลี่ยนไป Sepolia",
+  Disconnect: "ตัดการเชื่อมต่อ",
+  "Loading balance…": "กำลังโหลดยอดเงิน…",
+  "Balance unavailable": "ดูยอดเงินไม่ได้",
+  "Wallet removed": "ลบกระเป๋าแล้ว",
+  "Primary wallet updated": "อัปเดตกระเป๋าหลักแล้ว",
+  "Wallet ownership verified": "ยืนยันความเป็นเจ้าของกระเป๋าแล้ว",
+  "Connect your wallet": "เชื่อมต่อกระเป๋า",
+  "A connection lets you pay. A signature proves the wallet is yours.":
+    "เชื่อมต่อเพื่อจ่าย เซ็นข้อความเพื่อยืนยันว่ากระเป๋าเป็นของคุณ",
+  "Verify this wallet to link it to your ChainPay account. This signature does not move funds.":
+    "ยืนยันกระเป๋าเพื่อผูกกับบัญชี ChainPay การเซ็นนี้ไม่มีการโอนเงิน",
+  "Verifying wallet…": "กำลังยืนยันกระเป๋า…",
+  "Verify ownership": "ยืนยันความเป็นเจ้าของ",
+  "Your wallets belong here": "กระเป๋าของคุณจะแสดงที่นี่",
+  "Connect MetaMask and sign a verification message to add your first wallet.":
+    "เชื่อม MetaMask แล้วเซ็นข้อความเพื่อเพิ่มกระเป๋าแรก",
+  "Verified · Ethereum Sepolia": "ยืนยันแล้ว · Ethereum Sepolia",
+  Address: "ที่อยู่",
+  "Set primary": "ตั้งเป็นกระเป๋าหลัก",
+  Remove: "ลบ",
+  "Remove this wallet?": "ลบกระเป๋านี้หรือไม่?",
+  "Your payment history will stay available. Open requests must be resolved first.":
+    "ประวัติยังอยู่ แต่ต้องจัดการคำขอที่เปิดอยู่ก่อน",
+  "Keep it": "เก็บไว้",
+  "Please wait…": "กรุณารอสักครู่…",
+  Confirm: "ยืนยัน",
+  Copy: "คัดลอก",
+  "Copied to clipboard": "คัดลอกแล้ว",
+  "Copy is unavailable. Select and copy the text manually.":
+    "คัดลอกอัตโนมัติไม่ได้ โปรดเลือกข้อความแล้วคัดลอกเอง",
+  "Loading payment receipt…": "กำลังโหลดใบเสร็จ…",
+  "Receipt unavailable": "ดูใบเสร็จไม่ได้",
+  "Try again": "ลองอีกครั้ง",
+  "PAYMENT RECEIPT": "ใบเสร็จชำระเงิน",
+  "Payment confirmed.": "ยืนยันการชำระเงินแล้ว",
+  "Payment failed.": "การชำระเงินไม่สำเร็จ",
+  "On its way.": "กำลังดำเนินการ",
+  "Verified independently on Ethereum.": "ตรวจสอบกับ Ethereum แล้ว",
+  "Ethereum reverted this transaction. Network fees may still apply.":
+    "Ethereum ยกเลิกธุรกรรมนี้ แต่อาจยังมีค่าธรรมเนียมเครือข่าย",
+  "Submitted to Ethereum. Waiting for server verification.":
+    "ส่งไปยัง Ethereum แล้ว กำลังรอการตรวจสอบจากเซิร์ฟเวอร์",
+  Transaction: "ธุรกรรม",
+  Block: "บล็อก",
+  "Confirmed at": "ยืนยันเมื่อ",
+  "Awaiting confirmation": "รอการยืนยัน",
+  "Not confirmed": "ยังไม่ยืนยัน",
+  "Verification is temporarily unavailable. Your payment has not been marked confirmed.":
+    "ตรวจสอบชั่วคราวไม่ได้ รายการนี้ยังไม่ถูกระบุว่ายืนยันแล้ว",
+  "View on explorer": "ดูในตัวสำรวจธุรกรรม",
+  "Transaction hash": "hash ธุรกรรม",
+  Recheck: "ตรวจสอบอีกครั้ง",
+  "Use a ChainPay payment link from this site.":
+    "โปรดใช้ลิงก์ชำระเงิน ChainPay จากเว็บไซต์นี้",
+  "Use your phone’s camera to scan the QR, or paste the link below.":
+    "ใช้กล้องโทรศัพท์สแกน QR หรือวางลิงก์ด้านล่าง",
+  "Camera scanning stopped. Paste a payment link instead.":
+    "การสแกนหยุดลง โปรดวางลิงก์ชำระเงินแทน",
+  "Camera unavailable. Allow camera access or paste a payment link.":
+    "ใช้กล้องไม่ได้ โปรดอนุญาตการเข้าถึงหรือวางลิงก์แทน",
+  "Open a payment link": "เปิดลิงก์ชำระเงิน",
+  "Close scanner": "ปิดตัวสแกน",
+  "Use camera": "ใช้กล้อง",
+  "Or paste a ChainPay payment link": "หรือวางลิงก์ชำระเงิน ChainPay",
+  "Open request": "เปิดคำขอ",
+  "No unsaved transaction was found in this tab.":
+    "ไม่พบธุรกรรมที่ยังไม่บันทึกในแท็บนี้",
+  "Recovering payment…": "กำลังกู้คืนรายการ…",
+  "Recover my submitted payment": "กู้คืนรายการที่ส่งแล้ว",
+  "Opening payment request…": "กำลังเปิดคำขอชำระเงิน…",
+  "Request unavailable": "ไม่สามารถเปิดคำขอได้",
+  "This payment request could not be found.": "ไม่พบคำขอชำระเงินนี้",
+  "REQUESTED BY": "ขอรับโดย",
+  "A CHAINPAY USER": "ผู้ใช้ ChainPay",
+  "Verified receiving wallet · Ethereum Sepolia":
+    "กระเป๋าผู้รับยืนยันแล้ว · Ethereum Sepolia",
+  "This request has been paid.": "คำขอนี้ชำระแล้ว",
+  "A payment is being verified.": "กำลังตรวจสอบการชำระเงิน",
+  "This request is {status}.": "คำขอนี้{status}",
+  "Please wait while the submitted payment is confirmed. Do not send another payment.":
+    "โปรดรอการยืนยันรายการ อย่าส่งเงินซ้ำ",
+  "Contact the requester if you need a new payment link.":
+    "ติดต่อผู้ขอรับเงินหากต้องการลิงก์ใหม่",
+  Expires: "หมดอายุ",
+  "Welcome, {name}.": "ยินดีต้อนรับ {name}",
+  "Welcome.": "ยินดีต้อนรับ",
+  There: "คุณ",
+  "404 / NOTHING HERE": "404 / ไม่พบหน้านี้",
+  "This link doesn’t lead anywhere.": "ลิงก์นี้ไม่พาไปยังหน้าที่ต้องการ",
+  "Check the address or return to ChainPay.":
+    "ตรวจสอบที่อยู่หรือกลับไปหน้าแรกของ ChainPay",
+  "We couldn’t load this page.": "โหลดหน้านี้ไม่ได้",
+  "Please try again. If this is a new installation, check the service configuration in the setup guide.":
+    "โปรดลองอีกครั้ง หากเพิ่งติดตั้ง โปรดตรวจการตั้งค่าบริการในคู่มือ",
+  "Test ETH only": "ใช้ ETH ทดสอบเท่านั้น",
+  "Sepolia testnet": "เครือข่ายทดสอบ Sepolia",
+  "Enter a valid Ethereum address.": "กรอกที่อยู่ Ethereum ที่ถูกต้อง",
+  "Use a decimal amount with up to 18 decimal places.":
+    "กรอกจำนวนเงินที่มีทศนิยมไม่เกิน 18 ตำแหน่ง",
+  "Amount must be greater than zero.": "จำนวนเงินต้องมากกว่าศูนย์",
+  "Invalid transaction hash.": "hash ธุรกรรมไม่ถูกต้อง",
+  "Invalid input": "ข้อมูลไม่ถูกต้อง",
+  "Too small: expected string to have >=1 characters": "กรุณากรอกข้อมูล",
+  "Too big: expected string to have <=80 characters":
+    "กรอกได้ไม่เกิน 80 ตัวอักษร",
+  "Too big: expected string to have <=100 characters":
+    "กรอกได้ไม่เกิน 100 ตัวอักษร",
+  "Too big: expected string to have <=500 characters":
+    "กรอกได้ไม่เกิน 500 ตัวอักษร",
+  "Too big: expected string to have <=1000 characters":
+    "กรอกได้ไม่เกิน 1,000 ตัวอักษร",
+  "Invalid UUID": "ข้อมูลอ้างอิงไม่ถูกต้อง",
+  "Continue with Google": "ดำเนินการต่อด้วย Google",
+  "Create payment request": "สร้างคำขอรับชำระเงิน",
+  "Change language": "เปลี่ยนภาษา",
+  "Switch to English": "เปลี่ยนเป็นภาษาอังกฤษ",
+  "Switch to Thai": "เปลี่ยนเป็นภาษาไทย",
+  "ChainPay home": "หน้าแรกของ ChainPay",
+  "Footer product": "ลิงก์ผลิตภัณฑ์ด้านล่าง",
+  "Resources and support": "ข้อมูลและความช่วยเหลือ",
+  "Your account": "บัญชีของคุณ",
+  "Something went wrong. Please try again.": "เกิดข้อผิดพลาด โปรดลองอีกครั้ง",
+  "The request was cancelled. You can try again when ready.":
+    "ยกเลิกรายการแล้ว ลองใหม่ได้เมื่อพร้อม",
+  "Your wallet needs enough ETH for the payment and network fee.":
+    "กระเป๋าต้องมี ETH เพียงพอสำหรับยอดเงินและค่าธรรมเนียม",
+  "Your wallet could not complete this request. Check the network and balance, then try again.":
+    "กระเป๋าทำรายการไม่สำเร็จ ตรวจสอบเครือข่ายและยอดเงินแล้วลองอีกครั้ง",
+  "This challenge expired or was already used. Request a new signature.":
+    "คำขอยืนยันหมดอายุหรือถูกใช้แล้ว โปรดขอเซ็นข้อความใหม่",
+  "The signature does not match this wallet.": "ลายเซ็นไม่ตรงกับกระเป๋านี้",
+  "This wallet is already linked to another account.":
+    "กระเป๋านี้ผูกกับบัญชีอื่นแล้ว",
+  "Wallet not found.": "ไม่พบกระเป๋า",
+  "Cancel or resolve open requests for this wallet first.":
+    "ยกเลิกหรือจัดการคำขอที่เปิดอยู่ของกระเป๋านี้ก่อน",
+  "Contact not found.": "ไม่พบผู้ติดต่อ",
+  "Payment request not found.": "ไม่พบคำขอรับชำระเงิน",
+  "Choose one of your verified wallets.": "เลือกกระเป๋าของคุณที่ยืนยันแล้ว",
+  "This request cannot be changed in its current state.":
+    "เปลี่ยนคำขอในสถานะนี้ไม่ได้",
+  "Google sign-in could not be verified. Please sign in again.":
+    "ยืนยันการเข้าสู่ระบบ Google ไม่ได้ โปรดเข้าสู่ระบบใหม่",
+  "Please complete a fresh Google sign-in.": "โปรดเข้าสู่ระบบ Google ใหม่",
+  "Your session has expired. Please sign in again.":
+    "เซสชันหมดอายุ โปรดเข้าสู่ระบบใหม่",
+  "Too many attempts. Please wait a minute.":
+    "ลองหลายครั้งเกินไป โปรดรอสักครู่",
+  "This payment request is not available for payment.":
+    "คำขอนี้ไม่พร้อมรับชำระเงิน",
+  "Sign in to send a payment.": "เข้าสู่ระบบก่อนส่งเงิน",
+  "Verify this wallet before sending payments.": "ยืนยันกระเป๋านี้ก่อนส่งเงิน",
+  "Choose a recipient other than your sending wallet.":
+    "เลือกผู้รับที่ไม่ใช่กระเป๋าที่ใช้ส่ง",
+  "The payment contract cannot be a recipient.":
+    "ใช้สัญญาชำระเงินเป็นผู้รับไม่ได้",
+  "Invalid payment submission.": "ข้อมูลการชำระเงินไม่ถูกต้อง",
+  "A different transaction is already recorded for this payment.":
+    "การชำระเงินนี้มีธุรกรรมอื่นบันทึกไว้แล้ว",
+  "Ethereum has not seen this transaction yet. Retry saving in a moment.":
+    "Ethereum ยังไม่พบธุรกรรมนี้ โปรดลองบันทึกอีกครั้งในอีกสักครู่",
+  "The Ethereum connection is on the wrong network.":
+    "การเชื่อมต่อ Ethereum อยู่ผิดเครือข่าย",
+  "Transaction not found.": "ไม่พบธุรกรรม",
+  "The transaction does not match this payment.":
+    "ธุรกรรมไม่ตรงกับรายการชำระเงินนี้",
+  "The contract payment details do not match.":
+    "รายละเอียดในสัญญาชำระเงินไม่ตรงกัน",
+  "Ethereum did not emit the expected payment event.":
+    "Ethereum ไม่พบเหตุการณ์ชำระเงินที่คาดไว้",
+  "We could not complete this request. Please try again.":
+    "ทำรายการไม่สำเร็จ โปรดลองอีกครั้ง",
+};

@@ -1,3 +1,4 @@
+import { T } from "@/i18n";
 import { ArrowRight, Plus } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { TextEmerge } from "@/components/motion/text-emerge";
@@ -12,7 +13,9 @@ export function FinalCta() {
         aria-labelledby="help-heading"
       >
         <div id="help-heading">
-          <p className="eyebrow">A FEW THINGS TO KNOW</p>
+          <p className="eyebrow">
+            <T value="A FEW THINGS TO KNOW" />
+          </p>
           <TextEmerge lines={["Clear from the start."]} />
         </div>
         <div className="cp-faq">
@@ -36,10 +39,12 @@ export function FinalCta() {
           ].map(([question, answer]) => (
             <details key={question}>
               <summary>
-                {question}
+                <T value={question} />
                 <Plus size={18} />
               </summary>
-              <p>{answer}</p>
+              <p>
+                <T value={answer} />
+              </p>
             </details>
           ))}
         </div>
@@ -49,23 +54,28 @@ export function FinalCta() {
         aria-labelledby="final-heading"
       >
         <div className="cp-final-orbit" aria-hidden="true" />
-        <p className="eyebrow">YOUR NEXT PAYMENT, SIMPLIFIED</p>
+        <p className="eyebrow">
+          <T value="YOUR NEXT PAYMENT, SIMPLIFIED" />
+        </p>
         <div id="final-heading">
           <TextEmerge lines={["Less friction.", "More connection."]} />
         </div>
         <Reveal>
           <p>
-            Create your account, connect a wallet, and explore
-            <br className="cp-desktop-break" /> a more thoughtful way to pay.
+            <T value="Create your account, connect a wallet, and explore" />
+            <br className="cp-desktop-break" />{" "}
+            <T value="a more thoughtful way to pay." />
           </p>
           <div className="cp-hero-buttons">
             <SessionCta />
             <a className="text-link" href="#how-it-works">
-              Learn how it works
+              <T value="Learn how it works" />
               <ArrowRight size={16} />
             </a>
           </div>
-          <small>Ethereum Sepolia · Test ETH only</small>
+          <small>
+            <T value="Ethereum Sepolia · Test ETH only" />
+          </small>
         </Reveal>
       </section>
     </>

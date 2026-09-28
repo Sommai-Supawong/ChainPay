@@ -6,7 +6,14 @@ import { injected } from "wagmi/connectors";
 import { MotionConfig } from "motion/react";
 import { Toaster } from "sonner";
 import { chain } from "@/lib/blockchain/config";
-export function Providers({ children }: { children: React.ReactNode }) {
+import { LanguageProvider, type Language } from "@/i18n";
+export function Providers({
+  children,
+  initialLanguage,
+}: {
+  children: React.ReactNode;
+  initialLanguage: Language;
+}) {
   const [query] = useState(
     () =>
       new QueryClient({
@@ -24,13 +31,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
     }),
   );
   return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={query}>
-        <MotionConfig reducedMotion="user">
-          {children}
-          <Toaster theme="dark" richColors closeButton />
-        </MotionConfig>
-      </QueryClientProvider>
-    </WagmiProvider>
+    <LanguageProvider initialLanguage={initialLanguage}>
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={query}>
+          <MotionConfig reducedMotion="user">
+            {children}
+            <Toaster theme="dark" richColors closeButton />
+          </MotionConfig>
+        </QueryClientProvider>
+      </WagmiProvider>
+    </LanguageProvider>
   );
 }

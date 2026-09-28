@@ -1,3 +1,4 @@
+import { T } from "@/i18n";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Brand } from "@/components/layout/brand";
@@ -18,17 +19,21 @@ export function SiteFooter() {
         <div className="cp-footer-brand">
           <Brand />
           <p>
-            Modern Web3 payments.
+            <T value="Modern Web3 payments." />
             <br />
-            Transparent settlement.
-            <br />A simpler everyday experience.
+            <T value="Transparent settlement." />
+            <br />
+            <T value="A simpler everyday experience." />
           </p>
           <span className="cp-network-label">
-            <span className="network-dot" /> Ethereum Sepolia Testnet
+            <span className="network-dot" />{" "}
+            <T value="Ethereum Sepolia Testnet" />
           </span>
         </div>
-        <nav aria-label="Footer product">
-          <h2>Product</h2>
+        <nav aria-labelledby="footer-product-heading">
+          <h2 id="footer-product-heading">
+            <T value="Product" />
+          </h2>
           {[
             ["/dashboard", "Dashboard"],
             ["/pay", "Send payment"],
@@ -37,29 +42,44 @@ export function SiteFooter() {
             ["/wallets", "Wallets"],
           ].map(([href, label]) => (
             <Link key={href} href={href}>
-              {label}
+              <T value={label} />
             </Link>
           ))}
         </nav>
-        <nav aria-label="Resources and support">
-          <h2>Resources &amp; support</h2>
-          <a href="#how-it-works">Getting started</a>
-          <a href="#built-for-trust">Security &amp; verification</a>
-          <a href="#help">Help &amp; FAQs</a>
+        <nav aria-labelledby="footer-resources-heading">
+          <h2 id="footer-resources-heading">
+            <T value="Resources & support" />
+          </h2>
+          <a href="#how-it-works">
+            <T value="Getting started" />
+          </a>
+          <a href="#built-for-trust">
+            <T value="Security & verification" />
+          </a>
+          <a href="#help">
+            <T value="Help & FAQs" />
+          </a>
           {address && (
             <a
               href={explorerAddress(address)}
               target="_blank"
               rel="noopener noreferrer"
             >
-              Smart contract <ArrowUpRight size={13} />
+              <T value="Smart contract" />
+              <ArrowUpRight size={13} />
             </a>
           )}
         </nav>
         <div className="cp-contract-info">
-          <h2>On the network</h2>
-          <span>Ethereum Sepolia</span>
-          <p>Chain ID · 11155111</p>
+          <h2>
+            <T value="On the network" />
+          </h2>
+          <span>
+            <T value="Ethereum Sepolia" />
+          </span>
+          <p>
+            <T value="Chain ID · 11155111" />
+          </p>
           {address ? (
             <>
               <div className="cp-contract-address">
@@ -72,21 +92,30 @@ export function SiteFooter() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                View contract
+                <T value="View contract" />
                 <ArrowUpRight size={14} />
               </a>
             </>
           ) : (
-            <p>Testnet payments only</p>
+            <p>
+              <T value="Testnet payments only" />
+            </p>
           )}
         </div>
       </div>
       <div className="cp-footer-bottom">
-        <span>© {new Date().getFullYear()} ChainPay</span>
         <span>
-          Designed &amp; Developed by <strong>Sommai Devcodejeng</strong>
+          © {new Date().getFullYear()} <T value="ChainPay" />
         </span>
-        <a href="#main">Back to top ↑</a>
+        <span>
+          <T value="Designed & Developed by" />
+          <strong>
+            <T value="Sommai Devcodejeng" />
+          </strong>
+        </span>
+        <a href="#main">
+          <T value="Back to top ↑" />
+        </a>
       </div>
     </footer>
   );

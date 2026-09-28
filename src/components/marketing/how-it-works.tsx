@@ -1,3 +1,4 @@
+import { T } from "@/i18n";
 import { LogIn, Fingerprint, ArrowUpRight, ReceiptText } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { TextEmerge } from "@/components/motion/text-emerge";
@@ -10,10 +11,12 @@ export function HowItWorks() {
       aria-labelledby="workflow-heading"
     >
       <div className="cp-centered-heading" id="workflow-heading">
-        <p className="eyebrow">FROM HELLO TO PAYMENT HISTORY</p>
+        <p className="eyebrow">
+          <T value="FROM HELLO TO PAYMENT HISTORY" />
+        </p>
         <TextEmerge lines={["Four steps. One simpler flow."]} />
         <p className="cp-section-intro">
-          Start with an account. Stay in control with your wallet.
+          <T value="Start with an account. Stay in control with your wallet." />
         </p>
       </div>
       <div className="cp-steps">
@@ -51,9 +54,15 @@ export function HowItWorks() {
                 </span>
                 <span className="cp-step-number">0{index + 1}</span>
               </div>
-              <p className="cp-step-label">{label}</p>
-              <h3>{title}</h3>
-              <p>{copy}</p>
+              <p className="cp-step-label">
+                <T value={label} />
+              </p>
+              <h3>
+                <T value={title} />
+              </h3>
+              <p>
+                <T value={copy} />
+              </p>
             </article>
           </Reveal>
         ))}

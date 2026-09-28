@@ -1,7 +1,9 @@
+import { T } from "@/i18n";
 import { notFound } from "next/navigation";
 import { Brand } from "@/components/layout/brand";
 import { Receipt } from "@/components/payment/receipt";
 import { hashSchema } from "@/lib/validation";
+import { LanguageToggle } from "@/components/layout/language-toggle";
 export default async function ReceiptPage({
   params,
 }: {
@@ -13,11 +15,14 @@ export default async function ReceiptPage({
     <div className="public-page">
       <header>
         <Brand />
+        <LanguageToggle />
       </header>
       <main id="main" className="public-content">
         <Receipt hash={parsed.data} />
       </main>
-      <footer>Non-custodial payments · Ethereum Sepolia</footer>
+      <footer>
+        <T value="Non-custodial payments · Ethereum Sepolia" />
+      </footer>
     </div>
   );
 }

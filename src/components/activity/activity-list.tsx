@@ -1,4 +1,5 @@
 "use client";
+import { T, useTranslation } from "@/i18n";
 import Link from "next/link";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -12,6 +13,7 @@ import {
 } from "@/components/ui/primitives";
 import type { ContactModel, TransactionModel } from "@/types/models";
 export function TransactionRow({ row }: { row: TransactionModel }) {
+  const t = useTranslation();
   return (
     <Link href={`/tx/${row.txHash}`} className="transaction-row">
       <span
@@ -24,9 +26,9 @@ export function TransactionRow({ row }: { row: TransactionModel }) {
         )}
       </span>
       <div className="transaction-description">
-        <strong>{row.title || "Payment"}</strong>
+        <strong>{row.title || t("Payment")}</strong>
         <span>
-          {row.direction === "received" ? "From" : "To"}{" "}
+          {t(row.direction === "received" ? "From" : "To")}{" "}
           {shortAddress(
             row.direction === "received" ? row.fromAddress : row.toAddress,
           )}
@@ -35,7 +37,7 @@ export function TransactionRow({ row }: { row: TransactionModel }) {
       <div className="transaction-value">
         <strong>
           {row.direction === "received" ? "+" : "−"}
-          {eth(row.amount)} ETH
+          {eth(row.amount)} <T value="ETH" />
         </strong>
         <StatusBadge status={row.status} />
       </div>
@@ -43,6 +45,7 @@ export function TransactionRow({ row }: { row: TransactionModel }) {
   );
 }
 export function ActivityList({ initial }: { initial?: TransactionModel[] }) {
+  const t = useTranslation();
   const [filter, setFilter] = useState("all"),
     [search, setSearch] = useState("");
   const query = useQuery({
@@ -67,7 +70,7 @@ export function ActivityList({ initial }: { initial?: TransactionModel[] }) {
   return (
     <div className="card">
       <div className="activity-toolbar">
-        <div className="filter-tabs" aria-label="Filter activity">
+        <div className="filter-tabs" aria-label={t("Filter activity")}>
           {["all", "sent", "received", "pending", "confirmed", "failed"].map(
             (value) => (
               <button
@@ -76,7 +79,7 @@ export function ActivityList({ initial }: { initial?: TransactionModel[] }) {
                 onClick={() => setFilter(value)}
                 aria-pressed={filter === value}
               >
-                {value}
+                {t(value)}
               </button>
             ),
           )}
@@ -84,8 +87,8 @@ export function ActivityList({ initial }: { initial?: TransactionModel[] }) {
         <label className="search-box">
           <Search size={17} />
           <input
-            aria-label="Search transactions"
-            placeholder="Search payments…"
+            aria-label={t("Search transactions")}
+            placeholder={t("Search payments…")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -95,7 +98,7 @@ export function ActivityList({ initial }: { initial?: TransactionModel[] }) {
         <LoadingState text="Loading activity…" />
       ) : query.error ? (
         <p className="field-error" role="alert">
-          {query.error.message}
+          {t(query.error.message)}
         </p>
       ) : rows?.length ? (
         rows.map((row) => <TransactionRow key={row.id} row={row} />)
@@ -112,8 +115,7 @@ export function ActivityList({ initial }: { initial?: TransactionModel[] }) {
         />
       )}
       <p className="small muted">
-        Showing up to 500 recent payments. Network fees are excluded from
-        totals.
+        <T value="Showing up to 500 recent payments. Network fees are excluded from totals." />
       </p>
     </div>
   );

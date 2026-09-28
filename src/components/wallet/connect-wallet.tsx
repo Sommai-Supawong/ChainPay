@@ -1,4 +1,5 @@
 "use client";
+import { T, useTranslation } from "@/i18n";
 import {
   useConnect,
   useConnectors,
@@ -13,6 +14,7 @@ import { chain } from "@/lib/blockchain/config";
 import { shortAddress } from "@/lib/utils";
 import { friendlyError } from "@/lib/client-api";
 export function ConnectWallet() {
+  const t = useTranslation();
   const { address, chainId, isConnected } = useConnection();
   const connectors = useConnectors();
   const connect = useConnect(),
@@ -33,12 +35,12 @@ export function ConnectWallet() {
               );
             await connect.mutateAsync({ connector });
           } catch (error) {
-            toast.error(friendlyError(error));
+            toast.error(t(friendlyError(error)));
           }
         }}
       >
         <Wallet size={17} />
-        {connect.isPending ? "Connecting wallet…" : "Connect MetaMask"}
+        {t(connect.isPending ? "Connecting wallet…" : "Connect MetaMask")}
       </Button>
     );
   return (
@@ -52,17 +54,19 @@ export function ConnectWallet() {
             try {
               await network.mutateAsync({ chainId: chain.id });
             } catch (error) {
-              toast.error(friendlyError(error));
+              toast.error(t(friendlyError(error)));
             }
           }}
         >
-          {network.isPending ? "Switching…" : "Switch to Sepolia"}
+          {t(network.isPending ? "Switching…" : "Switch to Sepolia")}
         </Button>
       ) : (
-        <span className="badge badge-success">Sepolia</span>
+        <span className="badge badge-success">
+          <T value="Sepolia" />
+        </span>
       )}
       <Button variant="ghost" size="sm" onClick={() => disconnect.mutate()}>
-        Disconnect
+        <T value="Disconnect" />
       </Button>
     </div>
   );

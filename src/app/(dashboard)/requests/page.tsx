@@ -1,3 +1,4 @@
+import { T } from "@/i18n";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { RequestList } from "@/components/request/request-manager";
@@ -14,7 +15,7 @@ export default function RequestsPage() {
           <Button asChild>
             <Link href="/request/new">
               <Plus size={17} />
-              New request
+              <T value="New request" />
             </Link>
           </Button>
         }

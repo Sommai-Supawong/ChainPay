@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import { calmEase, revealViewport } from "./reveal";
+import { useTranslation } from "@/i18n";
 
 export function TextEmerge({
   lines,
@@ -15,11 +16,12 @@ export function TextEmerge({
   delay?: number;
 }) {
   const reduced = useReducedMotion();
+  const t = useTranslation();
   const Heading = as === "h1" ? motion.h1 : motion.h2;
   return (
     <Heading
       className={className}
-      aria-label={lines.join(" ")}
+      aria-label={lines.map((line) => t(line)).join(" ")}
       initial="hidden"
       whileInView="visible"
       viewport={revealViewport}
@@ -49,7 +51,7 @@ export function TextEmerge({
           }}
           transition={{ duration: reduced ? 0 : 0.7, ease: calmEase }}
         >
-          {line}
+          {t(line)}
         </motion.span>
       ))}
     </Heading>

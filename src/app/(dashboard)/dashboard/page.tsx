@@ -1,3 +1,4 @@
+import { T } from "@/i18n";
 import Link from "next/link";
 import {
   ArrowUpRight,
@@ -39,16 +40,17 @@ export default async function DashboardPage() {
       totalAmount(confirmed.filter((t) => t.direction === "received")),
     );
   return (
-    <>
+    <div className="dashboard-page">
       <PageHeader
         eyebrow="YOUR MONEY, WITH MORE CLARITY"
-        title={`Welcome, ${user.displayName?.split(" ")[0] ?? "there"}.`}
+        title={user.displayName ? "Welcome, {name}." : "Welcome."}
+        titleValues={{ name: user.displayName?.split(" ")[0] ?? "" }}
         description="Here’s where everything comes together."
         action={
           <Button asChild>
             <Link href="/pay">
               <ArrowUpRight size={17} />
-              Send payment
+              <T value="Send payment" />
             </Link>
           </Button>
         }
@@ -56,7 +58,9 @@ export default async function DashboardPage() {
       <div className="dashboard-top">
         <GlassCard className="balance-card">
           <div className="card-heading">
-            <span className="mini-label">YOUR PRIMARY WALLET</span>
+            <span className="mini-label">
+              <T value="YOUR PRIMARY WALLET" />
+            </span>
             <Wallet size={21} />
           </div>
           {primary ? (
@@ -67,19 +71,22 @@ export default async function DashboardPage() {
               <div className="button-row">
                 <WalletAddress address={primary.address} />
                 <CopyButton value={primary.address} label="" />
-                <span className="badge badge-success">Verified</span>
+                <span className="badge badge-success">
+                  <T value="Verified" />
+                </span>
               </div>
             </>
           ) : (
             <>
-              <h2>A home for your wallet.</h2>
+              <h2>
+                <T value="A home for your wallet." />
+              </h2>
               <p className="muted">
-                Connect and verify MetaMask to see your balance and start
-                paying.
+                <T value="Connect and verify MetaMask to see your balance and start paying." />
               </p>
               <Button asChild variant="secondary">
                 <Link href="/wallets">
-                  Connect a wallet
+                  <T value="Connect a wallet" />
                   <ArrowUpRight size={16} />
                 </Link>
               </Button>
@@ -87,63 +94,80 @@ export default async function DashboardPage() {
           )}
           <div className="balance-bottom">
             <span className="network-dot" />
-            Ethereum Sepolia<span>Test ETH only</span>
+            <T value="Ethereum Sepolia" />
+            <span>
+              <T value="Test ETH only" />
+            </span>
           </div>
         </GlassCard>
         <GlassCard className="quick-actions">
-          <p className="eyebrow">MAKE YOUR NEXT MOVE</p>
-          <h2>What’s on your mind?</h2>
+          <p className="eyebrow">
+            <T value="MAKE YOUR NEXT MOVE" />
+          </p>
+          <h2>
+            <T value="What’s on your mind?" />
+          </h2>
           <div className="quick-action-grid">
             <Button asChild variant="secondary">
               <Link href="/pay">
                 <ArrowUpRight size={19} />
-                Send
+                <T value="Send" />
               </Link>
             </Button>
             <Button asChild variant="secondary">
               <Link href="/request/new">
                 <Plus size={19} />
-                Request
+                <T value="Request" />
               </Link>
             </Button>
             <Button asChild variant="secondary">
               <Link href="/requests">
                 <ArrowDownLeft size={19} />
-                Receive
+                <T value="Receive" />
               </Link>
             </Button>
             <ScanLink />
           </div>
-          <p className="small muted">Payments and requests, just a tap away.</p>
+          <p className="small muted">
+            <T value="Payments and requests, just a tap away." />
+          </p>
         </GlassCard>
       </div>
       <div className="stats-grid">
         <GlassCard>
           <div className="stat-label">
             <ArrowUpRight size={17} />
-            Sent
+            <T value="Sent" />
           </div>
           <strong className="stat-value">
             {sent}
-            <span>ETH</span>
+            <span>
+              <T value="ETH" />
+            </span>
           </strong>
-          <p className="small muted">Confirmed payments · excluding fees</p>
+          <p className="small muted">
+            <T value="Confirmed payments · excluding fees" />
+          </p>
         </GlassCard>
         <GlassCard>
           <div className="stat-label">
             <ArrowDownLeft size={17} />
-            Received
+            <T value="Received" />
           </div>
           <strong className="stat-value">
             {received}
-            <span>ETH</span>
+            <span>
+              <T value="ETH" />
+            </span>
           </strong>
-          <p className="small muted">Confirmed incoming payments</p>
+          <p className="small muted">
+            <T value="Confirmed incoming payments" />
+          </p>
         </GlassCard>
         <GlassCard>
           <div className="stat-label">
             <ReceiptText size={17} />
-            Open requests
+            <T value="Open requests" />
           </div>
           <strong className="stat-value">
             {
@@ -151,39 +175,43 @@ export default async function DashboardPage() {
                 .length
             }
           </strong>
-          <p className="small muted">Waiting for payment or confirmation</p>
+          <p className="small muted">
+            <T value="Waiting for payment or confirmation" />
+          </p>
         </GlassCard>
       </div>
       <GlassCard>
         <div className="card-heading">
           <div>
-            <h2>Recent activity</h2>
-            <p className="muted small">Every payment has a story.</p>
+            <h2>
+              <T value="Recent activity" />
+            </h2>
+            <p className="muted small">
+              <T value="Every payment has a story." />
+            </p>
           </div>
           <Link href="/activity" className="text-link">
-            View all
+            <T value="View all" />
             <ArrowUpRight size={16} />
           </Link>
         </div>
         {transactions.length ? (
-          transactions
-            .slice(0, 5)
-            .map((t) => (
-              <TransactionRow
-                key={t.id}
-                row={{
-                  id: t.id,
-                  txHash: t.txHash,
-                  fromAddress: t.fromAddress,
-                  toAddress: t.toAddress,
-                  amount: t.amount,
-                  status: t.status,
-                  title: t.title,
-                  direction: t.direction,
-                  submittedAt: t.submittedAt.toISOString(),
-                }}
-              />
-            ))
+          transactions.slice(0, 5).map((t) => (
+            <TransactionRow
+              key={t.id}
+              row={{
+                id: t.id,
+                txHash: t.txHash,
+                fromAddress: t.fromAddress,
+                toAddress: t.toAddress,
+                amount: t.amount,
+                status: t.status,
+                title: t.title,
+                direction: t.direction,
+                submittedAt: t.submittedAt.toISOString(),
+              }}
+            />
+          ))
         ) : (
           <EmptyState
             title="A fresh start"
@@ -196,10 +224,9 @@ export default async function DashboardPage() {
       <div className="dashboard-note">
         <ShieldCheck size={18} />
         <p>
-          Only Ethereum-verified payments are marked confirmed. Overview totals
-          cover your latest 500 payments.
+          <T value="Only Ethereum-verified payments are marked confirmed. Overview totals cover your latest 500 payments." />
         </p>
       </div>
-    </>
+    </div>
   );
 }

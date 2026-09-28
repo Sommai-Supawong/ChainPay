@@ -1,66 +1,81 @@
+import { T } from "@/i18n";
 import Link from "next/link";
 import { ArrowLeft, ShieldCheck, Wallet, ScanLine } from "lucide-react";
 import { Brand } from "@/components/layout/brand";
 import { LoginButton } from "@/components/auth/auth-buttons";
+import { LanguageToggle } from "@/components/layout/language-toggle";
 export default function LoginPage() {
   return (
     <main id="main" className="login-page">
       <section className="login-story">
         <Brand />
         <div>
-          <p className="eyebrow">A LITTLE SIMPLER. A LOT CLEARER.</p>
+          <p className="eyebrow">
+            <T value="A LITTLE SIMPLER. A LOT CLEARER." />
+          </p>
           <h1>
-            Your payments.
+            <T value="Your payments." />
             <br />
-            All connected.
+            <T value="All connected." />
           </h1>
           <p>
-            One place to send, request, and keep track.
+            <T value="One place to send, request, and keep track." />
             <br />
-            With a wallet that stays yours.
+            <T value="With a wallet that stays yours." />
           </p>
           <div className="login-features">
             <span>
               <ShieldCheck />
-              Verified on Ethereum
+              <T value="Verified on Ethereum" />
             </span>
             <span>
               <Wallet />
-              Always non-custodial
+              <T value="Always non-custodial" />
             </span>
             <span>
               <ScanLine />
-              Ready to share
+              <T value="Ready to share" />
             </span>
           </div>
         </div>
-        <small>Built for Ethereum Sepolia · Test ETH only</small>
+        <small>
+          <T value="Built for Ethereum Sepolia · Test ETH only" />
+        </small>
       </section>
       <section className="login-form">
+        <div className="login-language">
+          <LanguageToggle />
+        </div>
         <Link href="/" className="text-link">
           <ArrowLeft size={16} />
-          Back to home
+          <T value="Back to home" />
         </Link>
         <div className="login-form-inner">
-          <span className="eyebrow">WELCOME TO CHAINPAY</span>
-          <h2>Make yourself at home.</h2>
+          <span className="eyebrow">
+            <T value="WELCOME TO CHAINPAY" />
+          </span>
+          <h2>
+            <T value="Make yourself at home." />
+          </h2>
           <p className="muted">
-            Sign in to keep your wallets, requests, and payment history
-            together.
+            <T value="Sign in to keep your wallets, requests, and payment history together." />
           </p>
           <LoginButton />
-          <div className="divider-text">YOUR ACCOUNT ≠ YOUR WALLET</div>
+          <div className="divider-text">
+            <T value="YOUR ACCOUNT ≠ YOUR WALLET" />
+          </div>
           <p className="small muted">
-            Google securely signs you into ChainPay. You’ll connect and verify
-            MetaMask separately when you’re ready to make a payment.
+            <T value="Google securely signs you into ChainPay. You’ll connect and verify MetaMask separately when you’re ready to make a payment." />
           </p>
           <div className="security-note">
             <ShieldCheck size={18} />
-            <p>We never ask for your seed phrase or private key.</p>
+            <p>
+              <T value="We never ask for your seed phrase or private key." />
+            </p>
           </div>
         </div>
         <p className="small muted">
-          Sepolia is a test network. Test ETH has no monetary value.
+          <T value="Sepolia is a test network. Test ETH has no monetary value." />
         </p>
       </section>
     </main>

@@ -1,3 +1,4 @@
+import { T } from "@/i18n";
 import {
   ArrowUpRight,
   Link2,
@@ -21,16 +22,18 @@ export function FeatureGrid() {
     >
       <div className="cp-section-heading">
         <div id="features-heading">
-          <p className="eyebrow">THE PAYMENT, NOT THE COMPLEXITY</p>
+          <p className="eyebrow">
+            <T value="THE PAYMENT, NOT THE COMPLEXITY" />
+          </p>
           <TextEmerge
             lines={["Blockchain underneath.", "Simplicity on top."]}
           />
         </div>
         <Reveal>
           <p className="cp-section-intro">
-            Who it’s for. How much. Where it stands.
+            <T value="Who it’s for. How much. Where it stands." />
             <br />
-            The details you need, right where you expect them.
+            <T value="The details you need, right where you expect them." />
           </p>
         </Reveal>
       </div>
@@ -40,22 +43,26 @@ export function FeatureGrid() {
             <span className="cp-feature-icon">
               <ArrowUpRight />
             </span>
-            <h3>A clearer way to send.</h3>
+            <h3>
+              <T value="A clearer way to send." />
+            </h3>
             <p>
-              Choose a recipient, add a note, and review the amount and
-              estimated fee before approving in MetaMask.
+              <T value="Choose a recipient, add a note, and review the amount and estimated fee before approving in MetaMask." />
             </p>
-            <div className="cp-send-visual" aria-label="Send payment steps">
+            <div className="cp-send-visual" aria-labelledby="send-steps-label">
+              <p id="send-steps-label" className="sr-only">
+                <T value="Send payment steps" />
+              </p>
               <span>
-                <Wallet size={18} /> Choose a recipient
+                <Wallet size={18} /> <T value="Choose a recipient" />
               </span>
               <ArrowRight size={16} />
               <span>
-                <Check size={18} /> Review &amp; pay
+                <Check size={18} /> <T value="Review & pay" />
               </span>
             </div>
             <span className="cp-feature-caption">
-              YOUR PAYMENT. YOUR APPROVAL.
+              <T value="YOUR PAYMENT. YOUR APPROVAL." />
             </span>
           </article>
         </Reveal>
@@ -64,14 +71,17 @@ export function FeatureGrid() {
             <span className="cp-feature-icon">
               <Link2 />
             </span>
-            <h3>One link. Less back-and-forth.</h3>
+            <h3>
+              <T value="One link. Less back-and-forth." />
+            </h3>
             <p>
-              Create a payment request with an amount and description. Share a
-              public link your payer can use without a ChainPay account.
+              <T value="Create a payment request with an amount and description. Share a public link your payer can use without a ChainPay account." />
             </p>
             <div className="cp-link-visual">
               <Link2 size={18} />
-              <span>Your request. Ready to share.</span>
+              <span>
+                <T value="Your request. Ready to share." />
+              </span>
               <ArrowUpRight size={18} />
             </div>
           </article>
@@ -101,9 +111,15 @@ export function FeatureGrid() {
               <span className="cp-feature-icon">
                 <Icon />
               </span>
-              <span className="cp-feature-caption">{label}</span>
-              <h3>{title}</h3>
-              <p>{copy}</p>
+              <span className="cp-feature-caption">
+                <T value={label} />
+              </span>
+              <h3>
+                <T value={title} />
+              </h3>
+              <p>
+                <T value={copy} />
+              </p>
             </article>
           </Reveal>
         ))}
@@ -112,8 +128,7 @@ export function FeatureGrid() {
         <div className="cp-feature-footnote">
           <ReceiptText size={16} />
           <span>
-            From first request to final receipt. One connected payment
-            experience.
+            <T value="From first request to final receipt. One connected payment experience." />
           </span>
         </div>
       </Reveal>

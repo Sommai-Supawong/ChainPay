@@ -2,6 +2,7 @@
 import { Copy } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "./button";
+import { useTranslation } from "@/i18n";
 export function CopyButton({
   value,
   label = "Copy",
@@ -9,6 +10,7 @@ export function CopyButton({
   value: string;
   label?: string;
 }) {
+  const t = useTranslation();
   return (
     <Button
       variant="ghost"
@@ -16,16 +18,16 @@ export function CopyButton({
       onClick={async () => {
         try {
           await navigator.clipboard.writeText(value);
-          toast.success("Copied to clipboard");
+          toast.success(t("Copied to clipboard"));
         } catch {
           toast.error(
-            "Copy is unavailable. Select and copy the text manually.",
+            t("Copy is unavailable. Select and copy the text manually."),
           );
         }
       }}
     >
       <Copy size={15} />
-      {label}
+      {t(label)}
     </Button>
   );
 }

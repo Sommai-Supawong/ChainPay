@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { currentUser } from "@/lib/auth/session";
 import { Button } from "@/components/ui/button";
 import { SiteNav } from "./site-nav";
+import { T } from "@/i18n";
 
 // Share one session lookup per server render. Marketing content never waits for it.
 const marketingUser = cache(currentUser);
@@ -12,7 +13,7 @@ function StartLink({ signedIn = false }: { signedIn?: boolean }) {
   return (
     <Button asChild>
       <Link href={signedIn ? "/dashboard" : "/login"}>
-        {signedIn ? "View Dashboard" : "Get Started"}
+        <T value={signedIn ? "View Dashboard" : "Get Started"} />
         <ArrowUpRight size={18} />
       </Link>
     </Button>

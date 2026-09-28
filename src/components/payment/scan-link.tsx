@@ -1,4 +1,5 @@
 "use client";
+import { T, useTranslation } from "@/i18n";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ScanLine, X } from "lucide-react";
@@ -8,6 +9,7 @@ type Detector = {
   detect: (video: HTMLVideoElement) => Promise<{ rawValue: string }[]>;
 };
 export function ScanLink() {
+  const t = useTranslation();
   const router = useRouter();
   const video = useRef<HTMLVideoElement>(null),
     stream = useRef<MediaStream | null>(null),
@@ -36,7 +38,7 @@ export function ScanLink() {
       stop();
       router.push(url.pathname);
     } catch {
-      toast.error("Use a ChainPay payment link from this site.");
+      toast.error(t("Use a ChainPay payment link from this site."));
     }
   }
   async function camera() {
@@ -48,7 +50,7 @@ export function ScanLink() {
     ).BarcodeDetector;
     if (!Constructor) {
       toast.info(
-        "Use your phone’s camera to scan the QR, or paste the link below.",
+        t("Use your phone’s camera to scan the QR, or paste the link below."),
       );
       return;
     }
@@ -75,7 +77,9 @@ export function ScanLink() {
           }
         } catch {
           stop();
-          toast.error("Camera scanning stopped. Paste a payment link instead.");
+          toast.error(
+            t("Camera scanning stopped. Paste a payment link instead."),
+          );
         } finally {
           detecting = false;
         }
@@ -83,7 +87,7 @@ export function ScanLink() {
     } catch {
       stop();
       toast.error(
-        "Camera unavailable. Allow camera access or paste a payment link.",
+        t("Camera unavailable. Allow camera access or paste a payment link."),
       );
     }
   }
@@ -97,16 +101,18 @@ export function ScanLink() {
         }}
       >
         <ScanLine size={18} />
-        Scan
+        <T value="Scan" />
       </Button>
       {open && (
         <div className="scan-panel card">
           <div className="card-heading">
-            <h2>Open a payment link</h2>
+            <h2>
+              <T value="Open a payment link" />
+            </h2>
             <Button
               variant="ghost"
               size="icon"
-              aria-label="Close scanner"
+              aria-label={t("Close scanner")}
               onClick={() => {
                 stop();
                 setOpen(false);
@@ -117,16 +123,21 @@ export function ScanLink() {
           </div>
           <video ref={video} playsInline muted className="scan-video" />
           <Button variant="secondary" onClick={camera}>
-            Use camera
+            <T value="Use camera" />
           </Button>
-          <label htmlFor="scan-url">Or paste a ChainPay payment link</label>
+          <label htmlFor="scan-url">
+            <T value="Or paste a ChainPay payment link" />
+          </label>
           <input
             id="scan-url"
+            className="technical-text"
             value={value}
             placeholder="https://…/p/CP-…"
             onChange={(e) => setValue(e.target.value)}
           />
-          <Button onClick={() => navigate(value)}>Open request</Button>
+          <Button onClick={() => navigate(value)}>
+            <T value="Open request" />
+          </Button>
         </div>
       )}
     </div>

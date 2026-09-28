@@ -1,4 +1,5 @@
 "use client";
+import { T, useTranslation } from "@/i18n";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
@@ -8,6 +9,7 @@ import { api, friendlyError } from "@/lib/client-api";
 import { Button } from "@/components/ui/button";
 export function LoginButton() {
   const router = useRouter();
+  const t = useTranslation();
   const [busy, setBusy] = useState(false);
   return (
     <Button
@@ -21,20 +23,21 @@ export function LoginButton() {
           router.replace("/dashboard");
           router.refresh();
         } catch (error) {
-          toast.error(friendlyError(error));
+          toast.error(t(friendlyError(error)));
           setBusy(false);
         }
       }}
     >
       <span className="google-g" aria-hidden="true">
-        G
+        <T value="G" />
       </span>
-      {busy ? "Signing in…" : "Continue with Google"}
+      {busy ? t("Signing in…") : t("Continue with Google")}
     </Button>
   );
 }
 export function LogoutButton() {
   const router = useRouter();
+  const t = useTranslation();
   const [busy, setBusy] = useState(false);
   return (
     <Button
@@ -47,14 +50,14 @@ export function LogoutButton() {
           router.replace("/login");
           router.refresh();
         } catch (error) {
-          toast.error(friendlyError(error));
+          toast.error(t(friendlyError(error)));
         } finally {
           setBusy(false);
         }
       }}
     >
       <LogOut size={17} />
-      {busy ? "Signing out…" : "Sign out"}
+      {busy ? t("Signing out…") : t("Sign out")}
     </Button>
   );
 }

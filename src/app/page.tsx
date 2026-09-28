@@ -1,4 +1,5 @@
-﻿import { Wallet, ShieldCheck, ReceiptText } from "lucide-react";
+import { T } from "@/i18n";
+import { Wallet, ShieldCheck, ReceiptText } from "lucide-react";
 import { SessionNav } from "@/components/marketing/session-actions";
 import { HeroSection } from "@/components/marketing/hero-section";
 import { FeatureGrid } from "@/components/marketing/feature-grid";
@@ -21,13 +22,13 @@ export default function Home() {
         <HeroSection />
         <div className="cp-value-strip cp-container">
           <span>
-            <Wallet size={17} /> Your keys stay yours
+            <Wallet size={17} /> <T value="Your keys stay yours" />
           </span>
           <span>
-            <ShieldCheck size={17} /> Verified against Ethereum
+            <ShieldCheck size={17} /> <T value="Verified against Ethereum" />
           </span>
           <span>
-            <ReceiptText size={17} /> History that stays with you
+            <ReceiptText size={17} /> <T value="History that stays with you" />
           </span>
         </div>
         <FeatureGrid />

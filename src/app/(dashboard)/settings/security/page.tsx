@@ -1,3 +1,4 @@
+import { T } from "@/i18n";
 import Link from "next/link";
 import { ShieldCheck, KeyRound, Wallet } from "lucide-react";
 import { GlassCard, PageHeader } from "@/components/ui/primitives";
@@ -10,18 +11,21 @@ export default function SecurityPage() {
         description="Clear boundaries. Control stays with you."
       />
       <nav className="settings-tabs">
-        <Link href="/settings/profile">Profile</Link>
+        <Link href="/settings/profile">
+          <T value="Profile" />
+        </Link>
         <Link aria-current="page" href="/settings/security">
-          Security
+          <T value="Security" />
         </Link>
       </nav>
       <div className="stack form-width">
         <GlassCard>
           <ShieldCheck className="accent" />
-          <h2>Google protects your sign-in</h2>
+          <h2>
+            <T value="Google protects your sign-in" />
+          </h2>
           <p className="muted">
-            Your ChainPay session expires after five days. Enable two-step
-            verification in your Google account for stronger sign-in protection.
+            <T value="Your ChainPay session expires after five days. Enable two-step verification in your Google account for stronger sign-in protection." />
           </p>
           <a
             href="https://myaccount.google.com/security"
@@ -29,25 +33,28 @@ export default function SecurityPage() {
             rel="noreferrer"
             className="text-link"
           >
-            Manage Google security ↗
+            <T value="Manage Google security ↗" />
           </a>
         </GlassCard>
         <GlassCard>
           <Wallet className="accent" />
-          <h2>Your keys never leave your wallet</h2>
+          <h2>
+            <T value="Your keys never leave your wallet" />
+          </h2>
           <p className="muted">
-            ChainPay never stores private keys or seed phrases. Wallet
-            signatures prove ownership, and MetaMask approves each payment.
+            <T value="ChainPay never stores private keys or seed phrases. Wallet signatures prove ownership, and MetaMask approves each payment." />
           </p>
           <Link href="/wallets" className="text-link">
-            Manage verified wallets →
+            <T value="Manage verified wallets →" />
           </Link>
         </GlassCard>
         <GlassCard>
           <KeyRound className="accent" />
-          <h2>This session</h2>
+          <h2>
+            <T value="This session" />
+          </h2>
           <p className="muted">
-            Sign out to remove the ChainPay session from this browser.
+            <T value="Sign out to remove the ChainPay session from this browser." />
           </p>
           <LogoutButton />
         </GlassCard>

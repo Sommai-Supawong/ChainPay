@@ -1,4 +1,5 @@
 "use client";
+import { T, useTranslation } from "@/i18n";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react";
 import { Button } from "./button";
@@ -15,18 +16,19 @@ export function ConfirmDialog({
 }) {
   const [open, setOpen] = useState(false),
     [busy, setBusy] = useState(false);
+  const t = useTranslation();
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="dialog-overlay" />
         <Dialog.Content className="dialog-content">
-          <Dialog.Title>{title}</Dialog.Title>
-          <Dialog.Description>{description}</Dialog.Description>
+          <Dialog.Title>{t(title)}</Dialog.Title>
+          <Dialog.Description>{t(description)}</Dialog.Description>
           <div className="button-row">
             <Dialog.Close asChild>
               <Button variant="secondary" disabled={busy}>
-                Keep it
+                <T value="Keep it" />
               </Button>
             </Dialog.Close>
             <Button
@@ -42,7 +44,7 @@ export function ConfirmDialog({
                 }
               }}
             >
-              {busy ? "Please wait…" : "Confirm"}
+              {busy ? t("Please wait…") : t("Confirm")}
             </Button>
           </div>
         </Dialog.Content>

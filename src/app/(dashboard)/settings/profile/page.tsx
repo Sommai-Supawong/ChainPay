@@ -1,3 +1,4 @@
+import { T } from "@/i18n";
 import Link from "next/link";
 import { pageUser } from "@/lib/auth/session";
 import { ProfileForm } from "@/components/profile/profile-form";
@@ -12,9 +13,11 @@ export default async function ProfilePage() {
       />
       <nav className="settings-tabs">
         <Link aria-current="page" href="/settings/profile">
-          Profile
+          <T value="Profile" />
         </Link>
-        <Link href="/settings/security">Security</Link>
+        <Link href="/settings/security">
+          <T value="Security" />
+        </Link>
       </nav>
       <GlassCard className="form-width">
         <ProfileForm

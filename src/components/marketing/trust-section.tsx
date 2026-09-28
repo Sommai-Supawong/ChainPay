@@ -1,3 +1,4 @@
+import { T } from "@/i18n";
 import {
   ShieldCheck,
   Fingerprint,
@@ -21,28 +22,35 @@ export function TrustSection() {
           <span className="cp-feature-icon">
             <ShieldCheck size={26} />
           </span>
-          <p className="eyebrow">TRUST YOU CAN CHECK</p>
+          <p className="eyebrow">
+            <T value="TRUST YOU CAN CHECK" />
+          </p>
           <div id="trust-heading">
             <TextEmerge lines={["A confirmation should", "mean something."]} />
           </div>
           <p className="cp-section-intro">
-            Your wallet signs. Ethereum settles. ChainPay checks the transaction
-            against the chain before marking it confirmed.
+            <T value="Your wallet signs. Ethereum settles. ChainPay checks the transaction against the chain before marking it confirmed." />
           </p>
           <a href="#verification-details" className="text-link">
-            See what gets verified <ArrowUpRight size={16} />
+            <T value="See what gets verified" />
+            <ArrowUpRight size={16} />
           </a>
           <span className="cp-pill cp-testnet-pill">
-            <span className="network-dot" /> Ethereum Sepolia Testnet
+            <span className="network-dot" />{" "}
+            <T value="Ethereum Sepolia Testnet" />
           </span>
         </Reveal>
         <Reveal delay={0.12} className="cp-trust-details">
           <div id="verification-details" className="cp-verification">
             <div>
               <ShieldCheck size={19} />
-              <strong>Behind every confirmation</strong>
+              <strong>
+                <T value="Behind every confirmation" />
+              </strong>
             </div>
-            <p>Server-side checks, not just a browser success message.</p>
+            <p>
+              <T value="Server-side checks, not just a browser success message." />
+            </p>
             <ul>
               {[
                 "Expected sender, recipient & amount",
@@ -52,7 +60,7 @@ export function TrustSection() {
               ].map((item) => (
                 <li key={item}>
                   <Check size={15} />
-                  {item}
+                  <T value={item} />
                 </li>
               ))}
             </ul>
@@ -78,8 +86,12 @@ export function TrustSection() {
               <div key={title}>
                 <Icon size={19} />
                 <div>
-                  <h3>{title}</h3>
-                  <p>{text}</p>
+                  <h3>
+                    <T value={title} />
+                  </h3>
+                  <p>
+                    <T value={text} />
+                  </p>
                 </div>
               </div>
             ))}
@@ -87,8 +99,7 @@ export function TrustSection() {
         </Reveal>
       </div>
       <p className="cp-trust-disclaimer">
-        Built for exploring payments with test ETH. ChainPay is not an audited
-        mainnet payment service.
+        <T value="Built for exploring payments with test ETH. ChainPay is not an audited mainnet payment service." />
       </p>
     </section>
   );

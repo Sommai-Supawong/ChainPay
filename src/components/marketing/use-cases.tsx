@@ -1,3 +1,4 @@
+import { T } from "@/i18n";
 import { UserRound, BriefcaseBusiness, Store, Compass } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { TextEmerge } from "@/components/motion/text-emerge";
@@ -10,16 +11,18 @@ export function UseCases() {
     >
       <div className="cp-section-heading">
         <div id="use-cases-heading">
-          <p className="eyebrow">FAMILIAR NEEDS. A NEW WAY TO PAY.</p>
+          <p className="eyebrow">
+            <T value="FAMILIAR NEEDS. A NEW WAY TO PAY." />
+          </p>
           <TextEmerge
             lines={["Built around people.", "Not just wallet addresses."]}
           />
         </div>
         <Reveal>
           <p className="cp-section-intro">
-            Explore everyday payment workflows
+            <T value="Explore everyday payment workflows" />
             <br />
-            on Ethereum Sepolia.
+            <T value="on Ethereum Sepolia." />
           </p>
         </Reveal>
       </div>
@@ -49,8 +52,12 @@ export function UseCases() {
           <Reveal key={title} delay={index * 0.06}>
             <article>
               <Icon size={23} />
-              <h3>{title}</h3>
-              <p>{text}</p>
+              <h3>
+                <T value={title} />
+              </h3>
+              <p>
+                <T value={text} />
+              </p>
             </article>
           </Reveal>
         ))}
