@@ -23,27 +23,37 @@ export function assertTransaction(
   contract: string,
   version: 1 | 2 = 2,
 ) {
+  if (tx.chainId !== chain.id)
+    throw new AppError(400, "The transaction is not on Ethereum Sepolia.");
+  if (tx.to?.toLowerCase() !== contract.toLowerCase())
+    throw new AppError(
+      400,
+      "The transaction targets a different ChainPay contract.",
+    );
   if (
-    tx.chainId !== chain.id ||
-    tx.to?.toLowerCase() !== contract.toLowerCase() ||
     tx.from.toLowerCase() !== expected.fromAddress.toLowerCase() ||
     tx.value !== parseEther(expected.amount)
   )
     throw new AppError(400, "The transaction does not match this payment.");
+  let call;
   try {
-    const call = decodeFunctionData({
+    call = decodeFunctionData({
       abi: version === 1 ? chainPayV1Abi : chainPayV2Abi,
       data: tx.input,
     });
-    if (
-      call.functionName !== "pay" ||
-      call.args[0].toLowerCase() !== expected.paymentId.toLowerCase() ||
-      call.args[1].toLowerCase() !== expected.toAddress.toLowerCase()
-    )
-      throw new Error("mismatch");
   } catch {
-    throw new AppError(400, "The contract payment details do not match.");
+    throw new AppError(
+      400,
+      "The transaction has invalid ChainPay payment data.",
+    );
   }
+  if (
+    call.functionName !== "pay" ||
+    call.args[0].toLowerCase() !== expected.paymentId.toLowerCase()
+  )
+    throw new AppError(400, "The transaction payment ID does not match.");
+  if (call.args[1].toLowerCase() !== expected.toAddress.toLowerCase())
+    throw new AppError(400, "The transaction merchant does not match.");
 }
 export function assertPaymentEvent(
   receipt: Pick<TransactionReceipt, "logs">,

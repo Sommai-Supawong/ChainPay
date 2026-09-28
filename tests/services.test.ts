@@ -17,6 +17,7 @@ import {
   encodeEventTopics,
   encodeAbiParameters,
   parseEther,
+  TransactionNotFoundError,
 } from "viem";
 import * as schema from "@/db/schema";
 import { chain, chainPayAbi } from "@/lib/blockchain/config";
@@ -56,6 +57,7 @@ import {
   submitTransaction,
   verifyTransaction,
   receiptData,
+  listTransactions,
 } from "@/features/payment/server";
 
 const pg = new PGlite();
@@ -248,6 +250,166 @@ async function submitted() {
   return { r, intent, input };
 }
 describe("payment persistence and independent confirmation", () => {
+  it("blocks a new payment intent before broadcast when the server RPC is on Mainnet", async () => {
+    fixture.rpc.getChainId.mockResolvedValueOnce(1);
+    await expect(
+      createIntent(alice, {
+        fromAddress: account.address.toLowerCase() as `0x${string}`,
+        toAddress: receiver,
+        amount: "0.1",
+        title: "",
+        note: "",
+      }),
+    ).rejects.toMatchObject({
+      status: 503,
+      message: expect.stringContaining("Expected Sepolia (11155111)"),
+    });
+    expect(await db.select().from(schema.paymentIntents)).toHaveLength(0);
+  });
+  it("reports an unavailable Sepolia RPC without calling transaction lookup", async () => {
+    const r = await createRequest(alice, requestInput());
+    const intent = await createIntent(null, {
+      slug: r.slug,
+      fromAddress: account.address.toLowerCase() as `0x${string}`,
+      toAddress: receiver,
+      amount: "0.1",
+      title: "",
+      note: "",
+    });
+    fixture.rpc.getChainId.mockRejectedValueOnce(new Error("network failure"));
+    await expect(
+      submitTransaction({ intentId: intent.id, token: intent.token, hash }),
+    ).rejects.toMatchObject({
+      status: 503,
+      message: expect.stringContaining("Sepolia RPC is unavailable"),
+    });
+    expect(fixture.rpc.getTransaction).not.toHaveBeenCalled();
+  });
+  it("rejects an invalid active V2 contract address before creating an intent", async () => {
+    vi.stubEnv("NEXT_PUBLIC_CHAINPAY_CONTRACT_ADDRESS", "0x0");
+    await expect(
+      createIntent(alice, {
+        fromAddress: account.address.toLowerCase() as `0x${string}`,
+        toAddress: receiver,
+        amount: "0.1",
+        title: "",
+        note: "",
+      }),
+    ).rejects.toThrow("Payments are not configured");
+    vi.stubEnv("NEXT_PUBLIC_CHAINPAY_CONTRACT_ADDRESS", contract);
+  });
+  it("rejects a Mainnet RPC before looking up a Sepolia transaction", async () => {
+    const r = await createRequest(alice, requestInput());
+    const intent = await createIntent(null, {
+      slug: r.slug,
+      fromAddress: account.address.toLowerCase() as `0x${string}`,
+      toAddress: receiver,
+      amount: "0.1",
+      title: "",
+      note: "",
+    });
+    fixture.rpc.getChainId.mockResolvedValueOnce(1);
+    await expect(
+      submitTransaction({ intentId: intent.id, token: intent.token, hash }),
+    ).rejects.toMatchObject({
+      status: 503,
+      message: expect.stringContaining("Expected Sepolia (11155111)"),
+    });
+    expect(fixture.rpc.getTransaction).not.toHaveBeenCalled();
+    expect(await db.select().from(schema.transactions)).toHaveLength(0);
+  });
+  it("rejects a Mainnet RPC before confirming a pending V2 payment", async () => {
+    await submitted();
+    fixture.rpc.getChainId.mockResolvedValueOnce(1);
+    await expect(verifyTransaction(hash)).rejects.toMatchObject({
+      status: 503,
+      message: expect.stringContaining("Expected Sepolia (11155111)"),
+    });
+    expect(fixture.rpc.getTransactionReceipt).not.toHaveBeenCalled();
+    expect((await db.select().from(schema.transactions))[0].status).toBe(
+      "pending",
+    );
+  });
+  it("keeps the original intent and hash retryable until Sepolia indexes the transaction", async () => {
+    const r = await createRequest(alice, requestInput());
+    const intent = await createIntent(null, {
+      slug: r.slug,
+      fromAddress: account.address.toLowerCase() as `0x${string}`,
+      toAddress: receiver,
+      amount: "0.1",
+      title: "",
+      note: "",
+    });
+    const submission = { intentId: intent.id, token: intent.token, hash };
+    fixture.rpc.getTransaction.mockRejectedValueOnce(
+      new TransactionNotFoundError({ hash }),
+    );
+    await expect(submitTransaction(submission)).rejects.toMatchObject({
+      status: 409,
+      message: expect.stringContaining("retry saving"),
+    });
+    expect(await db.select().from(schema.transactions)).toHaveLength(0);
+    fixture.rpc.getTransaction.mockResolvedValueOnce({
+      from: account.address.toLowerCase(),
+      to: contract,
+      chainId: chain.id,
+      value: parseEther("0.1"),
+      input: encodeFunctionData({
+        abi: chainPayAbi,
+        functionName: "pay",
+        args: [intent.paymentId, receiver],
+      }),
+    });
+    expect((await submitTransaction(submission)).status).toBe("pending");
+    expect((await submitTransaction(submission)).status).toBe("pending");
+    expect((await db.select().from(schema.transactions))[0]).toMatchObject({
+      txHash: hash,
+      intentId: intent.id,
+      contractVersion: 2,
+      contractAddress: contract,
+    });
+    expect(await db.select().from(schema.transactions)).toHaveLength(1);
+  });
+  it("shows one persisted payment as sent and received for verified wallet owners", async () => {
+    await db
+      .update(schema.wallets)
+      .set({ userId: bob })
+      .where(eq(schema.wallets.id, walletId));
+    await db.insert(schema.wallets).values({
+      userId: alice,
+      address: account.address.toLowerCase(),
+      chainId: chain.id,
+      verifiedAt: new Date(),
+    });
+    const intent = await createIntent(alice, {
+      fromAddress: account.address.toLowerCase() as `0x${string}`,
+      toAddress: receiver,
+      amount: "0.1",
+      title: "Peer payment",
+      note: "",
+    });
+    fixture.rpc.getTransaction.mockResolvedValueOnce({
+      from: account.address.toLowerCase(),
+      to: contract,
+      chainId: chain.id,
+      value: parseEther("0.1"),
+      input: encodeFunctionData({
+        abi: chainPayAbi,
+        functionName: "pay",
+        args: [intent.paymentId, receiver],
+      }),
+    });
+    await submitTransaction({ intentId: intent.id, token: intent.token, hash });
+    expect((await listTransactions(alice))[0]).toMatchObject({
+      txHash: hash,
+      direction: "sent",
+    });
+    expect((await listTransactions(bob))[0]).toMatchObject({
+      txHash: hash,
+      direction: "received",
+    });
+    expect(await db.select().from(schema.transactions)).toHaveLength(1);
+  });
   it("fails closed when the active protocol version is not V2", async () => {
     vi.stubEnv("NEXT_PUBLIC_CHAINPAY_CONTRACT_VERSION", "1");
     await expect(

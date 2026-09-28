@@ -67,7 +67,11 @@ describe("server settlement verification", () => {
         { ...expected, paymentId: `0x${"cd".repeat(32)}` },
         contract,
       ),
-    ).toThrow());
+    ).toThrow("payment ID does not match"));
+  it("identifies a wrong V2 contract target", () =>
+    expect(() => assertTransaction({ ...tx, to }, expected, contract)).toThrow(
+      "different ChainPay contract",
+    ));
   it("rejects an event spoofed by another contract", () =>
     expect(() =>
       assertPaymentEvent(

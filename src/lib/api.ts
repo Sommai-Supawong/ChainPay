@@ -85,6 +85,17 @@ export function endpoint(work: (request: Request) => Promise<unknown>) {
           category: error instanceof Error ? error.name : "Unknown",
         }),
       );
+      if (
+        request.method === "POST" &&
+        new URL(request.url).pathname === "/api/transactions"
+      )
+        return json(
+          {
+            error:
+              "We could not save this submitted payment. Keep its transaction hash and retry saving; do not pay again.",
+          },
+          503,
+        );
       return json(
         { error: "We could not complete this request. Please try again." },
         500,

@@ -60,7 +60,9 @@ Install MetaMask or use its mobile browser, enable test networks, choose Ethereu
 
 Run `npm run contract:compile`, then follow the [ChainPay V2 Remix deployment and cutover guide](docs/SMART_CONTRACT_V2_DEPLOYMENT.md). V2 is the only contract for new payments. V1 stays available internally for historical verification and pre-upgrade pending transactions. The guide covers the additive migration on the existing Neon database, the server-only V1 address, Vercel variables and mandatory redeploy. No deployment or user private key is saved in this repository.
 
-The server verifies transaction chain, sender, contract, value, calldata, receipt, block and event before confirming. Browser success is never authoritative. Two confirmations are required.
+The server checks its RPC network before creating a payment intent, then verifies transaction chain, sender, contract, value, calldata, receipt, block and event before confirming. Browser success is never authoritative. Two confirmations are required.
+
+Set the server-only `ETHEREUM_RPC_URL` to an **Ethereum Sepolia** endpoint. On Vercel, a Mainnet endpoint such as `https://eth-mainnet.g.alchemy.com/...` is wrong: Sepolia transaction hashes cannot be found there. The server checks `eth_chainId == 11155111` before looking up a transaction and reports a configuration error on a mismatch. If a wallet payment succeeded but saving failed, use **Retry saving transaction** with the original intent and hash; do not send ETH again. The current tab retains that recovery information until saving succeeds.
 
 ## Commands
 

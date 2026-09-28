@@ -26,7 +26,7 @@ export function Receipt({ hash }: { hash: string }) {
   const verification = useQuery({
     queryKey: ["verify", hash],
     queryFn: () =>
-      api<{ status: string }>(`transactions/${hash}/verify`, {
+      api<{ status: string; reason?: string }>(`transactions/${hash}/verify`, {
         method: "POST",
       }),
     enabled: receipt.data?.status === "pending",
@@ -162,9 +162,15 @@ export function Receipt({ hash }: { hash: string }) {
       </dl>
       {verification.error && (
         <p className="field-error" role="alert">
-          <T value="Verification is temporarily unavailable. Your payment has not been marked confirmed." />
+          {t(verification.error.message)}
         </p>
       )}
+      {data.status === "pending" &&
+        verification.data?.reason === "awaiting_confirmations" && (
+          <p className="small muted" role="status">
+            <T value="Waiting for two Sepolia confirmations." />
+          </p>
+        )}
       <div className="button-row">
         <Button asChild variant="secondary">
           <a href={explorerTx(hash)} target="_blank" rel="noreferrer">

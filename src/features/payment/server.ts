@@ -31,6 +31,7 @@ import {
 } from "@/lib/blockchain/config";
 import { contractForVersion } from "@/lib/blockchain/contracts";
 import { ethereum } from "@/lib/blockchain/server";
+import { assertSepoliaRpc, rpcResult } from "@/lib/blockchain/rpc";
 import {
   assertPaymentEvent,
   assertTransaction,
@@ -43,6 +44,8 @@ export async function createIntent(
   input: z.output<typeof intentSchema>,
 ) {
   const activeContract = contractForVersion(ACTIVE_CONTRACT_VERSION);
+  // Fail before asking MetaMask to broadcast when the server cannot verify Sepolia.
+  await assertSepoliaRpc(ethereum());
   return withDb((db) =>
     db.transaction(async (tx) => {
       let toAddress = input.toAddress,
@@ -157,6 +160,7 @@ export async function submitTransaction(input: z.output<typeof submitSchema>) {
     return { hash: existing.txHash, status: existing.status };
   }
   const client = ethereum();
+  await assertSepoliaRpc(client);
   let txData;
   try {
     txData = await client.getTransaction({ hash: input.hash });
@@ -164,12 +168,13 @@ export async function submitTransaction(input: z.output<typeof submitSchema>) {
     if (error instanceof TransactionNotFoundError)
       throw new AppError(
         409,
-        "Ethereum has not seen this transaction yet. Retry saving in a moment.",
+        "Sepolia has not indexed this transaction yet. Keep the original hash and retry saving shortly.",
       );
-    throw error;
+    throw new AppError(
+      503,
+      "Ethereum Sepolia RPC is unavailable. Keep your transaction hash and retry shortly.",
+    );
   }
-  if ((await client.getChainId()) !== chain.id)
-    throw new AppError(503, "The Ethereum connection is on the wrong network.");
   const intentContract = contractForVersion(
     intent.contractVersion ?? 1,
     intent.contractAddress,
@@ -248,17 +253,29 @@ export async function verifyTransaction(hash: Hex) {
   if (!row) throw new AppError(404, "Transaction not found.");
   if (row.status !== "pending") return { hash, status: row.status };
   const client = ethereum();
-  if ((await client.getChainId()) !== chain.id)
-    throw new AppError(503, "The Ethereum connection is on the wrong network.");
+  await assertSepoliaRpc(client);
   let receipt;
   try {
     receipt = await client.getTransactionReceipt({ hash });
   } catch (error) {
     if (error instanceof TransactionReceiptNotFoundError)
-      return { hash, status: "pending" };
-    throw error;
+      return { hash, status: "pending", reason: "awaiting_receipt" };
+    throw new AppError(
+      503,
+      "Ethereum Sepolia RPC is unavailable. Keep your transaction hash and retry shortly.",
+    );
   }
-  const txData = await client.getTransaction({ hash });
+  let txData;
+  try {
+    txData = await client.getTransaction({ hash });
+  } catch (error) {
+    if (error instanceof TransactionNotFoundError)
+      return { hash, status: "pending", reason: "awaiting_transaction" };
+    throw new AppError(
+      503,
+      "Ethereum Sepolia RPC is unavailable. Keep your transaction hash and retry shortly.",
+    );
+  }
   const recordContract = contractForVersion(
     row.contractVersion ?? 1,
     row.contractAddress,
@@ -269,15 +286,17 @@ export async function verifyTransaction(hash: Hex) {
     recordContract.address,
     recordContract.version,
   );
-  const [latest, block] = await Promise.all([
-    client.getBlockNumber(),
-    client.getBlock({ blockNumber: receipt.blockNumber }),
-  ]);
+  const [latest, block] = await rpcResult(() =>
+    Promise.all([
+      client.getBlockNumber(),
+      client.getBlock({ blockNumber: receipt.blockNumber }),
+    ]),
+  );
   if (
     block.hash !== receipt.blockHash ||
     latest - receipt.blockNumber + BigInt(1) < BigInt(CONFIRMATIONS)
   )
-    return { hash, status: "pending" };
+    return { hash, status: "pending", reason: "awaiting_confirmations" };
   const status = receipt.status === "success" ? "confirmed" : "failed";
   if (status === "confirmed")
     assertPaymentEvent(

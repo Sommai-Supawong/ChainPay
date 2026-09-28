@@ -3,6 +3,7 @@ import { isAddress, type Address } from "viem";
 import { chainPayV1Abi } from "./chainpay-v1-abi";
 import { chainPayV2Abi } from "./chainpay-v2-abi";
 import { contractAddress } from "./config";
+import { AppError } from "@/lib/errors";
 
 export type ContractVersion = 1 | 2;
 
@@ -18,12 +19,16 @@ export function contractForVersion(
   storedAddress?: string | null,
 ) {
   if (version !== 1 && version !== 2)
-    throw new Error(`Unsupported ChainPay contract version: ${version}`);
+    throw new AppError(
+      503,
+      "This payment uses an unsupported ChainPay contract version.",
+    );
   const configured =
     version === 1 ? legacyContractAddress() : contractAddress();
   if (storedAddress && storedAddress.toLowerCase() !== configured.toLowerCase())
-    throw new Error(
-      "Stored payment contract differs from configured contract.",
+    throw new AppError(
+      503,
+      "Payment contract configuration does not match this transaction. Contact the operator.",
     );
   return {
     version: version as ContractVersion,

@@ -57,9 +57,12 @@ Update these variables in the Vercel environment that hosts ChainPay:
 NEXT_PUBLIC_CHAINPAY_CONTRACT_ADDRESS=<V2_CONTRACT_ADDRESS_AFTER_DEPLOY>
 NEXT_PUBLIC_CHAINPAY_CONTRACT_VERSION=2
 CHAINPAY_V1_CONTRACT_ADDRESS=<V1_CONTRACT_ADDRESS>
+ETHEREUM_RPC_URL=<SEPOLIA_RPC_ENDPOINT>
 ```
 
-Keep the existing Sepolia `ETHEREUM_RPC_URL`, Neon URLs and Firebase settings unless they are independently wrong. `NEXT_PUBLIC_*` values are embedded into the browser bundle at build time, so **redeploy Vercel** after changing the active address or version. The application fails closed when the V2 address or version is missing or invalid; it never sends a new payment to V1.
+`ETHEREUM_RPC_URL` is server-only and **must** point to Sepolia. **Wrong:** `https://eth-mainnet.g.alchemy.com/...`. **Correct:** an Ethereum Sepolia RPC endpoint whose `eth_chainId` returns `11155111`. Do not put the RPC URL or an API key in a `NEXT_PUBLIC_*` variable. Keep the existing Neon URLs and Firebase settings unless they are independently wrong. `NEXT_PUBLIC_*` values are embedded into the browser bundle at build time, so **redeploy Vercel** after changing the active address or version. Redeploy after changing the server RPC as well. The application checks the RPC chain before creating a new intent or looking up a submitted hash. It fails closed when the V2 address, version or Sepolia RPC is invalid; it never sends a new payment to V1.
+
+If MetaMask already transferred Sepolia ETH but saving the transaction failed while Vercel used a Mainnet RPC, correct `ETHEREUM_RPC_URL`, redeploy, then use **Retry saving transaction** in the original tab. This reuses the original payment intent, submission capability and transaction hash. It does not send another blockchain payment. If the RPC has not indexed the hash, retry later; a wrong-chain RPC now produces a configuration error instead. If the original tab and its recovery data are gone, retain the hash and contact the operator for reconciliation. Do not pay again to solve a persistence error.
 
 ### Post-deployment smoke test
 

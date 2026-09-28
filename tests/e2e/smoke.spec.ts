@@ -121,3 +121,73 @@ test("receipt reflects the server result without exposing private metadata", asy
     ),
   ).toBe(true);
 });
+test("recovery retries the original intent and hash without offering another payment", async ({
+  page,
+}) => {
+  const slug = "CP-abcdefghijklmnopqrst";
+  const hash = `0x${"a".repeat(64)}`;
+  const submission = {
+    intentId: "00000000-0000-4000-8000-000000000111",
+    token: "t".repeat(43),
+    hash,
+  };
+  let submitted: unknown;
+  let posts = 0;
+  await page.route(`**/api/public/${slug}`, (route) =>
+    route.fulfill({
+      json: {
+        slug,
+        title: "Existing request",
+        description: "",
+        amount: "0.01",
+        merchant: "Merchant",
+        receiver: "0x2222222222222222222222222222222222222222",
+        status: "pending",
+        expiresAt: null,
+      },
+    }),
+  );
+  await page.route("**/api/transactions", (route) => {
+    posts++;
+    submitted = route.request().postDataJSON();
+    return route.fulfill({ json: { hash, status: "pending" } });
+  });
+  await page.route(`**/api/transactions/${hash}`, (route) =>
+    route.fulfill({
+      json: {
+        txHash: hash,
+        status: "pending",
+        amount: "0.01",
+        asset: "ETH",
+        fromAddress: "0x1111111111111111111111111111111111111111",
+        toAddress: "0x2222222222222222222222222222222222222222",
+        blockNumber: null,
+        confirmedAt: null,
+        submittedAt: "2026-01-01T00:00:00Z",
+        title: "Existing request",
+        note: null,
+      },
+    }),
+  );
+  await page.route(`**/api/transactions/${hash}/verify`, (route) =>
+    route.fulfill({
+      json: { hash, status: "pending", reason: "awaiting_confirmations" },
+    }),
+  );
+  await page.goto("/");
+  await page.evaluate(
+    (value) =>
+      sessionStorage.setItem("chainpay-submission", JSON.stringify(value)),
+    submission,
+  );
+  await page.goto(`/p/${slug}`);
+  await expect(page.getByRole("button", { name: "Confirm & pay" })).toHaveCount(
+    0,
+  );
+  await page
+    .getByRole("button", { name: "Recover my submitted payment" })
+    .click();
+  await expect(page).toHaveURL(new RegExp(`/tx/${hash}$`));
+  expect(submitted).toEqual(submission);
+  expect(posts).toBe(1);
+});
