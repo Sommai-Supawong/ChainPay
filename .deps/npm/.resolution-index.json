@@ -6,5 +6,13 @@
         "file": "contracts/ChainPay.sol"
       }
     }
+  },
+  "contracts/ChainPayV2.sol": {
+    "__sources__": {
+      "contracts/ChainPayV2.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.24;\n\n/// @notice Non-custodial ETH settlement. Application metadata remains off-chain.\ncontract ChainPayV2 {\n    mapping(bytes32 => bool) public completed;\n    bool private entered;\n\n    event PaymentCompleted(bytes32 indexed paymentId, address indexed payer, address indexed merchant, uint256 amount, uint256 timestamp);\n    error ZeroAmount();\n    error InvalidMerchant();\n    error InvalidPaymentId();\n    error AlreadyPaid();\n    error TransferFailed();\n    error Reentrancy();\n\n    function version() external pure returns (uint256) { return 2; }\n\n    function pay(bytes32 paymentId, address payable merchant) external payable {\n        if (entered) revert Reentrancy();\n        if (msg.value == 0) revert ZeroAmount();\n        if (merchant == address(0) || merchant == address(this) || merchant == msg.sender) revert InvalidMerchant();\n        if (paymentId == bytes32(0)) revert InvalidPaymentId();\n\n        // Preserve V1's payer-scoped replay rule. A separate intent has a separate ID.\n        bytes32 key = keccak256(abi.encode(msg.sender, paymentId));\n        if (completed[key]) revert AlreadyPaid();\n        entered = true;\n        completed[key] = true;\n        (bool ok,) = merchant.call{value: msg.value}(\"\");\n        if (!ok) revert TransferFailed();\n        emit PaymentCompleted(paymentId, msg.sender, merchant, msg.value, block.timestamp);\n        entered = false;\n    }\n}\n",
+        "file": "contracts/ChainPayV2.sol"
+      }
+    }
   }
 }
