@@ -98,4 +98,15 @@ describe("server settlement verification", () => {
       ),
     ).toThrow();
   });
+  it("rejects an event timestamp inconsistent with its block", () => {
+    expect(() =>
+      assertPaymentEvent(
+        receipt([log]),
+        expected,
+        contract,
+        2,
+        BigInt(1700000001),
+      ),
+    ).toThrow();
+  });
 });

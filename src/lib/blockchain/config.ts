@@ -1,13 +1,16 @@
-import { isAddress, parseAbi, type Address } from "viem";
+import { isAddress, type Address } from "viem";
 import { sepolia } from "viem/chains";
+import { chainPayV2Abi } from "./chainpay-v2-abi";
 
 export const chain = sepolia;
 export const CONFIRMATIONS = 2;
-export const chainPayAbi = parseAbi([
-  "function pay(bytes32 paymentId, address merchant) payable",
-  "event PaymentCompleted(bytes32 indexed paymentId, address indexed payer, address indexed merchant, uint256 amount, uint256 timestamp)",
-]);
+export const ACTIVE_CONTRACT_VERSION = 2 as const;
+export const chainPayAbi = chainPayV2Abi;
 export function contractAddress(): Address {
+  if (process.env.NEXT_PUBLIC_CHAINPAY_CONTRACT_VERSION !== "2")
+    throw new Error(
+      "ChainPay V2 is not configured. Set the active contract version to 2.",
+    );
   const value = process.env.NEXT_PUBLIC_CHAINPAY_CONTRACT_ADDRESS;
   if (!value || !isAddress(value) || /^0x0{40}$/i.test(value)) {
     throw new Error(

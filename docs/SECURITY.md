@@ -19,7 +19,9 @@ An address cannot be linked to multiple accounts on the same chain. Removing it 
 
 ## Settlement integrity
 
-The browser cannot choose confirmed status. Server checks RPC chain ID, transaction chain/sender/target/value/calldata, successful receipt, expected event address/ID/payer/merchant/value, canonical block hash, and two block confirmations. Failed receipts become failed records after confirmation depth; missing receipts stay pending. The contract forwards ETH with replay and reentrancy protection.
+The browser cannot choose confirmed status. Server checks RPC chain ID, transaction chain/sender/target/value/calldata, successful receipt, expected event address/ID/payer/merchant/value/timestamp, canonical block hash, and two block confirmations. Failed receipts become failed records after confirmation depth; missing receipts stay pending. The contract forwards ETH with replay and reentrancy protection.
+
+All new intents target V2 and fail closed if its public address or version is invalid. The server uses V1 only for pre-upgrade intents and historical transactions. A stored contract address must agree with the configured address for that version. V2 adds an explicit version method and rejects payment to the contract itself. Its external ETH call occurs after the replay key is marked; a failed call reverts both that mark and the transfer. The guard prevents a merchant callback from nesting another `pay` call.
 
 The database has unique hash/chain, intent, and confirmed-request constraints. Confirmation and request updates are atomic. Public submissions require an unguessable capability whose hash is stored in the database; possessing a transaction hash alone cannot attach arbitrary metadata to it. Public receipts expose only on-chain facts; private notes are visible only to the originating account.
 

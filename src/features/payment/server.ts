@@ -23,7 +23,13 @@ import { withDb } from "@/lib/db/client";
 import { AppError } from "@/lib/errors";
 import { intentSchema, submitSchema } from "@/lib/validation";
 import { canPayRequest, effectiveRequestStatus } from "@/lib/utils";
-import { chain, CONFIRMATIONS, contractAddress } from "@/lib/blockchain/config";
+import {
+  chain,
+  CONFIRMATIONS,
+  contractAddress,
+  ACTIVE_CONTRACT_VERSION,
+} from "@/lib/blockchain/config";
+import { contractForVersion } from "@/lib/blockchain/contracts";
 import { ethereum } from "@/lib/blockchain/server";
 import {
   assertPaymentEvent,
@@ -36,7 +42,7 @@ export async function createIntent(
   userId: string | null,
   input: z.output<typeof intentSchema>,
 ) {
-  contractAddress();
+  const activeContract = contractForVersion(ACTIVE_CONTRACT_VERSION);
   return withDb((db) =>
     db.transaction(async (tx) => {
       let toAddress = input.toAddress,
@@ -97,6 +103,8 @@ export async function createIntent(
           userId,
           paymentRequestId: requestId,
           paymentId,
+          contractAddress: activeContract.address,
+          contractVersion: activeContract.version,
           tokenHash: digest(token),
           fromAddress: input.fromAddress,
           toAddress,
@@ -115,7 +123,8 @@ export async function createIntent(
         amount,
         title,
         expiresAt,
-        contract: contractAddress(),
+        contract: activeContract.address,
+        contractVersion: activeContract.version,
         chainId: chain.id,
       };
     }),
@@ -161,7 +170,16 @@ export async function submitTransaction(input: z.output<typeof submitSchema>) {
   }
   if ((await client.getChainId()) !== chain.id)
     throw new AppError(503, "The Ethereum connection is on the wrong network.");
-  assertTransaction(txData, intent, contractAddress());
+  const intentContract = contractForVersion(
+    intent.contractVersion ?? 1,
+    intent.contractAddress,
+  );
+  assertTransaction(
+    txData,
+    intent,
+    intentContract.address,
+    intentContract.version,
+  );
   // Expiry prevents a new UI signature, never recovery of an already broadcast payment.
   return withDb((db) =>
     db.transaction(async (tx) => {
@@ -201,6 +219,8 @@ export async function submitTransaction(input: z.output<typeof submitSchema>) {
           paymentRequestId: requestId,
           txHash: input.hash,
           paymentId: intent.paymentId,
+          contractAddress: intentContract.address,
+          contractVersion: intentContract.version,
           chainId: chain.id,
           fromAddress: intent.fromAddress,
           toAddress: intent.toAddress,
@@ -239,7 +259,16 @@ export async function verifyTransaction(hash: Hex) {
     throw error;
   }
   const txData = await client.getTransaction({ hash });
-  assertTransaction(txData, row, contractAddress());
+  const recordContract = contractForVersion(
+    row.contractVersion ?? 1,
+    row.contractAddress,
+  );
+  assertTransaction(
+    txData,
+    row,
+    recordContract.address,
+    recordContract.version,
+  );
   const [latest, block] = await Promise.all([
     client.getBlockNumber(),
     client.getBlock({ blockNumber: receipt.blockNumber }),
@@ -251,7 +280,13 @@ export async function verifyTransaction(hash: Hex) {
     return { hash, status: "pending" };
   const status = receipt.status === "success" ? "confirmed" : "failed";
   if (status === "confirmed")
-    assertPaymentEvent(receipt, row, contractAddress());
+    assertPaymentEvent(
+      receipt,
+      row,
+      recordContract.address,
+      recordContract.version,
+      block.timestamp,
+    );
   const settledStatus = await withDb((db) =>
     db.transaction(async (tx) => {
       const [current] = await tx

@@ -1,9 +1,14 @@
 import fs from "node:fs";
 import solc from "solc";
-const source = fs.readFileSync("contracts/ChainPay.sol", "utf8");
+const sources = Object.fromEntries(
+  ["ChainPay.sol", "ChainPayV2.sol"].map((file) => [
+    file,
+    { content: fs.readFileSync(`contracts/${file}`, "utf8") },
+  ]),
+);
 const input = {
   language: "Solidity",
-  sources: { "ChainPay.sol": { content: source } },
+  sources,
   settings: {
     optimizer: { enabled: true, runs: 200 },
     evmVersion: "cancun",
@@ -18,12 +23,17 @@ const output = JSON.parse(solc.compile(JSON.stringify(input)));
 for (const issue of output.errors ?? []) console.error(issue.formattedMessage);
 if (output.errors?.some((issue) => issue.severity === "error")) process.exit(1);
 fs.mkdirSync("artifacts", { recursive: true });
-fs.writeFileSync(
-  "artifacts/ChainPay.json",
-  JSON.stringify(
-    { compiler: solc.version(), ...output.contracts["ChainPay.sol"].ChainPay },
-    null,
-    2,
-  ),
-);
-console.log(`Compiled ChainPay.sol with ${solc.version()}`);
+for (const [file, name] of [
+  ["ChainPay.sol", "ChainPay"],
+  ["ChainPayV2.sol", "ChainPayV2"],
+]) {
+  fs.writeFileSync(
+    `artifacts/${name}.json`,
+    JSON.stringify(
+      { compiler: solc.version(), ...output.contracts[file][name] },
+      null,
+      2,
+    ),
+  );
+  console.log(`Compiled ${file} with ${solc.version()}`);
+}

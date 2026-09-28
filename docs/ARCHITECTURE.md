@@ -10,7 +10,7 @@ flowchart LR
   Next -->|Drizzle, server-only| Neon[(Neon PostgreSQL)]
   Browser -->|Signatures / transactions| MetaMask
   MetaMask --> Sepolia
-  Sepolia --> Contract[ChainPay.sol]
+  Sepolia --> Contract[ChainPay V2 for new payments]
   Next -->|Independent RPC verification| Sepolia
 ```
 
@@ -26,6 +26,8 @@ Firebase UID maps to an internal `users.id` UUID. Domain foreign keys reference 
 4. Browser submits the hash with a random intent capability. Server compares the transaction against the stored expectation before recording `pending`.
 5. Receipt page polls the server. Server verifies chain, sender, target contract, value, calldata, receipt, canonical block, two confirmations, and exactly one expected event.
 6. One database transaction updates the receipt and associated request. Repeated submission/confirmation is idempotent; uniqueness constraints provide a second line of defense.
+
+New intents pin the V2 address and version. The server contract registry resolves old V1 rows and pre-upgrade intents from their stored version and the server-only V1 address. V1 is never offered as a new-payment choice. Existing pending V1 broadcasts can still be saved and verified after the cutover. The transaction record retains the contract address and version so later configuration changes cannot silently reinterpret it.
 
 Pending broadcast recovery is held in sessionStorage in the current tab. This is a temporary submission capability, not authoritative payment history. History and receipts come from PostgreSQL. The user can retry saving without paying again.
 

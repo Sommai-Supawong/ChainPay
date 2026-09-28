@@ -1,5 +1,7 @@
 # ChainPay implementation report
 
+> This report describes the original V1 implementation. ChainPay V2 is now the sole contract for new payments; V1 remains for historical verification. See [V2 deployment and cutover](SMART_CONTRACT_V2_DEPLOYMENT.md) for the current migration and operator steps.
+
 ## A. Status
 
 **Implemented locally; requires external setup and connected acceptance.** The original starter is now a full-stack Sepolia payment application. Production deployment and real Firebase/Neon/Sepolia flows are not claimed as complete because no credentials or deployed contract were supplied.

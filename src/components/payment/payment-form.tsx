@@ -12,7 +12,13 @@ import { ArrowRight, ShieldCheck, ArrowLeft, ExternalLink } from "lucide-react";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 import { api, friendlyError } from "@/lib/client-api";
-import { chain, chainPayAbi, explorerTx } from "@/lib/blockchain/config";
+import {
+  chain,
+  chainPayAbi,
+  explorerTx,
+  contractAddress,
+  ACTIVE_CONTRACT_VERSION,
+} from "@/lib/blockchain/config";
 import { paymentSchema, type PaymentInput } from "@/lib/validation";
 import { Button } from "@/components/ui/button";
 import { Field, GlassCard, WalletAddress } from "@/components/ui/primitives";
@@ -63,6 +69,13 @@ export function PaymentForm({
         method: "POST",
         body: { ...input, fromAddress: account.address, slug: request?.slug },
       });
+      if (
+        intent.contractVersion !== ACTIVE_CONTRACT_VERSION ||
+        intent.contract.toLowerCase() !== contractAddress().toLowerCase()
+      )
+        throw new Error(
+          "The active ChainPay contract changed. Reload and prepare a new payment.",
+        );
       const gas = await client.estimateContractGas({
         address: intent.contract,
         abi: chainPayAbi,
@@ -107,6 +120,13 @@ export function PaymentForm({
     setBusy(t("Waiting for MetaMask…"));
     try {
       const i = review.intent;
+      if (
+        i.contractVersion !== ACTIVE_CONTRACT_VERSION ||
+        i.contract.toLowerCase() !== contractAddress().toLowerCase()
+      )
+        throw new Error(
+          "The active ChainPay contract changed. Reload and prepare a new payment.",
+        );
       if (
         account.address?.toLowerCase() !== i.fromAddress.toLowerCase() ||
         account.chainId !== chain.id

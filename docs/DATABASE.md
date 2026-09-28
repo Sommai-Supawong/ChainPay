@@ -17,6 +17,8 @@ Schema: `src/db/schema.ts`. Versioned SQL and Drizzle snapshots: `db/migrations/
 
 Amounts use `NUMERIC(36,18)` and are represented as strings in JavaScript. Wei arithmetic uses bigint. Never aggregate money with floating-point numbers. Dates use timestamptz. User/request/transaction lookup columns have indexes.
 
+Migration `0001_stiff_union_jack.sql` adds nullable `contract_address` and `contract_version` to intents and transactions without dropping existing rows. Existing rows become V1; new rows persist V2 and its address. The V1 address is supplied by the operator through `CHAINPAY_V1_CONTRACT_ADDRESS`, with an optional explicit backfill. See [V2 cutover](SMART_CONTRACT_V2_DEPLOYMENT.md). Do not infer a V1 address from the new public V2 setting.
+
 ## Setup and migrations
 
 1. Create a Neon PostgreSQL project and database in the deployment region.

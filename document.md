@@ -1,5 +1,7 @@
 # ChainPay — Production Product Specification
 
+> **V2 implementation update:** `contracts/ChainPayV2.sol` is the active Sepolia settlement contract for all new payments. `contracts/ChainPay.sol` remains the V1 source for historical verification and pre-upgrade pending payments. The additive `0001_stiff_union_jack.sql` migration preserves Neon history; see `docs/SMART_CONTRACT_V2_DEPLOYMENT.md` for Remix deployment and Vercel/Neon cutover. Older references to `ChainPay.sol` below describe the original V1 design.
+
 > **Architecture revision:** Next.js full-stack on Vercel + Firebase Authentication + Neon PostgreSQL + Drizzle ORM + Ethereum. The MVP intentionally does **not** use a separate Render backend; Next.js Route Handlers / Server Actions form the application backend.
 
 > **ChainPay** is a production-oriented Web3 payment platform that makes blockchain payments feel as simple and trustworthy as modern online banking.

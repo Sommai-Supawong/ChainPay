@@ -76,6 +76,11 @@ beforeAll(async () => {
   fixture.db = db;
   vi.stubEnv("NEXT_PUBLIC_APP_URL", "http://localhost:3000");
   vi.stubEnv("NEXT_PUBLIC_CHAINPAY_CONTRACT_ADDRESS", contract);
+  vi.stubEnv("NEXT_PUBLIC_CHAINPAY_CONTRACT_VERSION", "2");
+  vi.stubEnv(
+    "CHAINPAY_V1_CONTRACT_ADDRESS",
+    "0x4444444444444444444444444444444444444444",
+  );
 }, 30_000);
 afterAll(async () => {
   await pg.close();
@@ -243,6 +248,84 @@ async function submitted() {
   return { r, intent, input };
 }
 describe("payment persistence and independent confirmation", () => {
+  it("fails closed when the active protocol version is not V2", async () => {
+    vi.stubEnv("NEXT_PUBLIC_CHAINPAY_CONTRACT_VERSION", "1");
+    await expect(
+      createIntent(alice, {
+        slug: "",
+        fromAddress: receiver as `0x${string}`,
+        toAddress: account.address,
+        amount: "0.1",
+        title: "",
+        note: "",
+      }),
+    ).rejects.toThrow("ChainPay V2 is not configured");
+    vi.stubEnv("NEXT_PUBLIC_CHAINPAY_CONTRACT_VERSION", "2");
+  });
+  it("verifies a migrated V1 intent and transaction using the legacy registry", async () => {
+    const r = await createRequest(alice, requestInput());
+    const intent = await createIntent(null, {
+      slug: r.slug,
+      fromAddress: account.address.toLowerCase() as `0x${string}`,
+      toAddress: receiver,
+      amount: "0.1",
+      title: "",
+      note: "",
+    });
+    const legacyAddress = "0x4444444444444444444444444444444444444444";
+    await db
+      .update(schema.paymentIntents)
+      .set({ contractVersion: 1, contractAddress: null })
+      .where(eq(schema.paymentIntents.id, intent.id));
+    fixture.rpc.getTransaction.mockResolvedValue({
+      from: account.address.toLowerCase(),
+      to: legacyAddress,
+      chainId: chain.id,
+      value: parseEther("0.1"),
+      input: encodeFunctionData({
+        abi: chainPayAbi,
+        functionName: "pay",
+        args: [intent.paymentId, receiver],
+      }),
+    });
+    await submitTransaction({ intentId: intent.id, token: intent.token, hash });
+    const row = (await db.select().from(schema.transactions))[0];
+    expect(row).toMatchObject({
+      contractVersion: 1,
+      contractAddress: legacyAddress,
+    });
+    const blockHash = `0x${"bb".repeat(32)}`;
+    fixture.rpc.getTransactionReceipt.mockResolvedValue({
+      status: "success",
+      blockNumber: BigInt(50),
+      blockHash,
+      gasUsed: BigInt(50000),
+      logs: [
+        {
+          address: legacyAddress,
+          topics: encodeEventTopics({
+            abi: chainPayAbi,
+            eventName: "PaymentCompleted",
+            args: {
+              paymentId: intent.paymentId,
+              payer: account.address,
+              merchant: receiver,
+            },
+          }),
+          data: encodeAbiParameters(
+            [{ type: "uint256" }, { type: "uint256" }],
+            [parseEther("0.1"), BigInt(1700000000)],
+          ),
+        },
+      ],
+    });
+    fixture.rpc.getBlock.mockResolvedValue({
+      hash: blockHash,
+      timestamp: BigInt(1700000000),
+    });
+    fixture.rpc.getBlockNumber.mockResolvedValue(BigInt(51));
+    expect((await verifyTransaction(hash)).status).toBe("confirmed");
+  });
   it("does not let a stale verification reopen an already settled request", async () => {
     const { r } = await submitted();
     fixture.rpc.getTransactionReceipt.mockResolvedValue({
@@ -273,6 +356,10 @@ describe("payment persistence and independent confirmation", () => {
     expect((await getRequest(r.id, alice)).status).toBe("pending");
     await submitTransaction(input);
     expect(await db.select().from(schema.transactions)).toHaveLength(1);
+    expect((await db.select().from(schema.transactions))[0]).toMatchObject({
+      contractAddress: contract,
+      contractVersion: 2,
+    });
     expect((await receiptData(hash, null)).status).toBe("pending");
     expect(await receiptData(hash, null)).not.toHaveProperty("userId");
     expect((await receiptData(hash, null)).note).toBeNull();

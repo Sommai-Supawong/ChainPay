@@ -42,6 +42,7 @@ export type IntentModel = {
   title: string;
   expiresAt: string;
   contract: `0x${string}`;
+  contractVersion: 2;
   chainId: number;
 };
 export type ReceiptModel = {

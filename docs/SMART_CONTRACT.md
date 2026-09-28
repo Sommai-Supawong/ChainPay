@@ -1,23 +1,11 @@
-# ChainPay.sol
+# ChainPay settlement contracts
 
-`contracts/ChainPay.sol` implements `pay(bytes32 paymentId, address payable merchant) external payable`. It rejects zero amounts, zero identifiers, zero recipients and self-payments; forwards ETH; emits `PaymentCompleted(paymentId, payer, merchant, amount, timestamp)`; retains no payment funds; and has no administrator or upgrade mechanism.
+`contracts/ChainPay.sol` is the immutable V1 source and remains available for historical transaction verification. `contracts/ChainPayV2.sol` is the active contract for every new payment. V2 must be deployed at a **new Sepolia address**; changing application configuration cannot alter a deployed V1 contract. See the [V2 Remix deployment and cutover guide](SMART_CONTRACT_V2_DEPLOYMENT.md).
 
-Replay protection uses `keccak256(abi.encode(payer, paymentId))`. A global reentrancy guard and checks/effects/interaction ordering protect forwarding. A failed recipient call reverts both payment and consumed identifier. No names, emails or private notes are written on-chain.
+Both contracts expose `pay(bytes32 paymentId, address payable merchant)` and emit `PaymentCompleted(paymentId, payer, merchant, amount, timestamp)`. V2 adds `version() == 2`, explicit validation errors, and rejection of the contract itself as a merchant. It forwards all ETH with `call`, retains no payment funds, and has no owner, custody, upgrade proxy, or personal metadata.
 
-## Compile and deploy to Sepolia
+V2 preserves V1's payer-scoped replay key, `keccak256(abi.encode(payer, paymentId))`. An unsuccessful forwarding call reverts the key and permits a retry. A different intent gets a random new ID, including late or competing payments for the same off-chain request; the database records those independently for reconciliation. Checks and the consumed key precede the external call, and a small reentrancy guard prevents nested `pay` calls. Failure reverts all state and ETH movement.
 
-1. Run `npm run contract:compile`. It writes ABI, creation bytecode and runtime bytecode to ignored `artifacts/ChainPay.json`. The compiler version is recorded there; optimizer uses 200 runs and EVM target Cancun.
-2. In Remix, open the exact `contracts/ChainPay.sol` source. Select the same Solidity compiler version printed by the command, enable optimizer with 200 runs, and select Cancun EVM target.
-3. In MetaMask, switch to Ethereum Sepolia (chain ID 11155111) and obtain test ETH. Never use a production-funded account for testing.
-4. In Remix's Deploy & Run panel, choose the injected browser wallet environment, verify the displayed network/account, select ChainPay and deploy. Approve the deployment in MetaMask. No key is copied into this repository.
-5. Verify the source and compiler settings on Sepolia Etherscan. Confirm the deployed runtime matches the compiled artifact.
-6. Set `NEXT_PUBLIC_CHAINPAY_CONTRACT_ADDRESS` to the deployed address. Set server-only `ETHEREUM_RPC_URL` to a Sepolia RPC. Redeploy Next.js because public variables are embedded at build time.
-7. Use two test wallets to exercise payment, rejected transaction, successful forwarding/event, recipient revert, receipt and request settlement.
+`npm run contract:compile` compiles both sources with the installed Solidity 0.8.37 compiler, optimizer 200 runs and Cancun EVM, writing ignored `artifacts/ChainPay.json` and `artifacts/ChainPayV2.json`. The canonical application ABIs are in `src/lib/blockchain/chainpay-v1-abi.ts` and `chainpay-v2-abi.ts`. Only the server-side contract registry uses V1. The browser uses V2 for gas estimates and wallet submission.
 
-The shared UI/server ABI is `src/lib/blockchain/config.ts`. Chain constants are centralized; no mainnet switching is exposed.
-
-## Tests and scope
-
-`tests/contract.test.ts` compiles the actual Solidity and deploys it into an isolated EthereumJS EVM. Tests execute signed local transactions for forwarding, exact event data, duplicate replay, zero/self validation, failed transfer rollback and reentrancy. Deterministic keys are test-only and never used on a network.
-
-The contract intentionally has no knowledge of off-chain invoices. It cannot enforce off-chain cancellation, expiry or unique invoice payment across different payers. Application policies and the reconciliation behavior are described in SECURITY.md. A mainnet release requires an audited contract design and stronger invoice/finality enforcement.
+The contracts do not know off-chain request amount, cancellation or expiry. They cannot prevent two different payers from sending ETH for one request. The server records late or racing transfers without falsely settling the request twice; operators may need manual reconciliation. Automated contract tests use an isolated local EVM, never Sepolia funds.
