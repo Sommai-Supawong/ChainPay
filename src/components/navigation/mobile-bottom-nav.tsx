@@ -3,7 +3,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Ellipsis, X } from "lucide-react";
+import { Ellipsis, ScanLine, X } from "lucide-react";
 import {
   animate,
   motion,
@@ -17,6 +17,7 @@ import { LogoutButton } from "@/components/auth/auth-buttons";
 import { LanguageToggle } from "@/components/layout/language-toggle";
 import { appNav, appNavActive } from "./app-nav";
 import { useTheme } from "@/components/theme/theme-provider";
+import { ScanLink } from "@/components/payment/scan-link";
 
 const mobileItems = appNav.filter((item) => item.mobile);
 const moreIndex = mobileItems.length;
@@ -46,6 +47,7 @@ export function MobileBottomNav({
   const router = useRouter();
   const reduced = useReducedMotion();
   const [open, setOpen] = useState(false);
+  const [scanOpen, setScanOpen] = useState(false);
   const [highlight, setHighlight] = useState<number | null>(null);
   const [ready, setReady] = useState(false);
   const innerRef = useRef<HTMLDivElement>(null);
@@ -335,6 +337,20 @@ export function MobileBottomNav({
             aria-label={t("More") + " " + t("Main navigation")}
             className="mobile-sheet-links"
           >
+            <button
+              type="button"
+              className="mobile-sheet-link-btn"
+              onClick={() => {
+                setOpen(false);
+                setScanOpen(true);
+              }}
+            >
+              <span className="mobile-sheet-icon">
+                <ScanLine size={19} aria-hidden="true" />
+              </span>
+              <span>{t("Scan")}</span>
+              <ArrowUpRightIcon />
+            </button>
             {appNav
               .filter((item) => !item.mobile)
               .map(({ href, shortLabel, icon: Icon }) => (
@@ -361,6 +377,7 @@ export function MobileBottomNav({
           </div>
         </Dialog.Content>
       </Dialog.Portal>
+      <ScanLink open={scanOpen} onOpenChange={setScanOpen} trigger={null} />
     </Dialog.Root>
   );
 }

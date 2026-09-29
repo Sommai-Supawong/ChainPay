@@ -161,3 +161,66 @@ test("homepage content is available without JavaScript", async ({
   await expect(page).toHaveURL(/\/login$/);
   await context.close();
 });
+
+test("scan qr modal opens above bottom navigation and closes cleanly", async ({
+  page,
+}) => {
+  for (const width of [320, 375, 390, 430]) {
+    await page.setViewportSize({ width, height: 812 });
+    await page.goto("/");
+    const bottomNav = page.locator(".mobile-bottom-nav");
+    await expect(bottomNav).toBeVisible();
+
+    const moreBtn = bottomNav.getByRole("button", { name: "More" });
+    await moreBtn.click();
+
+    const scanBtn = page.getByRole("button", { name: /Scan QR Code/i });
+    await expect(scanBtn).toBeVisible();
+    await scanBtn.click();
+
+    const modal = page.locator(".scan-modal");
+    const overlay = page.locator(".scan-overlay");
+    await expect(modal).toBeVisible();
+    await expect(overlay).toBeVisible();
+
+    const modalZ = await modal.evaluate((el) =>
+      Number(getComputedStyle(el).zIndex),
+    );
+    const overlayZ = await overlay.evaluate((el) =>
+      Number(getComputedStyle(el).zIndex),
+    );
+    const navZ = await bottomNav.evaluate((el) =>
+      Number(getComputedStyle(el).zIndex),
+    );
+
+    expect(modalZ).toBe(110);
+    expect(overlayZ).toBe(100);
+    expect(navZ).toBe(50);
+    expect(modalZ).toBeGreaterThan(navZ);
+    expect(overlayZ).toBeGreaterThan(navZ);
+
+    const box = await modal.boundingBox();
+    expect(box).not.toBeNull();
+    if (box) {
+      const modalCenterX = box.x + box.width / 2;
+      expect(Math.abs(modalCenterX - width / 2)).toBeLessThan(5);
+      expect(box.x).toBeGreaterThanOrEqual(0);
+      expect(box.x + box.width).toBeLessThanOrEqual(width);
+      expect(box.height).toBeLessThanOrEqual(812);
+    }
+
+    await expect(
+      page.getByRole("heading", { name: /Scan QR Code/i }),
+    ).toBeVisible();
+    await expect(modal.locator(".scan-camera-container")).toBeVisible();
+    await expect(modal.locator("#scan-url")).toBeVisible();
+
+    const cancelBtn = modal.getByRole("button", { name: /Cancel|ยกเลิก/i });
+    await expect(cancelBtn).toBeVisible();
+    await cancelBtn.click();
+
+    await expect(modal).toBeHidden();
+    await expect(overlay).toBeHidden();
+    await expect(bottomNav).toBeVisible();
+  }
+});

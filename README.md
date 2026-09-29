@@ -14,6 +14,11 @@
 
 > **Blockchain is the settlement and verification layer. ChainPay is the payment experience around it.** This repository implements the application and contracts; operating a connected instance requires Firebase, Neon, a Sepolia RPC endpoint, and deployed contract addresses. It is testnet software and has not been independently audited.
 
+## Project Links
+
+- 🌐 Live Website: https://chain-pay-eta.vercel.app
+- 🎨 Presentation Slides: https://canva.link/19qr4jchk1gg4jm
+
 ## Overview
 
 MetaMask can transfer ETH, but a wallet alone does not organize who a payment is for, provide a shareable request, or keep a readable business record. ChainPay adds Google-backed accounts, verified wallet ownership, guided review, payment requests, contacts, activity, and receipts around an on-chain transfer. The sender still approves each transaction in MetaMask; ChainPay never holds the sender's keys or payment funds.

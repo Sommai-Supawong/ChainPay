@@ -38,14 +38,25 @@
   --mobile-nav-background: #07101ded;
   --mobile-nav-text: #a9bcd6;
   --mobile-nav-active: #f5f9ff;
-  --mobile-nav-bubble: linear-gradient(110deg, #d8ecff24, transparent 28% 66%, #b8d8f91c), radial-gradient(ellipse at 50% 110%, #a9cae924, transparent 63%);
-  --mobile-nav-bubble-rim: linear-gradient(135deg, #ffffffd9, #dcefff6b 24%, #9cbfe72b 47%, #b8d7f066 74%, #ffffffa6);
-  --mobile-nav-bubble-refraction: linear-gradient(100deg, #dfedff55, #e3f2ff0a 27% 67%, #8ab6e34d), linear-gradient(180deg, #e5f3ff61, transparent 22% 73%, #c1ddf566);
+  --mobile-nav-bubble:
+    linear-gradient(110deg, #d8ecff24, transparent 28% 66%, #b8d8f91c),
+    radial-gradient(ellipse at 50% 110%, #a9cae924, transparent 63%);
+  --mobile-nav-bubble-rim: linear-gradient(
+    135deg,
+    #ffffffd9,
+    #dcefff6b 24%,
+    #9cbfe72b 47%,
+    #b8d7f066 74%,
+    #ffffffa6
+  );
+  --mobile-nav-bubble-refraction:
+    linear-gradient(100deg, #dfedff55, #e3f2ff0a 27% 67%, #8ab6e34d),
+    linear-gradient(180deg, #e5f3ff61, transparent 22% 73%, #c1ddf566);
   --mobile-nav-bubble-specular: #f1f8ffba;
   --mobile-nav-bubble-specular-soft: #d9edff12;
   --mobile-nav-bubble-shadow:
-    0 12px 22px #00000059, 3px 4px 7px #00000040,
-    inset 1px 0 2px #ffffff61, inset -4px -2px 8px #9dbdde2b;
+    0 12px 22px #00000059, 3px 4px 7px #00000040, inset 1px 0 2px #ffffff61,
+    inset -4px -2px 8px #9dbdde2b;
   --mobile-nav-selected-shadow: 0 1px 3px #0b244b91;
   --sheet-background: linear-gradient(
     165deg,
@@ -528,7 +539,7 @@ input:disabled {
   position: fixed;
   top: -70px;
   left: 16px;
-  z-index: 100;
+  z-index: 90;
   background: var(--primary);
   color: #071227;
   padding: 12px;
@@ -998,14 +1009,25 @@ input:disabled {
   --mobile-nav-background: rgba(255, 255, 255, 0.88);
   --mobile-nav-text: #52647e;
   --mobile-nav-active: #163c82;
-  --mobile-nav-bubble: linear-gradient(110deg, #ffffff70, #ffffff0a 30% 65%, #c1d6ef29), radial-gradient(ellipse at 50% 115%, #7e9db829, transparent 62%);
-  --mobile-nav-bubble-rim: linear-gradient(135deg, #ffffff, #ffffffa6 28%, #99b5ce73 54%, #8dacca99 75%, #ffffffeb);
-  --mobile-nav-bubble-refraction: linear-gradient(100deg, #ffffffd9, #edf6ff0a 28% 65%, #acc5df73), linear-gradient(180deg, #ffffffd9, transparent 24% 72%, #bad1e699);
+  --mobile-nav-bubble:
+    linear-gradient(110deg, #ffffff70, #ffffff0a 30% 65%, #c1d6ef29),
+    radial-gradient(ellipse at 50% 115%, #7e9db829, transparent 62%);
+  --mobile-nav-bubble-rim: linear-gradient(
+    135deg,
+    #ffffff,
+    #ffffffa6 28%,
+    #99b5ce73 54%,
+    #8dacca99 75%,
+    #ffffffeb
+  );
+  --mobile-nav-bubble-refraction:
+    linear-gradient(100deg, #ffffffd9, #edf6ff0a 28% 65%, #acc5df73),
+    linear-gradient(180deg, #ffffffd9, transparent 24% 72%, #bad1e699);
   --mobile-nav-bubble-specular: #ffffff;
   --mobile-nav-bubble-specular-soft: #ffffff26;
   --mobile-nav-bubble-shadow:
-    0 12px 22px #27415f2b, 3px 4px 7px #284b6c1f,
-    inset 1px 0 2px #ffffff, inset -4px -2px 8px #8eabc43d;
+    0 12px 22px #27415f2b, 3px 4px 7px #284b6c1f, inset 1px 0 2px #ffffff,
+    inset -4px -2px 8px #8eabc43d;
   --mobile-nav-selected-shadow: 0 1px 3px #ffffffbd;
   --sheet-background: linear-gradient(165deg, #ffffffef, #f1f6fdf7);
   color-scheme: light;
@@ -1629,7 +1651,7 @@ input:disabled {
   inset: 0;
   background: #000b;
   backdrop-filter: blur(4px);
-  z-index: 60;
+  z-index: 100;
 }
 .dialog-content {
   position: fixed;
@@ -1643,7 +1665,7 @@ input:disabled {
   border-radius: 16px;
   max-width: 440px;
   width: calc(100% - 32px);
-  z-index: 61;
+  z-index: 110;
 }
 .dialog-content h2 {
   font-size: 21px;
@@ -1656,32 +1678,334 @@ input:disabled {
 .dialog-content .button-row {
   justify-content: flex-end;
 }
-.scan-panel {
+
+/* ==========================================================================
+   Scan QR Modal & Backdrop (Liquid Glass FinTech UI)
+   Z-Index Hierarchy:
+     App content:        z-index: 0
+     Sidebar / Header:   z-index: 30 / 35
+     Bottom Navigation:  z-index: 50
+     Modal Backdrop:     z-index: 100
+     Scan Modal:         z-index: 110
+   ========================================================================== */
+
+.scan-overlay {
   position: fixed;
-  top: 20%;
+  inset: 0;
+  z-index: 100;
+  background: rgba(2, 6, 12, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: scan-overlay-fade 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scan-overlay[data-theme="light"] {
+  background: rgba(15, 23, 42, 0.55);
+}
+
+@keyframes scan-overlay-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.scan-modal {
+  position: fixed;
   left: 50%;
-  transform: translateX(-50%);
-  z-index: 40;
-  width: 440px;
-  max-width: calc(100vw - 32px);
-  box-shadow: 0 0 0 9999px #000a;
-  background: var(--surface);
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 110;
+  width: calc(100vw - 32px);
+  max-width: 420px;
+  max-height: calc(100dvh - 32px);
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  margin: 0;
+  padding: 24px;
+  border-radius: 28px;
+  background: rgba(10, 16, 26, 0.88);
+  color: var(--foreground);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.6),
+    inset 0 1px 1px rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(28px) saturate(1.2);
+  -webkit-backdrop-filter: blur(28px) saturate(1.2);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  outline: none;
+  box-sizing: border-box;
+  animation: scan-modal-scale 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes scan-modal-scale {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -46%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Light Theme Styling */
+.scan-modal[data-theme="light"],
+.product-ui[data-theme="light"] .scan-modal {
+  background: rgba(255, 255, 255, 0.94);
+  color: #0b1528;
+  border: 1px solid rgba(190, 210, 235, 0.7);
+  box-shadow:
+    0 24px 64px rgba(18, 38, 70, 0.18),
+    inset 0 1px 1px #ffffff;
+}
+
+.scan-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.scan-modal-title {
+  font-size: 19px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--foreground);
+  letter-spacing: -0.01em;
+}
+
+.scan-modal-subtitle {
+  font-size: 13px;
+  color: var(--secondary);
+  margin: 4px 0 0;
+  line-height: 1.4;
+}
+
+.scan-modal-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  color: var(--secondary);
+  border-radius: 50%;
+  border: 1px solid transparent;
+  transition: all 150ms ease;
+}
+
+.scan-modal-close:hover {
+  color: var(--foreground);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.scan-modal[data-theme="light"] .scan-modal-close:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.scan-modal-body {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
-.scan-panel .card-heading {
-  margin: 0;
+
+/* Camera Preview & Frame */
+.scan-camera-container {
+  position: relative;
+  width: 100%;
+  max-width: 250px;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #050a12;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
 }
+
+.scan-modal[data-theme="light"] .scan-camera-container {
+  background: #0d1624;
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
 .scan-video {
   width: 100%;
-  max-height: 220px;
-  background: #080e16;
-  border-radius: 8px;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
-.scan-panel label {
-  font-size: 12px;
+
+.scan-camera-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(
+    circle at center,
+    rgba(37, 99, 235, 0.08) 0%,
+    transparent 70%
+  );
+}
+
+.scan-placeholder-icon {
+  color: #64748b;
+  opacity: 0.6;
+}
+
+/* Viewfinder overlay */
+.scan-viewfinder {
+  position: absolute;
+  inset: 20px;
+  pointer-events: none;
+}
+
+.scan-corner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: #3b82f6;
+  border-style: solid;
+}
+
+.scan-corner.top-left {
+  top: 0;
+  left: 0;
+  border-width: 2.5px 0 0 2.5px;
+  border-top-left-radius: 8px;
+}
+
+.scan-corner.top-right {
+  top: 0;
+  right: 0;
+  border-width: 2.5px 2.5px 0 0;
+  border-top-right-radius: 8px;
+}
+
+.scan-corner.bottom-left {
+  bottom: 0;
+  left: 0;
+  border-width: 0 0 2.5px 2.5px;
+  border-bottom-left-radius: 8px;
+}
+
+.scan-corner.bottom-right {
+  bottom: 0;
+  right: 0;
+  border-width: 0 2.5px 2.5px 0;
+  border-bottom-right-radius: 8px;
+}
+
+.scan-laser-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #60a5fa, transparent);
+  box-shadow: 0 0 10px rgba(96, 165, 250, 0.7);
+  animation: scan-laser-motion 2s ease-in-out infinite alternate;
+}
+
+@keyframes scan-laser-motion {
+  0% {
+    top: 4px;
+    opacity: 0.4;
+  }
+  100% {
+    top: calc(100% - 6px);
+    opacity: 0.95;
+  }
+}
+
+.scan-camera-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+}
+
+/* Paste link section */
+.scan-paste-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 2px;
+}
+
+.scan-paste-label {
+  font-size: 13px;
   color: var(--secondary);
+  font-weight: 500;
+}
+
+.scan-input-group {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.scan-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 13px;
+  padding: 10px 14px;
+  border-radius: 12px;
+}
+
+.scan-open-btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding-inline: 16px;
+}
+
+.scan-modal-footer {
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.scan-cancel-btn {
+  width: 100%;
+  min-height: 42px;
+  border-radius: 14px;
+}
+
+/* Mobile adjustments (<= 430px) */
+@media (max-width: 430px) {
+  .scan-modal {
+    width: calc(100vw - 24px);
+    padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
+    padding-top: max(20px, env(safe-area-inset-top));
+    gap: 14px;
+    border-radius: 24px;
+  }
+
+  .scan-camera-container {
+    max-width: 210px;
+  }
+
+  .scan-input-group {
+    flex-direction: column;
+  }
+
+  .scan-open-btn {
+    width: 100%;
+  }
 }
 .error-page {
   padding: 15vh 24px;
@@ -2124,9 +2448,6 @@ input:disabled {
   .contact-row .button-row {
     margin-left: auto;
   }
-  .scan-panel {
-    top: 12%;
-  }
   .request-detail h2 {
     font-size: 24px;
   }
@@ -2328,7 +2649,7 @@ html[lang="th"] :is(.technical-text, code, pre, kbd, samp) {
   display: grid;
   gap: 8px;
 }
-.mobile-sheet-links a {
+.mobile-sheet-links :is(a, .mobile-sheet-link-btn) {
   display: flex;
   align-items: center;
   gap: 13px;
@@ -2339,8 +2660,12 @@ html[lang="th"] :is(.technical-text, code, pre, kbd, samp) {
   background: #ffffff0a;
   color: #e4edfc;
   font-size: 14px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
 }
-.mobile-sheet-links a[aria-current] {
+.mobile-sheet-links :is(a, .mobile-sheet-link-btn)[aria-current] {
   border-color: #a5c7fa70;
   background: #7caafa24;
 }
@@ -2507,8 +2832,12 @@ html[lang="th"] :is(.technical-text, code, pre, kbd, samp) {
     padding: 1px;
     border-radius: inherit;
     background: var(--mobile-nav-bubble-rim);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     content: "";
@@ -2534,7 +2863,12 @@ html[lang="th"] :is(.technical-text, code, pre, kbd, samp) {
     left: 12%;
     height: 19%;
     border-radius: 70% 80% 35% 40%;
-    background: linear-gradient(175deg, var(--mobile-nav-bubble-specular), var(--mobile-nav-bubble-specular-soft) 52%, transparent 75%);
+    background: linear-gradient(
+      175deg,
+      var(--mobile-nav-bubble-specular),
+      var(--mobile-nav-bubble-specular-soft) 52%,
+      transparent 75%
+    );
     content: "";
   }
   .mobile-nav-reflection::after {
@@ -2649,11 +2983,6 @@ html[lang="th"] :is(.technical-text, code, pre, kbd, samp) {
   }
   .login-form {
     padding: 30px 24px;
-  }
-  .scan-panel {
-    z-index: 60;
-    max-height: calc(100dvh - 24px);
-    overflow-y: auto;
   }
   .dialog-content {
     max-height: calc(100dvh - 32px);
@@ -2888,9 +3217,6 @@ html[lang="th"] :is(.technical-text, code, pre, kbd, samp) {
   border-color: var(--glass-border);
   background: var(--glass);
 }
-.app-shell[data-theme="light"] .scan-panel {
-  background: var(--surface);
-}
 .mobile-more-sheet[data-theme="light"] {
   color: var(--foreground);
   border-color: #bdcde5;
@@ -2902,7 +3228,10 @@ html[lang="th"] :is(.technical-text, code, pre, kbd, samp) {
   background: #b5c9e5;
 }
 .mobile-more-sheet[data-theme="light"]
-  :is(.mobile-sheet-heading p, .mobile-sheet-links a) {
+  :is(
+    .mobile-sheet-heading p,
+    .mobile-sheet-links :is(a, .mobile-sheet-link-btn)
+  ) {
   color: var(--foreground);
 }
 .mobile-more-sheet[data-theme="light"]
@@ -2910,12 +3239,14 @@ html[lang="th"] :is(.technical-text, code, pre, kbd, samp) {
   color: var(--secondary);
 }
 .mobile-more-sheet[data-theme="light"]
-  :is(.mobile-sheet-close, .mobile-sheet-links a) {
+  :is(.mobile-sheet-close, .mobile-sheet-links :is(a, .mobile-sheet-link-btn)) {
   background: #ffffffbb;
   border-color: var(--glass-border);
   color: var(--foreground);
 }
-.mobile-more-sheet[data-theme="light"] .mobile-sheet-links a[aria-current] {
+.mobile-more-sheet[data-theme="light"]
+  .mobile-sheet-links
+  :is(a, .mobile-sheet-link-btn)[aria-current] {
   background: #dbe8ff;
   border-color: #a9c6f4;
 }

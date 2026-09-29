@@ -41,3 +41,8 @@ export function useTheme() {
   if (!context) throw new Error("ThemeProvider is missing.");
   return context;
 }
+
+export function useThemeOptional(): { theme: Theme } {
+  const context = useContext(ThemeContext);
+  return context ?? { theme: "dark" };
+}

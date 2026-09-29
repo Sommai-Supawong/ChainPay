@@ -3,13 +3,14 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Ellipsis, X } from "lucide-react";
+import { ArrowUpRight, Ellipsis, ScanLine, X } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { Brand } from "@/components/layout/brand";
 import { Button } from "@/components/ui/button";
 import { LanguageToggle } from "@/components/layout/language-toggle";
 import { marketingNav } from "@/components/navigation/marketing-nav";
 import { useTranslation } from "@/i18n";
+import { ScanLink } from "@/components/payment/scan-link";
 
 export function SiteNav({ signedIn }: { signedIn: boolean }) {
   const t = useTranslation();
@@ -17,6 +18,7 @@ export function SiteNav({ signedIn }: { signedIn: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("#");
   const [open, setOpen] = useState(false);
+  const [scanOpen, setScanOpen] = useState(false);
   const destination = signedIn ? "/dashboard" : "/login";
 
   useEffect(() => {
@@ -133,6 +135,22 @@ export function SiteNav({ signedIn }: { signedIn: boolean }) {
             </Dialog.Close>
           </div>
           <div className="mobile-sheet-links">
+            <button
+              type="button"
+              className="mobile-sheet-link-btn"
+              onClick={() => {
+                setOpen(false);
+                setScanOpen(true);
+              }}
+            >
+              <span className="mobile-sheet-icon">
+                <ScanLine size={19} aria-hidden="true" />
+              </span>
+              <span>{t("Scan QR Code")}</span>
+              <span className="mobile-sheet-chevron" aria-hidden="true">
+                ›
+              </span>
+            </button>
             <Link href={destination} onClick={() => setOpen(false)}>
               <span className="mobile-sheet-icon">
                 <ArrowUpRight size={19} />
@@ -149,6 +167,7 @@ export function SiteNav({ signedIn }: { signedIn: boolean }) {
           </div>
         </Dialog.Content>
       </Dialog.Portal>
+      <ScanLink open={scanOpen} onOpenChange={setScanOpen} trigger={null} />
     </Dialog.Root>
   );
 }

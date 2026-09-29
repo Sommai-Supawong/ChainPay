@@ -1,5 +1,7 @@
 import { PaymentForm } from "@/components/payment/payment-form";
 import { PageHeader } from "@/components/ui/primitives";
+import { ScanLink } from "@/components/payment/scan-link";
+
 export default async function PayPage({
   searchParams,
 }: {
@@ -12,6 +14,7 @@ export default async function PayPage({
         eyebrow="SEND WITH CONFIDENCE"
         title="Send a payment"
         description="A clear review before anything leaves your wallet."
+        action={<ScanLink />}
       />
       <div className="form-width">
         <PaymentForm recipient={to} />

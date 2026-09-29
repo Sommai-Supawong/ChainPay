@@ -559,10 +559,14 @@ export const th: Record<string, string> = {
   "Camera unavailable. Allow camera access or paste a payment link.":
     "ใช้กล้องไม่ได้ โปรดอนุญาตการเข้าถึงหรือวางลิงก์แทน",
   "Open a payment link": "เปิดลิงก์ชำระเงิน",
+  "Scan QR Code": "สแกน QR Code",
+  "Align the QR code inside the frame": "จัดตำแหน่ง QR Code ให้อยู่ในกรอบ",
   "Close scanner": "ปิดตัวสแกน",
   "Use camera": "ใช้กล้อง",
+  "Stop camera": "ปิดกล้อง",
   "Or paste a ChainPay payment link": "หรือวางลิงก์ชำระเงิน ChainPay",
   "Open request": "เปิดคำขอ",
+  Cancel: "ยกเลิก",
   "No unsaved transaction was found in this tab.":
     "ไม่พบธุรกรรมที่ยังไม่บันทึกในแท็บนี้",
   "Recovering payment…": "กำลังกู้คืนรายการ…",
