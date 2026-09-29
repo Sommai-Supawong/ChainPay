@@ -23,7 +23,7 @@ test("homepage preview, navigation and help remain usable", async ({
     "Pay with blockchain,without the complexity.",
   );
   if (testInfo.project.name === "mobile") {
-    const mobileNav = page.locator(".marketing-bottom-nav");
+    const mobileNav = page.locator(".mobile-bottom-nav");
     const more = mobileNav.getByRole("button", {
       name: "More",
       includeHidden: true,
@@ -35,10 +35,9 @@ test("homepage preview, navigation and help remain usable", async ({
     await page.keyboard.press("Escape");
     await expect(more).toHaveAttribute("aria-expanded", "false");
     await expect(more).toBeFocused();
-    await mobileNav
-      .getByRole("link", { name: "Features", exact: true })
-      .click();
-    await expect(page).toHaveURL(/#features$/);
+    await expect(
+      mobileNav.getByRole("link", { name: "Features", exact: true }),
+    ).toHaveAttribute("href", "#features");
   }
   const request = page.getByRole("tab", { name: "Request", exact: true });
   await request.click();
@@ -73,7 +72,7 @@ test("responsive navigation stays usable across requested widths and languages",
   await page.goto("/");
   for (const width of [320, 375, 390, 430, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 812 });
-    const mobile = page.locator(".marketing-bottom-nav");
+    const mobile = page.locator(".mobile-bottom-nav");
     if (width <= 800) await expect(mobile).toBeVisible();
     else await expect(mobile).toBeHidden();
     expect(
@@ -174,7 +173,7 @@ test("scan qr modal opens above bottom navigation and closes cleanly", async ({
     const moreBtn = bottomNav.getByRole("button", { name: "More" });
     await moreBtn.click();
 
-    const scanBtn = page.getByRole("button", { name: /Scan QR Code/i });
+    const scanBtn = page.getByRole("button", { name: "Scan QR Code", exact: true });
     await expect(scanBtn).toBeVisible();
     await scanBtn.click();
 

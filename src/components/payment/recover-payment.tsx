@@ -5,9 +5,10 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { api, friendlyError } from "@/lib/client-api";
 import { submitSchema } from "@/lib/validation";
-import { useTranslation } from "@/i18n";
+import { useErrorTranslation, useTranslation } from "@/i18n";
 export function RecoverPayment() {
   const t = useTranslation();
+  const errorText = useErrorTranslation();
   const router = useRouter(),
     [busy, setBusy] = useState(false);
   return (
@@ -28,7 +29,7 @@ export function RecoverPayment() {
           router.push(`/tx/${input.hash}`);
         } catch (error) {
           toast.error(
-            `${t(friendlyError(error))} ${t("Your transaction was submitted successfully, but ChainPay has not saved it yet. Do not pay again. Recover this transaction using the existing hash.")}`,
+            `${errorText(friendlyError(error))} ${t("Your transaction was submitted successfully, but ChainPay has not saved it yet. Do not pay again. Recover this transaction using the existing hash.")}`,
           );
         } finally {
           setBusy(false);

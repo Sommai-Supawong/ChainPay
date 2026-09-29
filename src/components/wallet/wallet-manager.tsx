@@ -1,5 +1,5 @@
 "use client";
-import { T, useTranslation } from "@/i18n";
+import { T, useErrorTranslation, useTranslation } from "@/i18n";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useConnection, useSignMessage, useBalance } from "wagmi";
@@ -13,6 +13,7 @@ import {
   GlassCard,
   EmptyState,
   LoadingState,
+  StatusAlert,
   StatusBadge,
   WalletAddress,
 } from "@/components/ui/primitives";
@@ -35,6 +36,7 @@ export function WalletBalance({ address }: { address: `0x${string}` }) {
 }
 export function WalletManager() {
   const t = useTranslation();
+  const errorText = useErrorTranslation();
   const { address, chainId } = useConnection(),
     sign = useSignMessage(),
     query = useQueryClient();
@@ -51,7 +53,7 @@ export function WalletManager() {
         t(method === "DELETE" ? "Wallet removed" : "Primary wallet updated"),
       );
     } catch (error) {
-      toast.error(t(friendlyError(error)));
+      toast.error(errorText(friendlyError(error)));
     }
   }
   async function verify() {
@@ -70,7 +72,7 @@ export function WalletManager() {
       await query.invalidateQueries({ queryKey: ["wallets"] });
       toast.success(t("Wallet ownership verified"));
     } catch (error) {
-      toast.error(t(friendlyError(error)));
+      toast.error(errorText(friendlyError(error)));
     } finally {
       setBusy(false);
     }
@@ -108,9 +110,9 @@ export function WalletManager() {
       {wallets.isPending ? (
         <LoadingState text="Loading wallets…" />
       ) : wallets.error ? (
-        <p role="alert" className="field-error">
-          {t(wallets.error.message)}
-        </p>
+        <StatusAlert tone="error" title="Unable to load wallets">
+          {errorText(wallets.error.message)}
+        </StatusAlert>
       ) : !wallets.data?.length ? (
         <GlassCard>
           <EmptyState

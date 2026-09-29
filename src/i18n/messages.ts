@@ -14,3 +14,9 @@ export function translate(
       )
     : message;
 }
+
+export function translateError(language: Language, message: string) {
+  if (language !== "th" || /[ก-๙]/.test(message))
+    return translate(language, message);
+  return th[message] ?? th["Something went wrong. Please try again."];
+}

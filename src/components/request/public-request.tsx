@@ -1,5 +1,5 @@
 "use client";
-import { T, useLocale, useTranslation } from "@/i18n";
+import { T, useErrorTranslation, useLocale, useTranslation } from "@/i18n";
 import { useQuery } from "@tanstack/react-query";
 import { ShieldCheck } from "lucide-react";
 import { api } from "@/lib/client-api";
@@ -24,6 +24,7 @@ type PublicRequest = {
 };
 export function PublicRequestView({ slug }: { slug: string }) {
   const t = useTranslation();
+  const errorText = useErrorTranslation();
   const locale = useLocale();
   const query = useQuery({
     queryKey: ["public-request", slug],
@@ -38,8 +39,9 @@ export function PublicRequestView({ slug }: { slug: string }) {
           <T value="Request unavailable" />
         </h1>
         <p className="muted">
-          {query.error?.message ??
-            t("This payment request could not be found.")}
+          {query.error
+            ? errorText(query.error.message)
+            : t("This payment request could not be found.")}
         </p>
       </GlassCard>
     );

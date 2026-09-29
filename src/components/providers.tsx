@@ -42,7 +42,14 @@ export function Providers({
         <QueryClientProvider client={query}>
           <MotionConfig reducedMotion="user">
             {children}
-            {!inApp && <Toaster theme="dark" richColors closeButton />}
+            {!inApp && (
+              <Toaster
+                className="chainpay-toaster"
+                theme="dark"
+                richColors
+                closeButton
+              />
+            )}
           </MotionConfig>
         </QueryClientProvider>
       </WagmiProvider>

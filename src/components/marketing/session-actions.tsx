@@ -38,7 +38,7 @@ export function SessionCta() {
 
 export function SessionNav() {
   return (
-    <Suspense fallback={<SiteNav signedIn={false} />}>
+    <Suspense fallback={<SiteNav signedIn={false} showMobileNav={false} />}>
       <ResolvedNav />
     </Suspense>
   );

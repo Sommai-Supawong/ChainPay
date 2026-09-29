@@ -1,5 +1,5 @@
 "use client";
-import { T, useTranslation } from "@/i18n";
+import { T, useErrorTranslation, useTranslation } from "@/i18n";
 import {
   useConnect,
   useConnectors,
@@ -15,6 +15,7 @@ import { shortAddress } from "@/lib/utils";
 import { friendlyError } from "@/lib/client-api";
 export function ConnectWallet() {
   const t = useTranslation();
+  const errorText = useErrorTranslation();
   const { address, chainId, isConnected } = useConnection();
   const connectors = useConnectors();
   const connect = useConnect(),
@@ -35,7 +36,7 @@ export function ConnectWallet() {
               );
             await connect.mutateAsync({ connector });
           } catch (error) {
-            toast.error(t(friendlyError(error)));
+            toast.error(errorText(friendlyError(error)));
           }
         }}
       >
@@ -54,7 +55,7 @@ export function ConnectWallet() {
             try {
               await network.mutateAsync({ chainId: chain.id });
             } catch (error) {
-              toast.error(t(friendlyError(error)));
+              toast.error(errorText(friendlyError(error)));
             }
           }}
         >

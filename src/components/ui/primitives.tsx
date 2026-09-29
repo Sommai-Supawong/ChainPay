@@ -1,8 +1,23 @@
 import Link from "next/link";
-import { ArrowUpRight, Inbox, LoaderCircle } from "lucide-react";
+import {
+  Activity,
+  ArrowUpRight,
+  BadgeCheck,
+  Ban,
+  CheckCircle2,
+  CircleX,
+  Clock3,
+  FilePenLine,
+  Inbox,
+  Info,
+  LoaderCircle,
+  ShieldCheck,
+  TimerOff,
+  TriangleAlert,
+} from "lucide-react";
 import { cn, shortAddress } from "@/lib/utils";
 import { Button } from "./button";
-import { T } from "@/i18n";
+import { T, useErrorTranslation } from "@/i18n";
 import { Children, cloneElement, isValidElement } from "react";
 export function GlassCard({
   children,
@@ -47,21 +62,66 @@ export function PageHeader({
     </header>
   );
 }
+const statusPresentation = {
+  paid: { label: "Paid", icon: CheckCircle2, tone: "paid" },
+  active: { label: "Active", icon: Activity, tone: "active" },
+  pending: { label: "Pending", icon: Clock3, tone: "warning" },
+  confirmed: { label: "Confirmed", icon: BadgeCheck, tone: "success" },
+  failed: { label: "Failed", icon: CircleX, tone: "error" },
+  cancelled: { label: "Cancelled", icon: Ban, tone: "muted" },
+  expired: { label: "Expired", icon: TimerOff, tone: "muted" },
+  verified: { label: "Verified", icon: ShieldCheck, tone: "success" },
+  draft: { label: "Draft", icon: FilePenLine, tone: "muted" },
+  primary: { label: "Primary", icon: ShieldCheck, tone: "info" },
+} as const;
+
 export function StatusBadge({ status }: { status: string }) {
+  const presentation =
+    statusPresentation[status as keyof typeof statusPresentation];
+  const Icon = presentation?.icon ?? Info;
   return (
     <span
       data-status={status}
-      className={cn(
-        "badge",
-        ["confirmed", "paid", "verified", "active"].includes(status)
-          ? "badge-success"
-          : ["pending", "draft"].includes(status)
-            ? "badge-warning"
-            : "badge-muted",
-      )}
+      data-tone={presentation?.tone ?? "muted"}
+      className="badge status-badge"
     >
-      <T value={status} />
+      <Icon size={13} strokeWidth={2} aria-hidden="true" />
+      <T value={presentation?.label ?? status} />
     </span>
+  );
+}
+
+const alertIcons = {
+  success: CheckCircle2,
+  warning: TriangleAlert,
+  error: CircleX,
+  info: Info,
+} as const;
+
+export function StatusAlert({
+  tone,
+  title,
+  children,
+}: {
+  tone: keyof typeof alertIcons;
+  title: string;
+  children?: React.ReactNode;
+}) {
+  const Icon = alertIcons[tone];
+  return (
+    <div
+      className="status-alert"
+      data-tone={tone}
+      role={tone === "error" ? "alert" : "status"}
+    >
+      <Icon size={18} aria-hidden="true" />
+      <div>
+        <strong>
+          <T value={title} />
+        </strong>
+        {children && <p>{children}</p>}
+      </div>
+    </div>
   );
 }
 export function EmptyState({
@@ -152,6 +212,7 @@ export function Field({
   children: React.ReactNode;
   hint?: string;
 }) {
+  const errorText = useErrorTranslation();
   return (
     <div className="field">
       <label htmlFor={name}>
@@ -186,7 +247,7 @@ export function Field({
       )}
       {error && (
         <p className="field-error" role="alert" id={`${name}-error`}>
-          <T value={error} />
+          {errorText(error)}
         </p>
       )}
     </div>

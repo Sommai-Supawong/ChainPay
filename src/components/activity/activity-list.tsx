@@ -1,5 +1,5 @@
 "use client";
-import { T, useLocale, useTranslation } from "@/i18n";
+import { T, useErrorTranslation, useLocale, useTranslation } from "@/i18n";
 import Link from "next/link";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -9,6 +9,7 @@ import { eth, shortAddress } from "@/lib/utils";
 import {
   EmptyState,
   LoadingState,
+  StatusAlert,
   StatusBadge,
 } from "@/components/ui/primitives";
 import type { ContactModel, TransactionModel } from "@/types/models";
@@ -55,6 +56,7 @@ export function TransactionRow({ row }: { row: TransactionModel }) {
 }
 export function ActivityList({ initial }: { initial?: TransactionModel[] }) {
   const t = useTranslation();
+  const errorText = useErrorTranslation();
   const [filter, setFilter] = useState("all"),
     [search, setSearch] = useState("");
   const query = useQuery({
@@ -106,9 +108,9 @@ export function ActivityList({ initial }: { initial?: TransactionModel[] }) {
       {query.isPending ? (
         <LoadingState text="Loading activity…" />
       ) : query.error ? (
-        <p className="field-error" role="alert">
-          {t(query.error.message)}
-        </p>
+        <StatusAlert tone="error" title="Unable to load activity">
+          {errorText(query.error.message)}
+        </StatusAlert>
       ) : rows?.length ? (
         rows.map((row) => <TransactionRow key={row.id} row={row} />)
       ) : (

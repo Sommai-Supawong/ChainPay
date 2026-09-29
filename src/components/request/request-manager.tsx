@@ -1,5 +1,5 @@
 "use client";
-import { T, useLocale, useTranslation } from "@/i18n";
+import { T, useErrorTranslation, useLocale, useTranslation } from "@/i18n";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -17,6 +17,7 @@ import {
   Field,
   GlassCard,
   LoadingState,
+  StatusAlert,
   StatusBadge,
 } from "@/components/ui/primitives";
 import { CopyButton } from "@/components/ui/copy-button";
@@ -25,6 +26,7 @@ import type { RequestModel, WalletModel } from "@/types/models";
 
 export function RequestList() {
   const t = useTranslation();
+  const errorText = useErrorTranslation();
   const locale = useLocale();
   const query = useQuery({
     queryKey: ["requests"],
@@ -33,9 +35,9 @@ export function RequestList() {
   if (query.isPending) return <LoadingState text="Loading payment requests…" />;
   if (query.error)
     return (
-      <p role="alert" className="error-banner">
-        {t(query.error.message)}
-      </p>
+      <StatusAlert tone="error" title="Unable to load requests">
+        {errorText(query.error.message)}
+      </StatusAlert>
     );
   if (!query.data?.length)
     return (
@@ -88,6 +90,7 @@ export function RequestList() {
 }
 export function RequestForm() {
   const t = useTranslation();
+  const errorText = useErrorTranslation();
   const router = useRouter();
   const wallets = useQuery({
     queryKey: ["wallets"],
@@ -113,16 +116,16 @@ export function RequestForm() {
       toast.success(t("Payment request created"));
       router.push(`/request/${row.id}`);
     } catch (error) {
-      toast.error(t(friendlyError(error)));
+      toast.error(errorText(friendlyError(error)));
     }
   }
   if (wallets.isPending)
     return <LoadingState text="Loading verified wallets…" />;
   if (wallets.error)
     return (
-      <p className="error-banner" role="alert">
-        {t(wallets.error.message)}
-      </p>
+      <StatusAlert tone="error" title="Unable to load wallets">
+        {errorText(wallets.error.message)}
+      </StatusAlert>
     );
   if (!wallets.data?.length)
     return (
@@ -179,7 +182,11 @@ export function RequestForm() {
           label="Receive into"
           error={form.formState.errors.receiverWalletId?.message}
         >
-          <select id="receiverWalletId" className="technical-text" {...form.register("receiverWalletId")}>
+          <select
+            id="receiverWalletId"
+            className="technical-text"
+            {...form.register("receiverWalletId")}
+          >
             <option value="">
               <T value="Choose a verified wallet" />
             </option>
@@ -233,6 +240,7 @@ export function RequestForm() {
 }
 export function RequestDetail({ id }: { id: string }) {
   const t = useTranslation();
+  const errorText = useErrorTranslation();
   const locale = useLocale();
   const cache = useQueryClient();
   const query = useQuery({
@@ -250,15 +258,15 @@ export function RequestDetail({ id }: { id: string }) {
       await cache.invalidateQueries({ queryKey: ["requests"] });
       toast.success(t("Request updated"));
     } catch (error) {
-      toast.error(t(friendlyError(error)));
+      toast.error(errorText(friendlyError(error)));
     }
   }
   if (query.isPending) return <LoadingState text="Loading request…" />;
   if (query.error || !query.data)
     return (
-      <p role="alert" className="error-banner">
-        {query.error?.message ?? t("Request not found.")}
-      </p>
+      <StatusAlert tone="error" title="Unable to load request">
+        {query.error ? errorText(query.error.message) : t("Request not found.")}
+      </StatusAlert>
     );
   const r = query.data;
   const url = `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/p/${r.slug}`;
@@ -293,7 +301,12 @@ export function RequestDetail({ id }: { id: string }) {
             <T value="Scan to view this request. No ChainPay account needed." />
           </p>
           <div className="share-link">
-            <input className="technical-text" aria-label={t("Public payment URL")} value={url} readOnly />
+            <input
+              className="technical-text"
+              aria-label={t("Public payment URL")}
+              value={url}
+              readOnly
+            />
             <CopyButton value={url} label="Link" />
           </div>
           <Button asChild variant="secondary">

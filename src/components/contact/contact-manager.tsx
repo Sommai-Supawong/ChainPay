@@ -1,5 +1,5 @@
 "use client";
-import { T, useTranslation } from "@/i18n";
+import { T, useErrorTranslation, useTranslation } from "@/i18n";
 import Link from "next/link";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -15,12 +15,14 @@ import {
   Field,
   GlassCard,
   LoadingState,
+  StatusAlert,
   WalletAddress,
 } from "@/components/ui/primitives";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import type { ContactModel } from "@/types/models";
 export function ContactManager() {
   const t = useTranslation();
+  const errorText = useErrorTranslation();
   const cache = useQueryClient(),
     [editing, setEditing] = useState<string | null>(null);
   const contacts = useQuery({
@@ -42,7 +44,7 @@ export function ContactManager() {
       setEditing(null);
       toast.success(t("Contact saved"));
     } catch (error) {
-      toast.error(t(friendlyError(error)));
+      toast.error(errorText(friendlyError(error)));
     }
   }
   async function remove(id: string) {
@@ -51,7 +53,7 @@ export function ContactManager() {
       await cache.invalidateQueries({ queryKey: ["contacts"] });
       toast.success(t("Contact removed"));
     } catch (error) {
-      toast.error(t(friendlyError(error)));
+      toast.error(errorText(friendlyError(error)));
     }
   }
   return (
@@ -117,9 +119,9 @@ export function ContactManager() {
         {contacts.isPending ? (
           <LoadingState text="Loading contacts…" />
         ) : contacts.error ? (
-          <p className="error-banner" role="alert">
-            {t(contacts.error.message)}
-          </p>
+          <StatusAlert tone="error" title="Unable to load contacts">
+            {errorText(contacts.error.message)}
+          </StatusAlert>
         ) : !contacts.data?.length ? (
           <EmptyState
             title="Keep your people close"

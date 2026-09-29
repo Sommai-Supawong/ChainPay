@@ -1,5 +1,5 @@
 "use client";
-import { T, useTranslation } from "@/i18n";
+import { T, useErrorTranslation, useTranslation } from "@/i18n";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -19,6 +19,7 @@ export function ProfileForm({
   email: string;
 }) {
   const t = useTranslation();
+  const errorText = useErrorTranslation();
   const router = useRouter();
   const form = useForm<z.input<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
@@ -33,7 +34,7 @@ export function ProfileForm({
           toast.success(t("Profile updated"));
           router.refresh();
         } catch (error) {
-          toast.error(t(friendlyError(error)));
+          toast.error(errorText(friendlyError(error)));
         }
       })}
     >

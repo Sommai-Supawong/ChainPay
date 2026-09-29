@@ -1,5 +1,5 @@
 "use client";
-import { T, useTranslation } from "@/i18n";
+import { T, useErrorTranslation, useTranslation } from "@/i18n";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 export function LoginButton() {
   const router = useRouter();
   const t = useTranslation();
+  const errorText = useErrorTranslation();
   const [busy, setBusy] = useState(false);
   return (
     <Button
@@ -24,7 +25,7 @@ export function LoginButton() {
           router.replace("/dashboard");
           router.refresh();
         } catch (error) {
-          toast.error(t(friendlyError(error)));
+          toast.error(errorText(friendlyError(error)));
           setBusy(false);
         }
       }}
@@ -39,6 +40,7 @@ export function LoginButton() {
 export function LogoutButton() {
   const router = useRouter();
   const t = useTranslation();
+  const errorText = useErrorTranslation();
   const [busy, setBusy] = useState(false);
   return (
     <Button
@@ -51,7 +53,7 @@ export function LogoutButton() {
           router.replace("/login");
           router.refresh();
         } catch (error) {
-          toast.error(t(friendlyError(error)));
+          toast.error(errorText(friendlyError(error)));
         } finally {
           setBusy(false);
         }

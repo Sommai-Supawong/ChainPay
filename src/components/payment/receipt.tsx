@@ -1,5 +1,5 @@
 "use client";
-import { T, useLocale, useTranslation } from "@/i18n";
+import { T, useErrorTranslation, useLocale, useTranslation } from "@/i18n";
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, Clock3, ExternalLink, RefreshCw, CircleX } from "lucide-react";
@@ -9,6 +9,7 @@ import { eth } from "@/lib/utils";
 import {
   GlassCard,
   LoadingState,
+  StatusAlert,
   WalletAddress,
   StatusBadge,
 } from "@/components/ui/primitives";
@@ -17,6 +18,7 @@ import { CopyButton } from "@/components/ui/copy-button";
 import type { ReceiptModel } from "@/types/models";
 export function Receipt({ hash }: { hash: string }) {
   const t = useTranslation();
+  const errorText = useErrorTranslation();
   const locale = useLocale();
   const cache = useQueryClient();
   const receipt = useQuery({
@@ -49,7 +51,7 @@ export function Receipt({ hash }: { hash: string }) {
           <T value="Receipt unavailable" />
         </h2>
         <p className="muted">
-          {receipt.error?.message && t(receipt.error.message)}
+          {receipt.error?.message && errorText(receipt.error.message)}
         </p>
         <Button variant="secondary" onClick={() => receipt.refetch()}>
           <T value="Try again" />
@@ -163,9 +165,9 @@ export function Receipt({ hash }: { hash: string }) {
         </dl>
       </details>
       {verification.error && (
-        <p className="field-error" role="alert">
-          {t(verification.error.message)}
-        </p>
+        <StatusAlert tone="error" title="Unable to verify payment">
+          {errorText(verification.error.message)}
+        </StatusAlert>
       )}
       {data.status === "pending" &&
         verification.data?.reason === "awaiting_confirmations" && (

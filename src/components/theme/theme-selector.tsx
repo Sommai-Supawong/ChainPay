@@ -3,13 +3,14 @@
 import { useState } from "react";
 import { Moon, Sun, Check } from "lucide-react";
 import { toast } from "sonner";
-import { T, useTranslation } from "@/i18n";
+import { T, useErrorTranslation, useTranslation } from "@/i18n";
 import { friendlyError } from "@/lib/client-api";
 import { useTheme, type Theme } from "./theme-provider";
 
 export function ThemeSelector() {
   const { theme, changeTheme } = useTheme();
   const t = useTranslation();
+  const errorText = useErrorTranslation();
   const [saving, setSaving] = useState(false);
   async function select(next: Theme) {
     if (saving || next === theme) return;
@@ -17,7 +18,7 @@ export function ThemeSelector() {
     try {
       await changeTheme(next);
     } catch (error) {
-      toast.error(t(friendlyError(error)));
+      toast.error(errorText(friendlyError(error)));
     } finally {
       setSaving(false);
     }

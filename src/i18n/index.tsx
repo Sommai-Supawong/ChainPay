@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { translate } from "./messages";
+import { translate, translateError } from "./messages";
 import type { Language } from "./types";
 
 export type { Language } from "./types";
@@ -49,6 +49,11 @@ export function useTranslation() {
   const { language } = useLanguage();
   return (key: string, values?: Record<string, string | number>) =>
     translate(language, key, values);
+}
+
+export function useErrorTranslation() {
+  const { language } = useLanguage();
+  return (message: string) => translateError(language, message);
 }
 
 export function T({

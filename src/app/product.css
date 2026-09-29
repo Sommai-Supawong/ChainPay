@@ -303,6 +303,45 @@
   color: var(--primary-light);
   background: var(--primary-soft);
 }
+.product-ui .status-badge {
+  display: inline-flex;
+  gap: 5px;
+  max-width: 100%;
+  padding: 5px 9px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: none;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  backdrop-filter: blur(8px);
+}
+.product-ui .status-badge[data-tone="paid"],
+.product-ui .status-badge[data-tone="success"] {
+  color: var(--success);
+  background: color-mix(in srgb, var(--success) 9%, var(--surface));
+  border-color: color-mix(in srgb, var(--success) 28%, transparent);
+}
+.product-ui .status-badge[data-tone="active"],
+.product-ui .status-badge[data-tone="info"] {
+  color: var(--primary-light);
+  background: color-mix(in srgb, var(--primary) 9%, var(--surface));
+  border-color: color-mix(in srgb, var(--primary) 28%, transparent);
+}
+.product-ui .status-badge[data-tone="warning"] {
+  color: var(--warning);
+  background: color-mix(in srgb, var(--warning) 9%, var(--surface));
+  border-color: color-mix(in srgb, var(--warning) 28%, transparent);
+}
+.product-ui .status-badge[data-tone="error"] {
+  color: var(--error);
+  background: color-mix(in srgb, var(--error) 9%, var(--surface));
+  border-color: color-mix(in srgb, var(--error) 28%, transparent);
+}
+.product-ui .status-badge[data-tone="muted"] {
+  color: var(--secondary);
+  background: var(--surface-soft);
+  border-color: var(--border-strong);
+}
 
 /* A calm, fixed desktop frame; the existing mobile glass control is preserved. */
 .product-ui.app-shell {
@@ -1435,7 +1474,7 @@
     max-width: 43%;
   }
   .product-ui .transaction-value .badge {
-    font-size: 9px;
+    font-size: 10px;
   }
   .product-ui .wallet-grid,
   .product-ui .request-grid {

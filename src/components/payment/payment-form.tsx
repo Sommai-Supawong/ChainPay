@@ -1,5 +1,5 @@
 "use client";
-import { T, useTranslation } from "@/i18n";
+import { T, useErrorTranslation, useTranslation } from "@/i18n";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -21,7 +21,12 @@ import {
 } from "@/lib/blockchain/config";
 import { paymentSchema, type PaymentInput } from "@/lib/validation";
 import { Button } from "@/components/ui/button";
-import { Field, GlassCard, WalletAddress } from "@/components/ui/primitives";
+import {
+  Field,
+  GlassCard,
+  StatusAlert,
+  WalletAddress,
+} from "@/components/ui/primitives";
 import { ConnectWallet } from "@/components/wallet/connect-wallet";
 import { CopyButton } from "@/components/ui/copy-button";
 import { WalletBalance } from "@/components/wallet/wallet-manager";
@@ -37,6 +42,7 @@ export function PaymentForm({
   recipient?: string;
 }) {
   const t = useTranslation();
+  const errorText = useErrorTranslation();
   const router = useRouter();
   const account = useConnection(),
     client = usePublicClient({ chainId: chain.id }),
@@ -95,7 +101,7 @@ export function PaymentForm({
         );
       setReview({ intent, fee, note: input.note });
     } catch (err) {
-      setError(t(friendlyError(err)));
+      setError(errorText(friendlyError(err)));
     } finally {
       setBusy("");
     }
@@ -108,7 +114,7 @@ export function PaymentForm({
       router.push(`/tx/${value.hash}`);
     } catch (err) {
       setError(
-        `${t(friendlyError(err))} ${t("Your transaction was submitted successfully, but ChainPay has not saved it yet. Do not pay again. Recover this transaction using the existing hash.")}`,
+        `${errorText(friendlyError(err))} ${t("Your transaction was submitted successfully, but ChainPay has not saved it yet. Do not pay again. Recover this transaction using the existing hash.")}`,
       );
     } finally {
       setBusy("");
@@ -161,7 +167,7 @@ export function PaymentForm({
       }
       await persist(value);
     } catch (err) {
-      setError(t(friendlyError(err)));
+      setError(errorText(friendlyError(err)));
     } finally {
       setBusy("");
     }
@@ -210,9 +216,9 @@ export function PaymentForm({
         </p>
       )}
       {error && (
-        <p className="error-banner" role="alert">
+        <StatusAlert tone="error" title="Payment needs attention">
           {error}
-        </p>
+        </StatusAlert>
       )}
       {submission ? (
         <div className="stack">

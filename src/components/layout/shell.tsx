@@ -109,7 +109,12 @@ export function AppShell({
         </footer>
       </div>
       <MobileBottomNav name={name} email={email} />
-      <Toaster theme={theme} richColors closeButton />
+      <Toaster
+        className="chainpay-toaster"
+        theme={theme}
+        richColors
+        closeButton
+      />
     </div>
   );
 }
