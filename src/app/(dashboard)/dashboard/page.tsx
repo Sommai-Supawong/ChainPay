@@ -7,6 +7,7 @@ import {
   Wallet,
   ReceiptText,
   ShieldCheck,
+  Clock3,
 } from "lucide-react";
 import { formatEther } from "viem";
 import { pageUser } from "@/lib/auth/session";
@@ -42,18 +43,10 @@ export default async function DashboardPage() {
   return (
     <div className="dashboard-page">
       <PageHeader
-        eyebrow="YOUR MONEY, WITH MORE CLARITY"
+        eyebrow="OVERVIEW"
         title={user.displayName ? "Welcome, {name}." : "Welcome."}
         titleValues={{ name: user.displayName?.split(" ")[0] ?? "" }}
-        description="Here’s where everything comes together."
-        action={
-          <Button asChild>
-            <Link href="/pay">
-              <ArrowUpRight size={17} />
-              <T value="Send payment" />
-            </Link>
-          </Button>
-        }
+        description="Your balance, payments, and requests at a glance."
       />
       <div className="dashboard-top">
         <GlassCard className="balance-card">
@@ -61,10 +54,20 @@ export default async function DashboardPage() {
             <span className="mini-label">
               <T value="YOUR PRIMARY WALLET" />
             </span>
-            <Wallet size={21} />
+            <Link href="/wallets" className="text-link">
+              <T value="Manage" />
+              <ArrowUpRight size={16} />
+            </Link>
           </div>
           {primary ? (
             <>
+              <p className="wallet-name">
+                <Wallet size={16} aria-hidden="true" />
+                {primary.label}
+              </p>
+              <p className="mini-label balance-caption">
+                <T value="Available balance" />
+              </p>
               <div className="balance-value">
                 <WalletBalance address={primary.address as `0x${string}`} />
               </div>
@@ -102,10 +105,10 @@ export default async function DashboardPage() {
         </GlassCard>
         <GlassCard className="quick-actions">
           <p className="eyebrow">
-            <T value="MAKE YOUR NEXT MOVE" />
+            <T value="PAYMENTS" />
           </p>
           <h2>
-            <T value="What’s on your mind?" />
+            <T value="Quick actions" />
           </h2>
           <div className="quick-action-grid">
             <Button asChild variant="secondary">
@@ -129,7 +132,7 @@ export default async function DashboardPage() {
             <ScanLink />
           </div>
           <p className="small muted">
-            <T value="Payments and requests, just a tap away." />
+            <T value="Your wallet approves every payment." />
           </p>
         </GlassCard>
       </div>
@@ -166,6 +169,22 @@ export default async function DashboardPage() {
         </GlassCard>
         <GlassCard>
           <div className="stat-label">
+            <Clock3 size={17} />
+            <T value="Pending payments" />
+          </div>
+          <strong className="stat-value">
+            {
+              transactions.filter(
+                (transaction) => transaction.status === "pending",
+              ).length
+            }
+          </strong>
+          <p className="small muted">
+            <T value="Awaiting network confirmation" />
+          </p>
+        </GlassCard>
+        <GlassCard>
+          <div className="stat-label">
             <ReceiptText size={17} />
             <T value="Open requests" />
           </div>
@@ -187,7 +206,7 @@ export default async function DashboardPage() {
               <T value="Recent activity" />
             </h2>
             <p className="muted small">
-              <T value="Every payment has a story." />
+              <T value="Your latest payments and their status." />
             </p>
           </div>
           <Link href="/activity" className="text-link">

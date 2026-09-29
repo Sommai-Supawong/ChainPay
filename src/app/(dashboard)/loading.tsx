@@ -1,4 +1,4 @@
-import { LoadingState } from "@/components/ui/primitives";
+import { PageSkeleton } from "@/components/ui/primitives";
 export default function Loading() {
-  return <LoadingState />;
+  return <PageSkeleton />;
 }

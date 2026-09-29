@@ -24,7 +24,10 @@ export function ConfirmDialog({
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="dialog-overlay" />
-        <Dialog.Content className="dialog-content" data-theme={theme}>
+        <Dialog.Content
+          className="dialog-content product-ui"
+          data-theme={theme}
+        >
           <Dialog.Title>{t(title)}</Dialog.Title>
           <Dialog.Description>{t(description)}</Dialog.Description>
           <div className="button-row">

@@ -670,4 +670,36 @@ export const th: Record<string, string> = {
     "Ethereum ไม่พบเหตุการณ์ชำระเงินที่คาดไว้",
   "We could not complete this request. Please try again.":
     "ทำรายการไม่สำเร็จ โปรดลองอีกครั้ง",
+  "PAYMENTS, MADE CLEAR": "ชำระเงินอย่างชัดเจน",
+  "Send with confidence": "ส่งเงินอย่างมั่นใจ",
+  "Review every payment before you approve it.":
+    "ตรวจสอบทุกรายการก่อนยืนยันการชำระเงิน",
+  "Request with a link": "เรียกเก็บเงินผ่านลิงก์",
+  "Share a payment request, then follow its progress.":
+    "แชร์คำขอชำระเงิน แล้วติดตามสถานะได้ทุกขั้นตอน",
+  "Keep a clear record": "ทุกรายการ ตรวจสอบได้",
+  "Your payments and receipts, together in one place.":
+    "รวมรายการชำระเงินและใบเสร็จไว้ในที่เดียว",
+  "Your account starts here.": "เริ่มต้นใช้งานที่นี่",
+  "Your wallet stays yours": "คุณเป็นผู้ควบคุมกระเป๋าเสมอ",
+  OVERVIEW: "ภาพรวม",
+  "Your balance, payments, and requests at a glance.":
+    "ดูยอดเงิน รายการชำระ และคำขอได้ในที่เดียว",
+  Manage: "จัดการ",
+  "Available balance": "ยอดเงินคงเหลือ",
+  PAYMENTS: "การชำระเงิน",
+  "Quick actions": "ทำรายการ",
+  "Your wallet approves every payment.":
+    "ยืนยันทุกการชำระเงินผ่านกระเป๋าของคุณ",
+  "Pending payments": "รอยืนยัน",
+  "Awaiting network confirmation": "กำลังรอเครือข่ายยืนยัน",
+  "Your latest payments and their status.": "รายการชำระเงินล่าสุดและสถานะ",
+  "Payment progress": "ขั้นตอนการชำระเงิน",
+  Details: "รายละเอียด",
+  Review: "ตรวจสอบ",
+  Confirmation: "ยืนยัน",
+  "Your account details": "ข้อมูลบัญชีของคุณ",
+  "Sign-in and wallet security": "การเข้าสู่ระบบและกระเป๋าเงิน",
+  "Make ChainPay feel like you": "เลือกหน้าตาที่เหมาะกับคุณ",
+  "Transaction details": "รายละเอียดธุรกรรม",
 };

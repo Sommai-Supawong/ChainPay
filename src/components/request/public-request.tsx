@@ -62,8 +62,7 @@ export function PublicRequestView({ slug }: { slug: string }) {
         </div>
         <p className="muted">{r.description}</p>
         <p className="small muted">
-          <T value="To" />
-          <WalletAddress address={r.receiver} full />
+          <T value="To" /> <WalletAddress address={r.receiver} full />
         </p>
         {r.expiresAt && (
           <p className="small muted">

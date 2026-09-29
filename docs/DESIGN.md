@@ -1,5 +1,42 @@
 # Design system
 
+## Product polish — September 2026
+
+`src/app/product.css` is the application design layer. Its selectors are scoped to `.product-ui` on AppShell, Login, public payment/receipt pages, and portaled dialogs/sheets. Marketing components and `marketing.css` are unchanged. Public pages still default to Dark; the saved account preference remains limited to authenticated routes.
+
+### Surfaces and tokens
+
+| Layer            | Dark      | Light     | Use                                |
+| ---------------- | --------- | --------- | ---------------------------------- |
+| Canvas           | `#080c13` | `#f3f6fa` | App background                     |
+| Surface          | `#0e141e` | `#ffffff` | Forms, lists, informational cards  |
+| Soft surface     | `#111a27` | `#f6f8fc` | Secondary controls                 |
+| Elevated surface | `#172131` | `#eaf0f8` | Selected controls and subtle depth |
+| Accent           | `#78a2ff` | `#245bd1` | Primary actions and focus          |
+| Primary text     | `#f3f6fb` | `#18273c` | Titles and financial values        |
+| Secondary text   | `#a3b1c6` | `#52647b` | Descriptions and metadata          |
+
+Semantic variables also cover input borders/backgrounds, success/warning/error, glass rims/highlights, and soft/elevated shadows. Radius hierarchy is 13px controls, 22px cards, 28px feature surfaces, and pill-shaped floating navigation. Normal cards use opaque Soft UI surfaces. Glass is reserved for Login, floating navigation, sheets/dialogs, and selected controls; the primary wallet uses a restrained surface gradient and inner highlight.
+
+### Page hierarchy
+
+- **Login:** brand and language controls, short product explanation, one Google action, and explicit account/wallet security reassurance. Desktop uses two columns; mobile uses a compact single column.
+- **Dashboard:** greeting, primary wallet label/balance/address/verification/network, quick actions, real sent/received/pending/open-request totals, and recent activity. Existing server data and balance hooks remain authoritative.
+- **Payments:** three-step progress, prominent amount, clear review totals and signing action. Submission/recovery logic is unchanged.
+- **Requests, wallets, contacts:** shared quiet cards; primary wallet distinction; recipient initials and names before addresses; clear actions and status text.
+- **Activity and receipt:** compact rows include localized dates. Receipts emphasize status, amount and payment title; hash/block/confirmation metadata is available in a keyboard-accessible disclosure.
+- **Settings:** icon/title/description destinations, account summary, existing visual theme previews, and stacked navigation on mobile.
+
+### Responsive, motion, and accessibility
+
+Desktop uses a 248px sidebar (216px at intermediate widths); below 800px, the sticky header and existing custom bottom navigation take over. Content reserves safe-area-aware bottom space. The 3D glass lens, pill ends, resting dimensions, tap/hold/drag and route synchronization are preserved. Mobile dashboard statistics use two columns, actions use four compact controls, and long addresses/receipt details wrap. The audit targets 320, 375, 390, 430, 768, 1024, 1280, and 1440px.
+
+Buttons generally have 44–46px minimum targets, forms have 48px inputs, and the financial amount input is larger. Focus rings use the theme accent. `Field` associates hints/errors with matching child controls using `aria-describedby` and exposes `aria-invalid`; status labels communicate meaning in text. Radix retains focus trapping and Escape handling. English uses the existing font stack; Thai uses Kanit with relaxed line height and no tracking on headings/controls.
+
+`PageSkeleton` gives dashboard route transitions a content-shaped loading state with one screen-reader status. Page entrance uses opacity/12px translation over 260ms; control feedback is 160ms with a shared ease curve. Reduced motion disables these transitions/animations. The existing MotionConfig also respects the preference.
+
+Reusable components remain Button, GlassCard, PageHeader, Field, StatusBadge, EmptyState, LoadingState, CopyButton, TransactionRow, ConfirmDialog and SettingsTabs; the only new visual primitive is PageSkeleton. Shared CSS carries the visual system instead of duplicating component variants.
+
 ## Account appearance
 
 Authenticated routes now use an account-level Dark (default) or Light theme selected at `/settings/theme`. The dashboard layout reads `users.theme_preference` on the server and passes it to a client ThemeProvider. The initial `data-theme` attribute is therefore rendered with the saved value, without a client-only theme flash; switching updates the app shell immediately and persists through an authorized endpoint. The preference is scoped to the authenticated shell. Marketing `/`, login, and public payment/receipt pages stay dark.

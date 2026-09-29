@@ -12,7 +12,7 @@ export default async function PublicPaymentPage({
   const { slug } = await params;
   if (!slugSchema.safeParse(slug).success) notFound();
   return (
-    <div className="public-page">
+    <div className="public-page product-ui">
       <header>
         <Brand />
         <LanguageToggle />

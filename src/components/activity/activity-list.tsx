@@ -1,5 +1,5 @@
 "use client";
-import { T, useTranslation } from "@/i18n";
+import { T, useLocale, useTranslation } from "@/i18n";
 import Link from "next/link";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -14,6 +14,7 @@ import {
 import type { ContactModel, TransactionModel } from "@/types/models";
 export function TransactionRow({ row }: { row: TransactionModel }) {
   const t = useTranslation();
+  const locale = useLocale();
   return (
     <Link href={`/tx/${row.txHash}`} className="transaction-row">
       <span
@@ -33,6 +34,14 @@ export function TransactionRow({ row }: { row: TransactionModel }) {
             row.direction === "received" ? row.fromAddress : row.toAddress,
           )}
         </span>
+        <time dateTime={row.submittedAt}>
+          {new Date(row.submittedAt).toLocaleDateString(locale, {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+            timeZone: "UTC",
+          })}
+        </time>
       </div>
       <div className="transaction-value">
         <strong>

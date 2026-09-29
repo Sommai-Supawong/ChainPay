@@ -173,11 +173,21 @@ export function PaymentForm({
       account.chainId !== chain.id);
   return (
     <GlassCard className="payment-form">
+      <ol className="payment-progress" aria-label={t("Payment progress")}>
+        {["Details", "Review", "Confirmation"].map((label, index) => (
+          <li
+            key={label}
+            aria-current={
+              index === (submission ? 2 : review ? 1 : 0) ? "step" : undefined
+            }
+          >
+            <span aria-hidden="true">{index + 1}</span>
+            <span>{t(label)}</span>
+          </li>
+        ))}
+      </ol>
       <div className="card-heading">
         <div>
-          <p className="eyebrow">
-            {t(review ? "02 / REVIEW" : "01 / PAYMENT DETAILS")}
-          </p>
           <h2>
             {t(
               submission

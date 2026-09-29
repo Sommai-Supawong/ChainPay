@@ -12,7 +12,7 @@ export default function SecurityPage() {
         description="Clear boundaries. Control stays with you."
       />
       <SettingsTabs current="security" />
-      <div className="stack form-width">
+      <div className="stack form-width security-settings">
         <GlassCard>
           <ShieldCheck className="accent" />
           <h2>

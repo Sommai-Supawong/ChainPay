@@ -121,7 +121,10 @@ export function WalletManager() {
       ) : (
         <div className="wallet-grid">
           {wallets.data.map((wallet) => (
-            <GlassCard key={wallet.id}>
+            <GlassCard
+              key={wallet.id}
+              className={wallet.isPrimary ? "primary-wallet" : undefined}
+            >
               <div className="card-heading">
                 <div className="feature-icon">
                   <Wallet size={22} />

@@ -15,6 +15,7 @@ export function LoginButton() {
     <Button
       className="full-width"
       disabled={busy}
+      aria-busy={busy}
       onClick={async () => {
         setBusy(true);
         try {

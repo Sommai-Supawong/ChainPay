@@ -25,7 +25,7 @@ export function AppShell({
   const path = usePathname();
   const { theme } = useTheme();
   return (
-    <div className="app-shell" data-theme={theme}>
+    <div className="app-shell product-ui" data-theme={theme}>
       <header className="mobile-header">
         <Brand />
         <LanguageToggle />

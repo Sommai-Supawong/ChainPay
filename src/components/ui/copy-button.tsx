@@ -15,6 +15,7 @@ export function CopyButton({
     <Button
       variant="ghost"
       size="sm"
+      aria-label={t(label || "Copy")}
       onClick={async () => {
         try {
           await navigator.clipboard.writeText(value);
@@ -26,7 +27,7 @@ export function CopyButton({
         }
       }}
     >
-      <Copy size={15} />
+      <Copy size={15} aria-hidden="true" />
       {t(label)}
     </Button>
   );

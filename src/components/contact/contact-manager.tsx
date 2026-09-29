@@ -128,7 +128,10 @@ export function ContactManager() {
         ) : (
           contacts.data.map((c) => (
             <div className="contact-row" key={c.id}>
-              <div>
+              <span className="contact-avatar" aria-hidden="true">
+                {c.name.slice(0, 1).toUpperCase()}
+              </span>
+              <div className="contact-details">
                 <strong>{c.name}</strong>
                 <p className="small muted">{c.label}</p>
                 <WalletAddress address={c.walletAddress} />

@@ -6,6 +6,7 @@ import { Providers } from "@/components/providers";
 import { translate } from "@/i18n/messages";
 import type { Language } from "@/i18n/types";
 import "./globals.css";
+import "./product.css";
 
 const kanit = Kanit({
   weight: ["400", "500", "600", "700"],
@@ -42,7 +43,11 @@ export default async function RootLayout({
 }) {
   const language = await requestLanguage();
   return (
-    <html lang={language} className={kanit.variable} data-scroll-behavior="smooth">
+    <html
+      lang={language}
+      className={kanit.variable}
+      data-scroll-behavior="smooth"
+    >
       <body>
         <Providers initialLanguage={language}>
           <a className="skip-link" href="#main">

@@ -15,7 +15,7 @@ export default async function ReceiptPage({
   const parsed = hashSchema.safeParse((await params).hash);
   if (!parsed.success) notFound();
   return (
-    <div className="public-page">
+    <div className="public-page product-ui">
       <header>
         <Brand />
         <LanguageToggle />

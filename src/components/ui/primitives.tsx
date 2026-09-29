@@ -3,6 +3,7 @@ import { ArrowUpRight, Inbox, LoaderCircle } from "lucide-react";
 import { cn, shortAddress } from "@/lib/utils";
 import { Button } from "./button";
 import { T } from "@/i18n";
+import { Children, cloneElement, isValidElement } from "react";
 export function GlassCard({
   children,
   className,
@@ -49,6 +50,7 @@ export function PageHeader({
 export function StatusBadge({ status }: { status: string }) {
   return (
     <span
+      data-status={status}
       className={cn(
         "badge",
         ["confirmed", "paid", "verified", "active"].includes(status)
@@ -120,6 +122,23 @@ export function WalletAddress({
     </span>
   );
 }
+export function PageSkeleton() {
+  return (
+    <div className="page-skeleton" role="status" aria-busy="true">
+      <span className="sr-only">
+        <T value="Loading your account…" />
+      </span>
+      <div aria-hidden="true">
+        <div className="skeleton-block skeleton-title" />
+        <div className="skeleton-block skeleton-description" />
+        <div className="skeleton-block skeleton-panel" />
+        <div className="skeleton-block skeleton-row" />
+        <div className="skeleton-block skeleton-row" />
+        <div className="skeleton-block skeleton-row" />
+      </div>
+    </div>
+  );
+}
 export function Field({
   label,
   name,
@@ -138,14 +157,35 @@ export function Field({
       <label htmlFor={name}>
         <T value={label} />
       </label>
-      {children}
+      {Children.map(children, (child) => {
+        if (
+          !isValidElement<{
+            id?: string;
+            "aria-describedby"?: string;
+            "aria-invalid"?: boolean;
+          }>(child) ||
+          child.props.id !== name
+        )
+          return child;
+        return cloneElement(child, {
+          "aria-invalid": Boolean(error),
+          "aria-describedby":
+            [
+              child.props["aria-describedby"],
+              hint && `${name}-hint`,
+              error && `${name}-error`,
+            ]
+              .filter(Boolean)
+              .join(" ") || undefined,
+        });
+      })}
       {hint && (
-        <p className="field-hint">
+        <p className="field-hint" id={`${name}-hint`}>
           <T value={hint} />
         </p>
       )}
       {error && (
-        <p className="field-error" role="alert">
+        <p className="field-error" role="alert" id={`${name}-error`}>
           <T value={error} />
         </p>
       )}

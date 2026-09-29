@@ -1,5 +1,52 @@
 # ChainPay implementation report
 
+## Product UI polish — September 2026
+
+Implemented the brief in `prompt/redisign-dastboard-login.md`. This section records the current UI work; older sections below describe earlier implementation milestones.
+
+### Pages and components
+
+| Area                       | Result                                                                                                                    |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Login                      | New responsive two-column/single-column composition, focused Google sign-in card, security reassurance and EN/TH copy     |
+| Dashboard                  | Primary wallet identity and balance, compact quick actions, real pending count, four summary cards, dated recent activity |
+| Pay / review               | Three-step progress, stronger amount hierarchy, consistent financial inputs, review controls and validation associations  |
+| Requests / public request  | Shared Soft UI cards, subtle statuses, coherent request creation, QR/detail and payment controls                          |
+| Activity / receipts        | Compact dated transaction rows, mobile filters wrap, receipt title emphasized and technical details disclosed on demand   |
+| Wallets / contacts         | Distinct primary wallet, quiet action areas, contact initials and recipient hierarchy                                     |
+| Profile / Security / Theme | Icon/title/description navigation, profile summary, consistent surfaces and existing accessible theme previews            |
+| Supporting UI              | New PageSkeleton; polished Button, Field, StatusBadge, dialogs, More sheet, empty/loading states via scoped styles        |
+
+### System, themes, mobile, accessibility, motion
+
+- Added `src/app/product.css`, scoped to `.product-ui`, with semantic Dark/Light surface, text, border, glass, status, radius and shadow tokens. Dark uses layered navy/near-black; Light uses off-white canvas, white surfaces and stronger blue actions. Primary wallet/Login/navigation/dialogs receive selective depth; ordinary forms/lists remain quiet.
+- Desktop frame uses a 248px sidebar and bounded content. Mobile has a compact sticky header, safe-area-aware bottom clearance, two-column statistics, four quick actions, stacked Settings navigation, wrapping filters and long financial values/addresses.
+- Preserved the existing 3D glass navigation geometry and gesture code. Its resting size, fully rounded pill ends, tap/hold/drag and route synchronization remain intact. The only navigation component change adds the product scope to the portaled More sheet.
+- Added visible theme-aware focus treatment, form hint/error associations, `aria-invalid`, sign-in busy state, icon-only copy labels, text statuses, semantic receipt disclosure and screen-reader skeleton status. Existing Radix focus trapping and keyboard dismissal remain.
+- Page entrance uses a 12px opacity/translation transition; controls use restrained lift/press feedback. Reduced motion disables product entrance/skeleton motion and transitions. Thai keeps Kanit, adjusted line height and untracked headings.
+- Checked token contrast for normal text: Dark primary/secondary text 17.04:1 / 8.49:1 on cards; Light 15.06:1 / 6.06:1. Primary-button text exceeds 6:1 in both palettes. Light muted text was darkened during the second pass to clear 4.5:1 on the elevated surface. This is a token-pair check, not a claim of a complete WCAG audit.
+
+### Files changed
+
+- Application: `src/app/product.css`, root layout import, Login, Dashboard, dashboard loading, Profile/Security, public request and receipt wrappers.
+- Components: AppShell, MobileBottomNav (sheet scope only), LoginButton, TransactionRow, ContactManager, PaymentForm, Receipt, PublicRequestView, SettingsTabs, ConfirmDialog, UI primitives, CopyButton and WalletManager.
+- Localization/documentation: `src/i18n/th.ts`, `docs/DESIGN.md`, this report.
+- No changes to marketing components, `src/app/marketing.css`, payment/auth server services, database schema, API contracts, ABI or signing/verification logic. Production values still come from the existing server queries and wallet hooks.
+
+### Validation and second visual pass
+
+- `npm run lint` and `npm run typecheck`: passed.
+- `npm test`: 82 tests passed across 9 files.
+- `npm run build`: passed.
+- `npm run test:e2e`: 24 desktop/mobile tests passed, including public payments, receipt statuses/recovery, protected redirects, and homepage boundaries.
+- Isolated Chromium visual audit used the actual app components with test-only API/auth/wallet adapters. It covered 15 page/stage views × 2 palettes × 2 languages × 8 widths = 480 combinations. Widths: 320, 375, 390, 430, 768, 1024, 1280, 1440px. Screenshots include 390/1440px views; Kanit and the real logo were loaded.
+- Second pass aligned mobile page headers, removed redundant transaction-row frames/payment step headings, wrapped Activity filters, added long-value wrapping and improved Light muted contrast. A targeted 64-case Activity/review recheck found no horizontal overflow or browser errors. The earlier full matrix had no document overflow; its clipped filter-button findings were corrected in that follow-up.
+- Twenty additional isolated checks passed: empty Dashboard/Activity/Wallets/Contacts/Requests in both themes; instant theme switching; More-sheet focus trapping and Escape; confirmation-dialog viewport bounds; form error associations; expanded receipt details. Audit script, screenshots and JSON evidence are local generated artifacts under `artifacts/product-audit.mjs` and `artifacts/product-polish/`.
+
+### Remaining acceptance
+
+No known layout issue remains in the audited viewport/state matrix. The authenticated visual audit used fixtures and does not establish real Google/MetaMask/Neon/RPC acceptance. Final connected acceptance should still cover Google sign-in, real wallet approval/rejection, saved account appearance across devices, and native iOS/Android keyboard/safe-area behavior. Public pages remain Dark in production; their Light styling was exercised only as a shared-component compatibility check. No production data was fabricated and no payment was signed during this UI work.
+
 ## Appearance update
 
 The authenticated application now offers Dark (default) and Light at `/settings/theme`. The selected value is stored per user in `users.theme_preference`, updated through an authorized Route Handler, and supplied to the app shell during server rendering. Shared controls, cards, navigation, mobile sheets, dialogs, and statuses use theme-aware styling. Marketing and public pages retain dark styling. Migration `0002_dazzling_celestials.sql` is additive and defaults existing accounts to Dark; it has been generated locally and must be applied to the target database by an operator before deployment. Connected cross-device acceptance still requires configured Firebase and Neon.

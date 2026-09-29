@@ -313,7 +313,7 @@ export function MobileBottomNav({
       <Dialog.Portal>
         <Dialog.Overlay className="mobile-sheet-overlay" />
         <Dialog.Content
-          className="mobile-more-sheet"
+          className="mobile-more-sheet product-ui"
           data-theme={theme}
           aria-describedby={undefined}
         >

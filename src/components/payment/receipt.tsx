@@ -95,14 +95,9 @@ export function Receipt({ hash }: { hash: string }) {
           <T value="ETH" />
         </span>
       </div>
+      {data.title && <p className="receipt-title">{data.title}</p>}
       <StatusBadge status={data.status} />
       <dl className="detail-list">
-        <div>
-          <dt>
-            <T value="For" />
-          </dt>
-          <dd>{data.title}</dd>
-        </div>
         <div>
           <dt>
             <T value="From" />
@@ -127,39 +122,46 @@ export function Receipt({ hash }: { hash: string }) {
             <T value="Ethereum Sepolia" />
           </dd>
         </div>
-        <div>
-          <dt>
-            <T value="Transaction" />
-          </dt>
-          <dd>
-            <WalletAddress address={data.txHash} full />
-          </dd>
-        </div>
-        <div>
-          <dt>
-            <T value="Block" />
-          </dt>
-          <dd>{data.blockNumber ?? t("Awaiting confirmation")}</dd>
-        </div>
-        <div>
-          <dt>
-            <T value="Confirmed at" />
-          </dt>
-          <dd>
-            {data.confirmedAt
-              ? new Date(data.confirmedAt).toLocaleString(locale)
-              : t("Not confirmed")}
-          </dd>
-        </div>
-        {data.note && (
+      </dl>
+      <details className="receipt-technical">
+        <summary>
+          <T value="Transaction details" />
+        </summary>
+        <dl className="detail-list">
           <div>
             <dt>
-              <T value="Private note" />
+              <T value="Transaction" />
             </dt>
-            <dd>{data.note}</dd>
+            <dd>
+              <WalletAddress address={data.txHash} full />
+            </dd>
           </div>
-        )}
-      </dl>
+          <div>
+            <dt>
+              <T value="Block" />
+            </dt>
+            <dd>{data.blockNumber ?? t("Awaiting confirmation")}</dd>
+          </div>
+          <div>
+            <dt>
+              <T value="Confirmed at" />
+            </dt>
+            <dd>
+              {data.confirmedAt
+                ? new Date(data.confirmedAt).toLocaleString(locale)
+                : t("Not confirmed")}
+            </dd>
+          </div>
+          {data.note && (
+            <div>
+              <dt>
+                <T value="Private note" />
+              </dt>
+              <dd>{data.note}</dd>
+            </div>
+          )}
+        </dl>
+      </details>
       {verification.error && (
         <p className="field-error" role="alert">
           {t(verification.error.message)}
