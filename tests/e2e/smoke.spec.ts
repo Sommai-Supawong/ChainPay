@@ -115,11 +115,62 @@ test("receipt reflects the server result without exposing private metadata", asy
   await expect(
     page.getByRole("heading", { name: "Payment failed." }),
   ).toBeVisible();
+  const back = page.getByRole("link", { name: "Back to Dashboard" });
+  await expect(back).toBeVisible();
+  expect((await back.boundingBox())?.height).toBeGreaterThanOrEqual(44);
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= window.innerWidth,
     ),
   ).toBe(true);
+  await back.click();
+  await expect(page).toHaveURL(/\/login$/);
+});
+test("confirmed and pending receipts keep the dashboard return visible", async ({
+  page,
+}) => {
+  for (const [index, status] of ["confirmed", "pending"].entries()) {
+    const hash = `0x${String(index + 1).repeat(64)}`;
+    await page.route(`**/api/transactions/${hash}`, (route) =>
+      route.fulfill({
+        json: {
+          txHash: hash,
+          status,
+          amount: "0.025",
+          asset: "ETH",
+          fromAddress: "0x1111111111111111111111111111111111111111",
+          toAddress: "0x2222222222222222222222222222222222222222",
+          blockNumber: status === "confirmed" ? "100" : null,
+          confirmedAt: status === "confirmed" ? "2026-01-01T00:00:00Z" : null,
+          submittedAt: "2026-01-01T00:00:00Z",
+          title: "ChainPay payment",
+          note: null,
+        },
+      }),
+    );
+    if (status === "pending")
+      await page.route(`**/api/transactions/${hash}/verify`, (route) =>
+        route.fulfill({ json: { hash, status: "pending" } }),
+      );
+    await page.goto(`/tx/${hash}`);
+    await expect(
+      page.getByRole("heading", {
+        name: status === "confirmed" ? "Payment confirmed." : "On its way.",
+      }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Back to Dashboard" }),
+    ).toBeVisible();
+  }
+  await page
+    .context()
+    .addCookies([
+      { name: "chainpay-language", value: "th", url: "http://localhost:3100" },
+    ]);
+  await page.reload();
+  await expect(
+    page.getByRole("link", { name: "กลับไปแดชบอร์ด" }),
+  ).toBeVisible();
 });
 test("recovery retries the original intent and hash without offering another payment", async ({
   page,

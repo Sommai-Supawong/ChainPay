@@ -1,7 +1,10 @@
 import { T } from "@/i18n";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { Brand } from "@/components/layout/brand";
 import { Receipt } from "@/components/payment/receipt";
+import { Button } from "@/components/ui/button";
 import { hashSchema } from "@/lib/validation";
 import { LanguageToggle } from "@/components/layout/language-toggle";
 export default async function ReceiptPage({
@@ -18,6 +21,12 @@ export default async function ReceiptPage({
         <LanguageToggle />
       </header>
       <main id="main" className="public-content">
+        <Button asChild variant="secondary" className="receipt-back-link">
+          <Link href="/dashboard">
+            <ArrowLeft size={17} aria-hidden="true" />
+            <T value="Back to Dashboard" />
+          </Link>
+        </Button>
         <Receipt hash={parsed.data} />
       </main>
       <footer>

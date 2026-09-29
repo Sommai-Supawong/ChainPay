@@ -7,6 +7,7 @@ export const th: Record<string, string> = {
   "How it works": "วิธีใช้งาน",
   Security: "ความปลอดภัย",
   Dashboard: "แดชบอร์ด",
+  "Back to Dashboard": "กลับไปแดชบอร์ด",
   "Open ChainPay": "เปิด ChainPay",
   "Open navigation": "เปิดเมนู",
   "Close navigation": "ปิดเมนู",
