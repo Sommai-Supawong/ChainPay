@@ -15,6 +15,13 @@
       "when": 1790593940742,
       "tag": "0001_stiff_union_jack",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790677777100,
+      "tag": "0002_dazzling_celestials",
+      "breakpoints": true
     }
   ]
 }

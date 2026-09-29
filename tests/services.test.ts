@@ -52,6 +52,7 @@ import {
   saveContact,
   removeContact,
 } from "@/features/contact/server";
+import { updateTheme } from "@/features/theme/server";
 import {
   createIntent,
   submitTransaction,
@@ -118,6 +119,20 @@ const requestInput = () => ({
   status: "active" as const,
 });
 describe("database-backed ownership boundaries", () => {
+  it("defaults existing accounts to dark and saves appearance per account", async () => {
+    const [before] = await db
+      .select({ theme: schema.users.themePreference })
+      .from(schema.users)
+      .where(eq(schema.users.id, alice));
+    expect(before.theme).toBe("dark");
+    expect(await updateTheme(alice, "light")).toEqual({ theme: "light" });
+    const rows = await db
+      .select({ id: schema.users.id, theme: schema.users.themePreference })
+      .from(schema.users);
+    expect(rows.find((row) => row.id === alice)?.theme).toBe("light");
+    expect(rows.find((row) => row.id === bob)?.theme).toBe("dark");
+    expect(await updateTheme(alice, "dark")).toEqual({ theme: "dark" });
+  });
   it("isolates contacts and rejects another user's edits/deletes", async () => {
     const contact = await saveContact(alice, {
       name: "Client",

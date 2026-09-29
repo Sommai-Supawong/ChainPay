@@ -10,6 +10,8 @@ import { LanguageToggle } from "./language-toggle";
 import { useTranslation } from "@/i18n";
 import { appNav, appNavActive } from "@/components/navigation/app-nav";
 import { MobileBottomNav } from "@/components/navigation/mobile-bottom-nav";
+import { useTheme } from "@/components/theme/theme-provider";
+import { Toaster } from "sonner";
 export function AppShell({
   children,
   name,
@@ -21,8 +23,9 @@ export function AppShell({
 }) {
   const t = useTranslation();
   const path = usePathname();
+  const { theme } = useTheme();
   return (
-    <div className="app-shell">
+    <div className="app-shell" data-theme={theme}>
       <header className="mobile-header">
         <Brand />
         <LanguageToggle />
@@ -106,6 +109,7 @@ export function AppShell({
         </footer>
       </div>
       <MobileBottomNav name={name} email={email} />
+      <Toaster theme={theme} richColors closeButton />
     </div>
   );
 }

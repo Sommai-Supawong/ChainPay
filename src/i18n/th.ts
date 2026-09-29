@@ -7,6 +7,13 @@ export const th: Record<string, string> = {
   "How it works": "วิธีใช้งาน",
   Security: "ความปลอดภัย",
   Dashboard: "แดชบอร์ด",
+  Theme: "ธีม",
+  Appearance: "การแสดงผล",
+  Dark: "โหมดมืด",
+  Light: "โหมดสว่าง",
+  "Choose how ChainPay looks": "เลือกรูปแบบการแสดงผลของ ChainPay",
+  "Your choice follows your account across devices. The homepage always stays dark.":
+    "การตั้งค่านี้จะใช้กับบัญชีของคุณทุกอุปกรณ์ โดยหน้าแรกยังคงใช้ธีมมืดเสมอ",
   "Back to Dashboard": "กลับไปแดชบอร์ด",
   "Open ChainPay": "เปิด ChainPay",
   "Open navigation": "เปิดเมนู",

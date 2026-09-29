@@ -37,6 +37,7 @@ export const transactionStatus = pgEnum("transaction_status", [
   "failed",
 ]);
 export const accountType = pgEnum("account_type", ["personal", "merchant"]);
+export const themePreference = pgEnum("theme_preference", ["dark", "light"]);
 export const users = pgTable("users", {
   id: uuid().primaryKey().defaultRandom(),
   firebaseUid: text("firebase_uid").notNull().unique(),
@@ -44,6 +45,9 @@ export const users = pgTable("users", {
   displayName: text("display_name"),
   avatarUrl: text("avatar_url"),
   accountType: accountType("account_type").default("personal").notNull(),
+  themePreference: themePreference("theme_preference")
+    .default("dark")
+    .notNull(),
   ...dates(),
 });
 export const wallets = pgTable(

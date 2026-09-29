@@ -42,6 +42,11 @@ test("private API denies anonymous reads and cross-origin mutations", async ({
     data: { address: "0x1111111111111111111111111111111111111111" },
   });
   expect(forged.status()).toBe(403);
+  const theme = await request.patch("/api/settings/theme", {
+    headers: { Origin: "http://localhost:3100" },
+    data: { theme: "light" },
+  });
+  expect([401, 403]).toContain(theme.status());
 });
 test("invalid public identifiers show a safe not-found page", async ({
   page,

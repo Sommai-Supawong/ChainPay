@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ShieldCheck, KeyRound, Wallet } from "lucide-react";
 import { GlassCard, PageHeader } from "@/components/ui/primitives";
 import { LogoutButton } from "@/components/auth/auth-buttons";
+import { SettingsTabs } from "@/components/theme/settings-tabs";
 export default function SecurityPage() {
   return (
     <>
@@ -10,14 +11,7 @@ export default function SecurityPage() {
         title="Account security"
         description="Clear boundaries. Control stays with you."
       />
-      <nav className="settings-tabs">
-        <Link href="/settings/profile">
-          <T value="Profile" />
-        </Link>
-        <Link aria-current="page" href="/settings/security">
-          <T value="Security" />
-        </Link>
-      </nav>
+      <SettingsTabs current="security" />
       <div className="stack form-width">
         <GlassCard>
           <ShieldCheck className="accent" />

@@ -1,5 +1,6 @@
 import { pageUser } from "@/lib/auth/session";
 import { AppShell } from "@/components/layout/shell";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 export default async function DashboardLayout({
   children,
 }: {
@@ -7,8 +8,10 @@ export default async function DashboardLayout({
 }) {
   const user = await pageUser();
   return (
-    <AppShell name={user.displayName ?? "Your account"} email={user.email}>
-      {children}
-    </AppShell>
+    <ThemeProvider initialTheme={user.themePreference}>
+      <AppShell name={user.displayName ?? "Your account"} email={user.email}>
+        {children}
+      </AppShell>
+    </ThemeProvider>
   );
 }

@@ -3,6 +3,7 @@ import { T, useTranslation } from "@/i18n";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react";
 import { Button } from "./button";
+import { useTheme } from "@/components/theme/theme-provider";
 export function ConfirmDialog({
   title,
   description,
@@ -17,12 +18,13 @@ export function ConfirmDialog({
   const [open, setOpen] = useState(false),
     [busy, setBusy] = useState(false);
   const t = useTranslation();
+  const { theme } = useTheme();
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="dialog-overlay" />
-        <Dialog.Content className="dialog-content">
+        <Dialog.Content className="dialog-content" data-theme={theme}>
           <Dialog.Title>{t(title)}</Dialog.Title>
           <Dialog.Description>{t(description)}</Dialog.Description>
           <div className="button-row">

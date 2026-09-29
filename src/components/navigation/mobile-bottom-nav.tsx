@@ -10,6 +10,7 @@ import { useTranslation } from "@/i18n";
 import { LogoutButton } from "@/components/auth/auth-buttons";
 import { LanguageToggle } from "@/components/layout/language-toggle";
 import { appNav, appNavActive } from "./app-nav";
+import { useTheme } from "@/components/theme/theme-provider";
 
 export function MobileBottomNav({
   name,
@@ -22,6 +23,7 @@ export function MobileBottomNav({
   const path = usePathname();
   const reduced = useReducedMotion();
   const [open, setOpen] = useState(false);
+  const { theme } = useTheme();
   const moreActive =
     open ||
     appNav.some((item) => !item.mobile && appNavActive(item.href, path));
@@ -85,6 +87,7 @@ export function MobileBottomNav({
         <Dialog.Overlay className="mobile-sheet-overlay" />
         <Dialog.Content
           className="mobile-more-sheet"
+          data-theme={theme}
           aria-describedby={undefined}
         >
           <div className="mobile-sheet-handle" aria-hidden="true" />

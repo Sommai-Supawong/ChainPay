@@ -5,6 +5,7 @@ import { WagmiProvider, createConfig, http } from "wagmi";
 import { injected } from "wagmi/connectors";
 import { MotionConfig } from "motion/react";
 import { Toaster } from "sonner";
+import { usePathname } from "next/navigation";
 import { chain } from "@/lib/blockchain/config";
 import { LanguageProvider, type Language } from "@/i18n";
 export function Providers({
@@ -14,6 +15,11 @@ export function Providers({
   children: React.ReactNode;
   initialLanguage: Language;
 }) {
+  const pathname = usePathname();
+  const inApp =
+    /^\/(dashboard|pay|requests|request|activity|wallets|contacts|settings)(\/|$)/.test(
+      pathname,
+    );
   const [query] = useState(
     () =>
       new QueryClient({
@@ -36,7 +42,7 @@ export function Providers({
         <QueryClientProvider client={query}>
           <MotionConfig reducedMotion="user">
             {children}
-            <Toaster theme="dark" richColors closeButton />
+            {!inApp && <Toaster theme="dark" richColors closeButton />}
           </MotionConfig>
         </QueryClientProvider>
       </WagmiProvider>

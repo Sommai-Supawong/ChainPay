@@ -50,6 +50,9 @@ export const profileSchema = z.object({
   displayName: z.string().trim().min(1).max(80),
   accountType: z.enum(["personal", "merchant"]),
 });
+export const themeSchema = z.object({
+  theme: z.enum(["dark", "light"]),
+});
 export const intentSchema = paymentSchema.extend({
   fromAddress: addressSchema,
   slug: slugSchema.optional(),

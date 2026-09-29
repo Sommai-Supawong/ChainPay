@@ -24,14 +24,18 @@ The product is aimed at individuals, freelancers, small merchants, and Web3 newc
 
 | Area      | Capability                                                                                                                                           |
 | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Account   | Google sign-in, server session, profile settings, personal/merchant profile preference                                                               |
+| Account   | Google sign-in, server session, profile settings, personal/merchant profile preference, saved dark/light appearance                                  |
 | Wallet    | MetaMask connection, Sepolia network checks, signed ownership challenge, multiple linked wallets, primary-wallet selection, soft removal             |
 | Pay       | Recipient/contact selection, amount validation, fee and balance estimate, review, MetaMask contract call, pending-state recovery                     |
 | Request   | Draft and published requests, expiration/cancellation, public link and QR code; a payer can use an active link without a ChainPay account            |
 | Records   | Server-backed transaction activity, status and direction filters, human-readable receipts, explorer links, private notes for the originating account |
-| Interface | Responsive pages, English/Thai language toggle, loading/error states, reduced-motion support                                                         |
+| Interface | Responsive pages, English/Thai language toggle, dark/light product theme, loading/error states, reduced-motion support                               |
 
 The browser's broadcast result is **not** a settlement decision. A server-side check compares the Sepolia transaction and receipt with an immutable payment intent before the database record becomes confirmed.
+
+### Appearance
+
+Dark is the default. Signed-in users can choose Dark or Light at `/settings/theme`; the preference is stored on their account and applies immediately across the authenticated product. A refresh or another device loads the saved value from PostgreSQL during server rendering. The marketing homepage, login, public payment links, and public receipts stay dark regardless of this setting. The light palette keeps ChainPay blue, layered glass surfaces, readable status colors, and the mobile bottom navigation.
 
 ## System architecture
 
@@ -136,15 +140,15 @@ The server checks Sepolia chain ID, transaction sender, contract target, value, 
 
 ## Data model and source of truth
 
-| Table                                   | Main purpose                                                               |
-| --------------------------------------- | -------------------------------------------------------------------------- |
-| `users`                                 | Internal UUID account mapped to a Firebase UID                             |
-| `wallets`, `wallet_verification_nonces` | Verified addresses, primary selection, and single-use signature challenges |
-| `payment_requests`                      | Off-chain request details and lifecycle                                    |
-| `payment_intents`                       | Immutable expected transfer and hashed submission capability               |
-| `transactions`, `transaction_metadata`  | Verified/pending chain references, status, readable title and private note |
-| `contacts`                              | Saved recipient addresses per account                                      |
-| `audit_logs`, `rate_limits`             | Exceptional payment-request events and shared request limits               |
+| Table                                   | Main purpose                                                                    |
+| --------------------------------------- | ------------------------------------------------------------------------------- |
+| `users`                                 | Internal UUID account mapped to a Firebase UID, including appearance preference |
+| `wallets`, `wallet_verification_nonces` | Verified addresses, primary selection, and single-use signature challenges      |
+| `payment_requests`                      | Off-chain request details and lifecycle                                         |
+| `payment_intents`                       | Immutable expected transfer and hashed submission capability                    |
+| `transactions`, `transaction_metadata`  | Verified/pending chain references, status, readable title and private note      |
+| `contacts`                              | Saved recipient addresses per account                                           |
+| `audit_logs`, `rate_limits`             | Exceptional payment-request events and shared request limits                    |
 
 Ethereum is authoritative for whether a transfer exists, its sender, target, value, receipt, block, and emitted event. PostgreSQL stores application identity, request context, notes, contact names, and a queryable record of the verified result. A database row is useful for product history; it does not replace an on-chain check. Drizzle migrations in `db/migrations/` include an additive V2 migration that preserves historical V1 records.
 

@@ -1,5 +1,7 @@
 # ChainPay — Production Product Specification
 
+> **Implementation update — account appearance:** The authenticated product now has a Dark (default) / Light choice at `/settings/theme`. The value is saved on `users.theme_preference` and read during server rendering, so it follows the account across refreshes and devices. Marketing `/`, login, public requests, and public receipts retain the original dark design. The additive `0002_dazzling_celestials.sql` migration must be applied by the operator; generating it did not migrate a production database.
+
 > **V2 implementation update:** `contracts/ChainPayV2.sol` is the active Sepolia settlement contract for all new payments. `contracts/ChainPay.sol` remains the V1 source for historical verification and pre-upgrade pending payments. The additive `0001_stiff_union_jack.sql` migration preserves Neon history; see `docs/SMART_CONTRACT_V2_DEPLOYMENT.md` for Remix deployment and Vercel/Neon cutover. Older references to `ChainPay.sol` below describe the original V1 design.
 
 > **Architecture revision:** Next.js full-stack on Vercel + Firebase Authentication + Neon PostgreSQL + Drizzle ORM + Ethereum. The MVP intentionally does **not** use a separate Render backend; Next.js Route Handlers / Server Actions form the application backend.
@@ -563,6 +565,7 @@ email TEXT UNIQUE NOT NULL
 display_name TEXT
 avatar_url TEXT
 account_type TEXT
+theme_preference ENUM('dark', 'light') NOT NULL DEFAULT 'dark'
 created_at TIMESTAMP
 updated_at TIMESTAMP
 ```
@@ -769,6 +772,7 @@ Firebase handles the Google provider flow. ChainPay uses server endpoints to est
 ```text
 /settings/profile
 /settings/security
+/settings/theme
 ```
 
 ---

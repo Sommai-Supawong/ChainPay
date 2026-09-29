@@ -1,5 +1,11 @@
 # ChainPay implementation report
 
+## Appearance update
+
+The authenticated application now offers Dark (default) and Light at `/settings/theme`. The selected value is stored per user in `users.theme_preference`, updated through an authorized Route Handler, and supplied to the app shell during server rendering. Shared controls, cards, navigation, mobile sheets, dialogs, and statuses use theme-aware styling. Marketing and public pages retain dark styling. Migration `0002_dazzling_celestials.sql` is additive and defaults existing accounts to Dark; it has been generated locally and must be applied to the target database by an operator before deployment. Connected cross-device acceptance still requires configured Firebase and Neon.
+
+Local validation for this update: lint, typecheck, 82 Vitest tests, production build, and 24 desktop/mobile Playwright tests passed. Automated browser checks cover the marketing theme boundary; a signed-in visual pass of both themes remains part of connected acceptance.
+
 > This report describes the original V1 implementation. ChainPay V2 is now the sole contract for new payments; V1 remains for historical verification. See [V2 deployment and cutover](SMART_CONTRACT_V2_DEPLOYMENT.md) for the current migration and operator steps.
 
 ## A. Status

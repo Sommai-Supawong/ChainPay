@@ -1,5 +1,11 @@
 # Design system
 
+## Account appearance
+
+Authenticated routes now use an account-level Dark (default) or Light theme selected at `/settings/theme`. The dashboard layout reads `users.theme_preference` on the server and passes it to a client ThemeProvider. The initial `data-theme` attribute is therefore rendered with the saved value, without a client-only theme flash; switching updates the app shell immediately and persists through an authorized endpoint. The preference is scoped to the authenticated shell. Marketing `/`, login, and public payment/receipt pages stay dark.
+
+Semantic tokens in `src/app/globals.css` cover foreground, background, surfaces, glass, borders, shadows, controls, navigation, and status colors. The light palette uses an off-white canvas, translucent white cards, neutral shadows, and ChainPay blue accents. The mobile bottom bar and More sheet, dialogs, inputs, status badges, and language control have light variants. Theme changes transition color, border, background, and shadow in about 240ms; reduced-motion users get nearly instant changes. Both preview cards are keyboard-accessible buttons with `aria-pressed`.
+
 The specification palette is implemented as CSS tokens in `src/app/globals.css`: background #070A0F, surface #0B1018, primary #5B8CFF, primary light #8FB0FF, success #4ADE80, warning #FBBF24, error #F87171, text #F8FAFC, secondary #94A3B8, muted #64748B.
 
 Design uses quiet surfaces, restrained borders, clear typography, readable addresses and short action labels. The landing-page wallet illustration communicates a journey without inventing balances or transaction records. Production account screens use actual server data and explicit empty states.
@@ -8,7 +14,7 @@ Reusable components include Button (shadcn-compatible CVA/Slot), accessible Radi
 
 Most pages remain Server Components. Interactive feature components use React Hook Form/Zod, Sonner feedback, wagmi, and TanStack Query. The homepage also uses small client boundaries for navigation, reusable Motion reveals, a particle horizon, and an interactive interface preview. MotionConfig and CSS respect reduced-motion preferences.
 
-Responsive behavior: desktop sidebar, mobile navigation, stacking dashboard and forms, minimum 40–44px controls, wrapping hash/address text, responsive QR and receipt layouts. Scan requests camera access only after a click; browsers lacking BarcodeDetector offer native-phone-camera or pasted-link fallback. No remote font fetch is needed for a build.
+Responsive behavior: desktop sidebar, mobile navigation, stacking dashboard and forms, minimum 40–44px controls, wrapping hash/address text, responsive QR and receipt layouts. Scan requests camera access only after a click; browsers lacking BarcodeDetector offer native-phone-camera or pasted-link fallback. Kanit is loaded through `next/font/google`; an uncached build needs access to Google Fonts.
 
 Keyboard focus, skip link, form labels, real buttons, dialog focus trapping, live error messages and semantic navigation are present. Browser tests assert no horizontal overflow at desktop and mobile sizes. Financial values remain in ETH; there is no fabricated fiat conversion.
 

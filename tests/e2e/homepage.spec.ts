@@ -1,5 +1,18 @@
 import { test, expect } from "@playwright/test";
 
+test("marketing homepage stays dark with a remembered light choice", async ({
+  page,
+}) => {
+  await page.addInitScript(() =>
+    localStorage.setItem("chainpay-theme", "light"),
+  );
+  await page.goto("/");
+  expect(
+    await page.evaluate(() => getComputedStyle(document.body).backgroundColor),
+  ).toBe("rgb(7, 10, 15)");
+  await expect(page.locator(".app-shell")).toHaveCount(0);
+});
+
 test("homepage preview, navigation and help remain usable", async ({
   page,
 }, testInfo) => {

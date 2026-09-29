@@ -41,6 +41,8 @@ import {
   slugSchema,
 } from "@/lib/validation";
 import { AppError } from "@/lib/errors";
+import { themeSchema } from "@/lib/validation";
+import { updateTheme } from "@/features/theme/server";
 import { rateLimit, clientKey } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
@@ -88,6 +90,8 @@ const handle = endpoint(async (request) => {
     };
   if (path === "profile" && method === "PATCH")
     return updateProfile(user.id, profileSchema.parse(await body(request)));
+  if (path === "settings/theme" && method === "PATCH")
+    return updateTheme(user.id, themeSchema.parse(await body(request)).theme);
   if (path === "wallets/challenge" && method === "POST")
     return challenge(
       user.id,
