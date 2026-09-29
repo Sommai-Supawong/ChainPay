@@ -2,15 +2,37 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Ellipsis, X } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
-import { useState } from "react";
+import {
+  animate,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+} from "motion/react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import type { PointerEvent } from "react";
 import { useTranslation } from "@/i18n";
 import { LogoutButton } from "@/components/auth/auth-buttons";
 import { LanguageToggle } from "@/components/layout/language-toggle";
 import { appNav, appNavActive } from "./app-nav";
 import { useTheme } from "@/components/theme/theme-provider";
+
+const mobileItems = appNav.filter((item) => item.mobile);
+const moreIndex = mobileItems.length;
+const dragThreshold = 8;
+const holdDelay = 190;
+
+type Gesture = {
+  pointerId: number;
+  index: number;
+  startX: number;
+  startY: number;
+  originX: number;
+  dragging: boolean;
+  cancelled: boolean;
+  timer: ReturnType<typeof setTimeout> | null;
+};
 
 export function MobileBottomNav({
   name,
@@ -21,62 +43,267 @@ export function MobileBottomNav({
 }) {
   const t = useTranslation();
   const path = usePathname();
+  const router = useRouter();
   const reduced = useReducedMotion();
   const [open, setOpen] = useState(false);
+  const [highlight, setHighlight] = useState<number | null>(null);
+  const [ready, setReady] = useState(false);
+  const innerRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<(HTMLElement | null)[]>([]);
+  const gestureRef = useRef<Gesture | null>(null);
+  const hoverRef = useRef<number | null>(null);
+  const suppressClickRef = useRef(false);
+  const animationRef = useRef(0);
+  const x = useMotionValue(0);
+  const width = useMotionValue(0);
+  const scale = useMotionValue(1);
+  const stretch = useMotionValue(1);
   const { theme } = useTheme();
   const moreActive =
     open ||
     appNav.some((item) => !item.mobile && appNavActive(item.href, path));
-  const transition = reduced
-    ? { duration: 0 }
-    : { type: "spring" as const, stiffness: 340, damping: 30 };
+  const activeIndex = moreActive
+    ? moreIndex
+    : mobileItems.findIndex((item) => appNavActive(item.href, path));
+
+  const position = useCallback((index: number) => {
+    const item = itemRefs.current[index];
+    if (!item) return null;
+    return { x: item.offsetLeft + 1, width: item.offsetWidth - 2 };
+  }, []);
+
+  const snapTo = useCallback(
+    async (index: number, pulse = false) => {
+      const target = position(index);
+      if (!target) return false;
+      const sequence = ++animationRef.current;
+      if (reduced) {
+        x.set(target.x);
+        width.set(target.width);
+        scale.set(1);
+        stretch.set(1);
+        return true;
+      }
+      const animations = [
+        animate(x, target.x, { type: "spring", stiffness: 390, damping: 35 }),
+        animate(width, target.width, {
+          type: "spring",
+          stiffness: 390,
+          damping: 35,
+        }),
+        animate(stretch, [stretch.get(), 1.08, 0.98, 1], { duration: 0.34 }),
+      ];
+      if (pulse)
+        animations.push(
+          animate(scale, [scale.get(), 1.06, 1], { duration: 0.24 }),
+        );
+      await Promise.all(animations);
+      if (sequence !== animationRef.current) return false;
+      scale.set(1);
+      stretch.set(1);
+      return true;
+    },
+    [position, reduced, scale, stretch, width, x],
+  );
+
+  useLayoutEffect(() => {
+    const inner = innerRef.current;
+    if (!inner) return;
+    const sync = () => {
+      if (gestureRef.current || activeIndex < 0) return;
+      const target = position(activeIndex);
+      if (!target) return;
+      x.set(target.x);
+      width.set(target.width);
+      scale.set(1);
+      stretch.set(1);
+      setReady(true);
+      setHighlight(null);
+    };
+    sync();
+    const observer = new ResizeObserver(sync);
+    observer.observe(inner);
+    return () => observer.disconnect();
+  }, [activeIndex, position, scale, stretch, width, x]);
+
+  const clearGesture = () => {
+    const gesture = gestureRef.current;
+    if (gesture?.timer) clearTimeout(gesture.timer);
+    gestureRef.current = null;
+    hoverRef.current = null;
+    setHighlight(null);
+  };
+
+  const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType !== "touch" || !event.isPrimary) return;
+    const item = (event.target as Element).closest<HTMLElement>(
+      "[data-nav-index]",
+    );
+    if (!item || !innerRef.current?.contains(item)) return;
+    const index = Number(item.dataset.navIndex);
+    const current = position(activeIndex);
+    if (!current) return;
+    animationRef.current++;
+    x.stop();
+    width.stop();
+    scale.stop();
+    stretch.stop();
+    const gesture: Gesture = {
+      pointerId: event.pointerId,
+      index,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: current.x,
+      dragging: false,
+      cancelled: false,
+      timer: null,
+    };
+    if (index === activeIndex) {
+      gesture.timer = setTimeout(() => {
+        if (gestureRef.current !== gesture) return;
+        gesture.dragging = true;
+        setHighlight(index);
+        if (!reduced) animate(scale, 1.06, { duration: 0.14 });
+      }, holdDelay);
+    }
+    gestureRef.current = gesture;
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    const gesture = gestureRef.current;
+    if (!gesture || gesture.pointerId !== event.pointerId) return;
+    const dx = event.clientX - gesture.startX;
+    const dy = event.clientY - gesture.startY;
+    if (Math.abs(dy) > dragThreshold && Math.abs(dy) > Math.abs(dx)) {
+      gesture.cancelled = true;
+      if (gesture.timer) clearTimeout(gesture.timer);
+      return;
+    }
+    if (gesture.cancelled) return;
+    if (gesture.index !== activeIndex || Math.abs(dx) <= dragThreshold) return;
+    gesture.dragging = true;
+    if (gesture.timer) clearTimeout(gesture.timer);
+    const last = position(moreIndex);
+    if (!last) return;
+    const nextX = Math.max(1, Math.min(last.x, gesture.originX + dx * 0.82));
+    x.set(nextX);
+    if (!reduced) scale.set(1.07);
+    if (!reduced) stretch.set(1.06);
+    const center = nextX + width.get() / 2;
+    let nearest = activeIndex;
+    let distance = Infinity;
+    itemRefs.current.forEach((item, index) => {
+      if (!item) return;
+      const delta = Math.abs(item.offsetLeft + item.offsetWidth / 2 - center);
+      if (delta < distance) {
+        distance = delta;
+        nearest = index;
+      }
+    });
+    if (hoverRef.current !== nearest) {
+      hoverRef.current = nearest;
+      setHighlight(nearest);
+    }
+  };
+
+  const onPointerUp = async (event: PointerEvent<HTMLDivElement>) => {
+    const gesture = gestureRef.current;
+    if (!gesture || gesture.pointerId !== event.pointerId) return;
+    const target = gesture.dragging
+      ? (hoverRef.current ?? activeIndex)
+      : gesture.index;
+    const cancelled = gesture.cancelled;
+    clearGesture();
+    suppressClickRef.current = true;
+    setTimeout(() => {
+      suppressClickRef.current = false;
+    }, 0);
+    if (cancelled) {
+      await snapTo(activeIndex);
+      return;
+    }
+    setHighlight(target);
+    const completed = await snapTo(target, true);
+    if (!completed) return;
+    if (target === moreIndex) setOpen(true);
+    else if (target !== activeIndex) router.push(mobileItems[target].href);
+    else setHighlight(null);
+  };
+
+  const onPointerCancel = () => {
+    if (!gestureRef.current) return;
+    clearGesture();
+    void snapTo(activeIndex);
+  };
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <nav className="mobile-bottom-nav" aria-label={t("Mobile navigation")}>
-        <div className="mobile-bottom-nav-inner">
-          {appNav
-            .filter((item) => item.mobile)
-            .map(({ href, shortLabel, icon: Icon }) => {
-              const active = appNavActive(href, path);
-              return (
-                <Link
-                  key={href}
-                  href={href}
-                  className="mobile-nav-item"
-                  aria-current={active ? "page" : undefined}
-                >
-                  {active && !open && (
-                    <motion.span
-                      layoutId="app-nav-active"
-                      className="mobile-nav-bubble"
-                      transition={transition}
-                    />
-                  )}
-                  <Icon
-                    size={20}
-                    strokeWidth={active ? 2.2 : 1.8}
-                    aria-hidden="true"
-                  />
-                  <span>{t(shortLabel)}</span>
-                </Link>
-              );
-            })}
+        <div
+          ref={innerRef}
+          className="mobile-bottom-nav-inner"
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerCancel}
+          onClickCapture={(event) => {
+            if (!suppressClickRef.current) return;
+            event.preventDefault();
+            event.stopPropagation();
+            suppressClickRef.current = false;
+          }}
+        >
+          <motion.span
+            className="mobile-nav-bubble"
+            aria-hidden="true"
+            style={{ x, width, scale, scaleX: stretch, opacity: ready ? 1 : 0 }}
+          >
+            <span className="mobile-nav-lens">
+              <span className="mobile-nav-reflection" />
+            </span>
+          </motion.span>
+          {mobileItems.map(({ href, shortLabel, icon: Icon }, index) => {
+            const active = index === activeIndex;
+            const selected =
+              highlight === index || (highlight === null && active);
+            return (
+              <Link
+                key={href}
+                ref={(node) => {
+                  itemRefs.current[index] = node;
+                }}
+                data-nav-index={index}
+                data-highlight={selected}
+                href={href}
+                className="mobile-nav-item"
+                aria-current={active ? "page" : undefined}
+              >
+                <Icon
+                  size={20}
+                  strokeWidth={selected ? 2.2 : 1.8}
+                  aria-hidden="true"
+                />
+                <span>{t(shortLabel)}</span>
+              </Link>
+            );
+          })}
           <Dialog.Trigger asChild>
             <button
+              ref={(node) => {
+                itemRefs.current[moreIndex] = node;
+              }}
+              data-nav-index={moreIndex}
+              data-highlight={
+                highlight === moreIndex || (highlight === null && moreActive)
+              }
               type="button"
               className="mobile-nav-item"
               aria-label={t("More")}
               aria-haspopup="dialog"
               aria-expanded={open}
+              aria-current={moreActive && !open ? "page" : undefined}
             >
-              {moreActive && (
-                <motion.span
-                  layoutId="app-nav-active"
-                  className="mobile-nav-bubble"
-                  transition={transition}
-                />
-              )}
               <Ellipsis size={21} aria-hidden="true" />
               <span>{t("More")}</span>
             </button>
