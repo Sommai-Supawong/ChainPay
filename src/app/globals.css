@@ -2952,6 +2952,7 @@ html[lang="th"] :is(.technical-text, code, pre, kbd, samp) {
   .mobile-nav-lens {
     position: absolute;
     inset: 0 -5px;
+    pointer-events: none;
     border-radius: 999px;
     background: var(--mobile-nav-bubble);
     box-shadow: var(--mobile-nav-bubble-shadow);
@@ -2961,6 +2962,7 @@ html[lang="th"] :is(.technical-text, code, pre, kbd, samp) {
   .mobile-nav-lens::before,
   .mobile-nav-lens::after {
     position: absolute;
+    pointer-events: none;
     inset: 0;
     padding: 1px;
     border-radius: inherit;
@@ -2984,6 +2986,7 @@ html[lang="th"] :is(.technical-text, code, pre, kbd, samp) {
   .mobile-nav-reflection {
     position: absolute;
     inset: 0;
+    pointer-events: none;
     border-radius: inherit;
     opacity: 0.7;
     transition: opacity 160ms ease;
@@ -2991,6 +2994,7 @@ html[lang="th"] :is(.technical-text, code, pre, kbd, samp) {
   .mobile-nav-reflection::before,
   .mobile-nav-reflection::after {
     position: absolute;
+    pointer-events: none;
     top: 2px;
     right: 14%;
     left: 12%;

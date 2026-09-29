@@ -11,7 +11,7 @@ import {
   useReducedMotion,
 } from "motion/react";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
-import type { PointerEvent } from "react";
+import type { MouseEvent, PointerEvent } from "react";
 import { useTranslation } from "@/i18n";
 import { LogoutButton } from "@/components/auth/auth-buttons";
 import { LanguageToggle } from "@/components/layout/language-toggle";
@@ -31,6 +31,7 @@ type Gesture = {
   startY: number;
   originX: number;
   dragging: boolean;
+  moved: boolean;
   cancelled: boolean;
   timer: ReturnType<typeof setTimeout> | null;
 };
@@ -56,6 +57,8 @@ export function MobileBottomNav({
   const hoverRef = useRef<number | null>(null);
   const suppressClickRef = useRef(false);
   const animationRef = useRef(0);
+  const readyRef = useRef(false);
+  const innerWidthRef = useRef<number | null>(null);
   const x = useMotionValue(0);
   const width = useMotionValue(0);
   const scale = useMotionValue(1);
@@ -109,24 +112,38 @@ export function MobileBottomNav({
   );
 
   useLayoutEffect(() => {
+    if (activeIndex < 0 || gestureRef.current) return;
+    const target = position(activeIndex);
+    if (!target) return;
+    if (readyRef.current) {
+      void snapTo(activeIndex).then(() => setHighlight(null));
+    } else {
+      x.set(target.x);
+      width.set(target.width);
+      readyRef.current = true;
+    }
+  }, [activeIndex, position, snapTo, width, x]);
+
+  useLayoutEffect(() => {
     const inner = innerRef.current;
     if (!inner) return;
-    const sync = () => {
+    const observer = new ResizeObserver(() => {
+      const innerWidth = inner.getBoundingClientRect().width;
+      if (innerWidthRef.current === innerWidth) return;
+      innerWidthRef.current = innerWidth;
+      setReady(true);
       if (gestureRef.current || activeIndex < 0) return;
       const target = position(activeIndex);
       if (!target) return;
+      animationRef.current++;
+      x.stop();
+      width.stop();
       x.set(target.x);
       width.set(target.width);
-      scale.set(1);
-      stretch.set(1);
-      setReady(true);
-      setHighlight(null);
-    };
-    sync();
-    const observer = new ResizeObserver(sync);
+    });
     observer.observe(inner);
     return () => observer.disconnect();
-  }, [activeIndex, position, scale, stretch, width, x]);
+  }, [activeIndex, position, width, x]);
 
   const clearGesture = () => {
     const gesture = gestureRef.current;
@@ -137,7 +154,7 @@ export function MobileBottomNav({
   };
 
   const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType !== "touch" || !event.isPrimary) return;
+    if (!event.isPrimary || (event.pointerType === "mouse" && event.button !== 0)) return;
     const item = (event.target as Element).closest<HTMLElement>(
       "[data-nav-index]",
     );
@@ -155,19 +172,19 @@ export function MobileBottomNav({
       index,
       startX: event.clientX,
       startY: event.clientY,
-      originX: current.x,
+      originX: x.get(),
       dragging: false,
+      moved: false,
       cancelled: false,
       timer: null,
     };
-    if (index === activeIndex) {
-      gesture.timer = setTimeout(() => {
-        if (gestureRef.current !== gesture) return;
-        gesture.dragging = true;
-        setHighlight(index);
-        if (!reduced) animate(scale, 1.06, { duration: 0.14 });
-      }, holdDelay);
-    }
+    if (!reduced) animate(scale, 0.97, { duration: 0.1 });
+    gesture.timer = setTimeout(() => {
+      if (gestureRef.current !== gesture) return;
+      gesture.dragging = true;
+      setHighlight(activeIndex);
+      if (!reduced) animate(scale, 1.07, { duration: 0.14 });
+    }, holdDelay);
     gestureRef.current = gesture;
     event.currentTarget.setPointerCapture(event.pointerId);
   };
@@ -183,12 +200,13 @@ export function MobileBottomNav({
       return;
     }
     if (gesture.cancelled) return;
-    if (gesture.index !== activeIndex || Math.abs(dx) <= dragThreshold) return;
+    if (!gesture.dragging && Math.abs(dx) <= dragThreshold) return;
     gesture.dragging = true;
+    if (Math.abs(dx) > dragThreshold) gesture.moved = true;
     if (gesture.timer) clearTimeout(gesture.timer);
     const last = position(moreIndex);
     if (!last) return;
-    const nextX = Math.max(1, Math.min(last.x, gesture.originX + dx * 0.82));
+    const nextX = Math.max(1, Math.min(last.x, gesture.originX + dx));
     x.set(nextX);
     if (!reduced) scale.set(1.07);
     if (!reduced) stretch.set(1.06);
@@ -212,7 +230,7 @@ export function MobileBottomNav({
   const onPointerUp = async (event: PointerEvent<HTMLDivElement>) => {
     const gesture = gestureRef.current;
     if (!gesture || gesture.pointerId !== event.pointerId) return;
-    const target = gesture.dragging
+    const target = gesture.moved
       ? (hoverRef.current ?? activeIndex)
       : gesture.index;
     const cancelled = gesture.cancelled;
@@ -220,7 +238,7 @@ export function MobileBottomNav({
     suppressClickRef.current = true;
     setTimeout(() => {
       suppressClickRef.current = false;
-    }, 0);
+    }, 400);
     if (cancelled) {
       await snapTo(activeIndex);
       return;
@@ -231,6 +249,28 @@ export function MobileBottomNav({
     if (target === moreIndex) setOpen(true);
     else if (target !== activeIndex) router.push(mobileItems[target].href);
     else setHighlight(null);
+  };
+
+  const onClickCapture = (event: MouseEvent<HTMLDivElement>) => {
+    if (suppressClickRef.current) {
+      event.preventDefault();
+      event.stopPropagation();
+      suppressClickRef.current = false;
+      return;
+    }
+    const item = (event.target as Element).closest<HTMLElement>("[data-nav-index]");
+    if (!item || !innerRef.current?.contains(item)) return;
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const index = Number(item.dataset.navIndex);
+    setHighlight(index);
+    void snapTo(index, true).then((completed) => {
+      if (!completed) return;
+      if (index === moreIndex) setOpen(true);
+      else if (index !== activeIndex) router.push(mobileItems[index].href);
+      else setHighlight(null);
+    });
   };
 
   const onPointerCancel = () => {
@@ -249,12 +289,7 @@ export function MobileBottomNav({
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerCancel}
-          onClickCapture={(event) => {
-            if (!suppressClickRef.current) return;
-            event.preventDefault();
-            event.stopPropagation();
-            suppressClickRef.current = false;
-          }}
+          onClickCapture={onClickCapture}
         >
           <motion.span
             className="mobile-nav-bubble"
