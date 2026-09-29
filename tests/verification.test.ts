@@ -102,6 +102,50 @@ describe("server settlement verification", () => {
       ),
     ).toThrow();
   });
+  it("accepts a zero-value wrapper only through the expected contract event", () => {
+    const wrapped = {
+      ...tx,
+      to: to as `0x${string}`,
+      value: BigInt(0),
+      input: "0x1234" as const,
+    };
+    expect(() => assertTransaction(wrapped, expected, contract)).toThrow();
+    expect(() =>
+      assertPaymentEvent(receipt([log]), expected, contract),
+    ).not.toThrow();
+  });
+  it("rejects wrong payment ID, payer, and a second contract event", () => {
+    expect(() =>
+      assertPaymentEvent(
+        receipt([log]),
+        { ...expected, paymentId: `0x${"cd".repeat(32)}` },
+        contract,
+      ),
+    ).toThrow();
+    expect(() =>
+      assertPaymentEvent(
+        receipt([log]),
+        { ...expected, fromAddress: to },
+        contract,
+      ),
+    ).toThrow();
+    expect(() =>
+      assertPaymentEvent(
+        receipt([
+          log,
+          {
+            ...log,
+            data: encodeAbiParameters(
+              [{ type: "uint256" }, { type: "uint256" }],
+              [BigInt(1), BigInt(1700000000)],
+            ),
+          },
+        ]),
+        expected,
+        contract,
+      ),
+    ).toThrow();
+  });
   it("rejects an event timestamp inconsistent with its block", () => {
     expect(() =>
       assertPaymentEvent(

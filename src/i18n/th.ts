@@ -359,6 +359,9 @@ export const th: Record<string, string> = {
     "เชื่อมกระเป๋าและเปลี่ยนไป Ethereum Sepolia",
   "Your wallet needs enough ETH for this payment and its estimated network fee.":
     "กระเป๋าต้องมี ETH เพียงพอสำหรับยอดเงินและค่าธรรมเนียมโดยประมาณ",
+  "Your transaction was submitted successfully, but ChainPay has not saved it yet. Do not pay again. Recover this transaction using the existing hash.":
+    "ธุรกรรมถูกส่งสำเร็จแล้ว แต่ ChainPay ยังไม่ได้บันทึกรายการ กรุณาอย่าชำระซ้ำ และใช้ Transaction Hash เดิมเพื่อกู้คืนรายการ",
+  "Recover Transaction": "กู้คืนธุรกรรม",
   "Your transaction was already broadcast. Retry saving; do not pay again.":
     "ส่งธุรกรรมแล้ว โปรดลองบันทึกใหม่ อย่าจ่ายซ้ำ",
   "Your wallet or network changed. Go back and review the payment again.":

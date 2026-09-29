@@ -34,7 +34,9 @@ import { ethereum } from "@/lib/blockchain/server";
 import { assertSepoliaRpc, rpcResult } from "@/lib/blockchain/rpc";
 import {
   assertPaymentEvent,
+  assertSepoliaTransaction,
   assertTransaction,
+  isDirectTransaction,
 } from "@/lib/blockchain/verification";
 
 const digest = (token: string) =>
@@ -179,12 +181,14 @@ export async function submitTransaction(input: z.output<typeof submitSchema>) {
     intent.contractVersion ?? 1,
     intent.contractAddress,
   );
-  assertTransaction(
-    txData,
-    intent,
-    intentContract.address,
-    intentContract.version,
-  );
+  assertSepoliaTransaction(txData);
+  if (isDirectTransaction(txData, intentContract.address))
+    assertTransaction(
+      txData,
+      intent,
+      intentContract.address,
+      intentContract.version,
+    );
   // Expiry prevents a new UI signature, never recovery of an already broadcast payment.
   return withDb((db) =>
     db.transaction(async (tx) => {
@@ -280,12 +284,14 @@ export async function verifyTransaction(hash: Hex) {
     row.contractVersion ?? 1,
     row.contractAddress,
   );
-  assertTransaction(
-    txData,
-    row,
-    recordContract.address,
-    recordContract.version,
-  );
+  assertSepoliaTransaction(txData);
+  if (isDirectTransaction(txData, recordContract.address))
+    assertTransaction(
+      txData,
+      row,
+      recordContract.address,
+      recordContract.version,
+    );
   const [latest, block] = await rpcResult(() =>
     Promise.all([
       client.getBlockNumber(),

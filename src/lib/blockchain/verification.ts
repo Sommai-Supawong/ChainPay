@@ -17,15 +17,25 @@ export type ExpectedPayment = {
   amount: string;
   paymentId: string;
 };
+export function isDirectTransaction(
+  tx: Pick<Transaction, "to">,
+  contract: string,
+) {
+  return tx.to?.toLowerCase() === contract.toLowerCase();
+}
+
+export function assertSepoliaTransaction(tx: Pick<Transaction, "chainId">) {
+  if (tx.chainId !== chain.id)
+    throw new AppError(400, "The transaction is not on Ethereum Sepolia.");
+}
 export function assertTransaction(
   tx: Pick<Transaction, "from" | "to" | "value" | "input" | "chainId">,
   expected: ExpectedPayment,
   contract: string,
   version: 1 | 2 = 2,
 ) {
-  if (tx.chainId !== chain.id)
-    throw new AppError(400, "The transaction is not on Ethereum Sepolia.");
-  if (tx.to?.toLowerCase() !== contract.toLowerCase())
+  assertSepoliaTransaction(tx);
+  if (!isDirectTransaction(tx, contract))
     throw new AppError(
       400,
       "The transaction targets a different ChainPay contract.",
@@ -62,8 +72,8 @@ export function assertPaymentEvent(
   version: 1 | 2 = 2,
   blockTimestamp?: bigint,
 ) {
-  const matches = receipt.logs.filter((log) => {
-    if (log.address.toLowerCase() !== contract.toLowerCase()) return false;
+  const events = receipt.logs.flatMap((log) => {
+    if (log.address.toLowerCase() !== contract.toLowerCase()) return [];
     try {
       const event = decodeEventLog({
         abi: version === 1 ? chainPayV1Abi : chainPayV2Abi,
@@ -72,21 +82,22 @@ export function assertPaymentEvent(
         eventName: "PaymentCompleted",
         strict: true,
       });
-      return (
-        event.args.paymentId.toLowerCase() ===
-          expected.paymentId.toLowerCase() &&
-        event.args.payer.toLowerCase() === expected.fromAddress.toLowerCase() &&
-        event.args.merchant.toLowerCase() ===
-          expected.toAddress.toLowerCase() &&
-        event.args.amount === parseEther(expected.amount) &&
-        (blockTimestamp === undefined ||
-          event.args.timestamp === blockTimestamp)
-      );
+      return [event];
     } catch {
-      return false;
+      return [];
     }
   });
-  if (matches.length !== 1)
+  if (
+    events.length !== 1 ||
+    events[0].args.paymentId.toLowerCase() !==
+      expected.paymentId.toLowerCase() ||
+    events[0].args.payer.toLowerCase() !== expected.fromAddress.toLowerCase() ||
+    events[0].args.merchant.toLowerCase() !==
+      expected.toAddress.toLowerCase() ||
+    events[0].args.amount !== parseEther(expected.amount) ||
+    (blockTimestamp !== undefined &&
+      events[0].args.timestamp !== blockTimestamp)
+  )
     throw new AppError(
       400,
       "Ethereum did not emit the expected payment event.",

@@ -108,7 +108,7 @@ export function PaymentForm({
       router.push(`/tx/${value.hash}`);
     } catch (err) {
       setError(
-        `${t(friendlyError(err))} ${t("Your transaction was already broadcast. Retry saving; do not pay again.")}`,
+        `${t(friendlyError(err))} ${t("Your transaction was submitted successfully, but ChainPay has not saved it yet. Do not pay again. Recover this transaction using the existing hash.")}`,
       );
     } finally {
       setBusy("");
@@ -234,7 +234,7 @@ export function PaymentForm({
             </Button>
           </div>
           <Button disabled={Boolean(busy)} onClick={() => persist(submission)}>
-            {busy || t("Retry saving transaction")}
+            {busy || t("Recover Transaction")}
           </Button>
         </div>
       ) : review ? (

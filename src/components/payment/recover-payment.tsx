@@ -27,13 +27,15 @@ export function RecoverPayment() {
           sessionStorage.removeItem("chainpay-submission");
           router.push(`/tx/${input.hash}`);
         } catch (error) {
-          toast.error(t(friendlyError(error)));
+          toast.error(
+            `${t(friendlyError(error))} ${t("Your transaction was submitted successfully, but ChainPay has not saved it yet. Do not pay again. Recover this transaction using the existing hash.")}`,
+          );
         } finally {
           setBusy(false);
         }
       }}
     >
-      {t(busy ? "Recovering payment…" : "Recover my submitted payment")}
+      {t(busy ? "Recovering payment…" : "Recover Transaction")}
     </Button>
   );
 }

@@ -30,6 +30,8 @@ const fixture = vi.hoisted(() => ({
     getTransactionReceipt: vi.fn(),
     getBlockNumber: vi.fn(),
     getBlock: vi.fn(),
+    sendTransaction: vi.fn(),
+    writeContract: vi.fn(),
   },
 }));
 vi.mock("@/lib/db/client", () => ({
@@ -264,7 +266,160 @@ async function submitted() {
   await submitTransaction(input);
   return { r, intent, input };
 }
+async function wrappedSubmitted() {
+  const r = await createRequest(alice, requestInput());
+  const intent = await createIntent(null, {
+    slug: r.slug,
+    fromAddress: account.address.toLowerCase() as `0x${string}`,
+    toAddress: receiver,
+    amount: "0.1",
+    title: "Wrapped payment",
+    note: "",
+  });
+  const input = { intentId: intent.id, token: intent.token, hash };
+  fixture.rpc.getTransaction.mockResolvedValue({
+    from: account.address.toLowerCase(),
+    to: "0x5555555555555555555555555555555555555555",
+    chainId: chain.id,
+    value: BigInt(0),
+    input: "0x1234",
+  });
+  const blockHash = `0x${"bb".repeat(32)}`;
+  const log = {
+    address: contract,
+    topics: encodeEventTopics({
+      abi: chainPayAbi,
+      eventName: "PaymentCompleted",
+      args: {
+        paymentId: intent.paymentId,
+        payer: account.address,
+        merchant: receiver,
+      },
+    }),
+    data: encodeAbiParameters(
+      [{ type: "uint256" }, { type: "uint256" }],
+      [parseEther("0.1"), BigInt(1700000000)],
+    ),
+  };
+  fixture.rpc.getTransactionReceipt.mockResolvedValue({
+    status: "success",
+    blockNumber: BigInt(50),
+    blockHash,
+    gasUsed: BigInt(50000),
+    logs: [log],
+  });
+  fixture.rpc.getBlock.mockResolvedValue({
+    hash: blockHash,
+    timestamp: BigInt(1700000000),
+  });
+  fixture.rpc.getBlockNumber.mockResolvedValue(BigInt(51));
+  return { r, intent, input, log };
+}
 describe("payment persistence and independent confirmation", () => {
+  it("recovers a wrapped zero-value payment with one hash and updates both activity views", async () => {
+    const { r, input } = await wrappedSubmitted();
+    await db
+      .update(schema.wallets)
+      .set({ userId: bob })
+      .where(eq(schema.wallets.id, walletId));
+    await db.insert(schema.wallets).values({
+      userId: alice,
+      address: account.address.toLowerCase(),
+      chainId: chain.id,
+      verifiedAt: new Date(),
+    });
+    expect((await submitTransaction(input)).status).toBe("pending");
+    expect((await submitTransaction(input)).status).toBe("pending");
+    expect((await getRequest(r.id, alice)).status).toBe("pending");
+    expect((await verifyTransaction(hash)).status).toBe("confirmed");
+    expect((await getRequest(r.id, alice)).status).toBe("paid");
+    expect((await listTransactions(alice))[0]).toMatchObject({
+      txHash: hash,
+      direction: "sent",
+      status: "confirmed",
+    });
+    expect((await listTransactions(bob))[0]).toMatchObject({
+      txHash: hash,
+      direction: "received",
+      status: "confirmed",
+    });
+    expect(await db.select().from(schema.transactions)).toHaveLength(1);
+    expect(fixture.rpc.sendTransaction).not.toHaveBeenCalled();
+    expect(fixture.rpc.writeContract).not.toHaveBeenCalled();
+  });
+  it("waits for canonical confirmations before settling a wrapped payment", async () => {
+    const { input } = await wrappedSubmitted();
+    await submitTransaction(input);
+    fixture.rpc.getBlockNumber.mockResolvedValueOnce(BigInt(50));
+    expect((await verifyTransaction(hash)).status).toBe("pending");
+    fixture.rpc.getBlock.mockResolvedValueOnce({
+      hash: `0x${"cc".repeat(32)}`,
+      timestamp: BigInt(1700000000),
+    });
+    expect((await verifyTransaction(hash)).status).toBe("pending");
+    expect((await db.select().from(schema.transactions))[0].status).toBe(
+      "pending",
+    );
+    expect((await verifyTransaction(hash)).status).toBe("confirmed");
+  });
+  it.each([
+    "missing",
+    "wrong contract",
+    "payment ID",
+    "payer",
+    "merchant",
+    "amount",
+    "duplicate",
+  ])(
+    "does not confirm a wrapped payment with %s event evidence",
+    async (problem) => {
+      const { r, intent, input, log } = await wrappedSubmitted();
+      const receipt = await fixture.rpc.getTransactionReceipt();
+      const altered = {
+        ...log,
+        address:
+          problem === "wrong contract"
+            ? "0x6666666666666666666666666666666666666666"
+            : contract,
+        topics: encodeEventTopics({
+          abi: chainPayAbi,
+          eventName: "PaymentCompleted",
+          args: {
+            paymentId:
+              problem === "payment ID"
+                ? (`0x${"cd".repeat(32)}` as `0x${string}`)
+                : intent.paymentId,
+            payer: problem === "payer" ? receiver : account.address,
+            merchant: problem === "merchant" ? account.address : receiver,
+          },
+        }),
+        data: encodeAbiParameters(
+          [{ type: "uint256" }, { type: "uint256" }],
+          [
+            problem === "amount" ? BigInt(1) : parseEther("0.1"),
+            BigInt(1700000000),
+          ],
+        ),
+      };
+      fixture.rpc.getTransactionReceipt.mockResolvedValue({
+        ...receipt,
+        logs:
+          problem === "missing"
+            ? []
+            : problem === "duplicate"
+              ? [log, log]
+              : [altered],
+      });
+      await submitTransaction(input);
+      await expect(verifyTransaction(hash)).rejects.toThrow(
+        "expected payment event",
+      );
+      expect((await db.select().from(schema.transactions))[0].status).toBe(
+        "pending",
+      );
+      expect((await getRequest(r.id, alice)).status).toBe("pending");
+    },
+  );
   it("blocks a new payment intent before broadcast when the server RPC is on Mainnet", async () => {
     fixture.rpc.getChainId.mockResolvedValueOnce(1);
     await expect(
