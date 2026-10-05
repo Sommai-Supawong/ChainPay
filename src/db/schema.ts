@@ -226,3 +226,76 @@ export const rateLimits = pgTable("rate_limits", {
   count: integer().notNull(),
   resetAt: timestamp("reset_at", { withTimezone: true }).notNull(),
 });
+
+export const escrowStatus = pgEnum("escrow_status", [
+  "created",
+  "funded",
+  "disputed",
+  "refunded",
+  "released",
+]);
+
+export const milestoneStatus = pgEnum("milestone_status", [
+  "pending",
+  "submitted",
+  "approved",
+  "released",
+]);
+
+export const escrows = pgTable("escrows", {
+  id: uuid().primaryKey().defaultRandom(),
+  onChainId: text("on_chain_id").unique(),
+  clientId: uuid("client_id")
+    .notNull()
+    .references(() => users.id),
+  freelancerAddress: text("freelancer_address").notNull(),
+  freelancerId: uuid("freelancer_id").references(() => users.id),
+  contractAddress: text("contract_address"),
+  title: text().notNull(),
+  description: text().notNull().default(""),
+  totalAmount: numeric({ precision: 36, scale: 18 }).notNull(),
+  asset: text().notNull().default("ETH"),
+  status: escrowStatus().notNull().default("created"),
+  ...dates(),
+});
+
+export const escrowMilestones = pgTable("escrow_milestones", {
+  id: uuid().primaryKey().defaultRandom(),
+  escrowId: uuid("escrow_id")
+    .notNull()
+    .references(() => escrows.id),
+  milestoneIndex: integer("milestone_index").notNull(),
+  title: text().notNull(),
+  description: text().notNull().default(""),
+  amount: numeric({ precision: 36, scale: 18 }).notNull(),
+  status: milestoneStatus().notNull().default("pending"),
+  submittedAt: timestamp("submitted_at", { withTimezone: true }),
+  approvedAt: timestamp("approved_at", { withTimezone: true }),
+  releasedAt: timestamp("released_at", { withTimezone: true }),
+  ...dates(),
+});
+
+export const escrowTransactionsType = pgEnum("escrow_transactions_type", [
+  "deposit",
+  "release",
+  "refund",
+  "dispute_resolved",
+]);
+
+export const escrowTransactions = pgTable("escrow_transactions", {
+  id: uuid().primaryKey().defaultRandom(),
+  escrowId: uuid("escrow_id")
+    .notNull()
+    .references(() => escrows.id),
+  milestoneId: uuid("milestone_id").references(() => escrowMilestones.id),
+  txHash: text("tx_hash").notNull(),
+  type: escrowTransactionsType("type").notNull(),
+  amount: numeric({ precision: 36, scale: 18 }).notNull(),
+  status: transactionStatus().notNull().default("pending"),
+  blockNumber: bigint("block_number", { mode: "bigint" }),
+  submittedAt: timestamp("submitted_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  confirmedAt: timestamp("confirmed_at", { withTimezone: true }),
+  ...dates(),
+});

@@ -23,3 +23,13 @@ export const explorerTx = (hash: string) =>
   `${chain.blockExplorers.default.url}/tx/${hash}`;
 export const explorerAddress = (address: string) =>
   `${chain.blockExplorers.default.url}/address/${address}`;
+
+export function escrowContractAddress(): Address {
+  const value = process.env.NEXT_PUBLIC_CHAINPAY_ESCROW_CONTRACT_ADDRESS;
+  if (!value || !isAddress(value) || /^0x0{40}$/i.test(value)) {
+    throw new Error(
+      "Escrow contract is not configured yet. Please contact the operator.",
+    );
+  }
+  return value;
+}

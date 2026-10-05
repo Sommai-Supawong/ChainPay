@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import solc from "solc";
 const sources = Object.fromEntries(
-  ["ChainPay.sol", "ChainPayV2.sol"].map((file) => [
+  ["ChainPay.sol", "ChainPayV2.sol", "ChainPayEscrow.sol"].map((file) => [
     file,
     { content: fs.readFileSync(`contracts/${file}`, "utf8") },
   ]),
@@ -26,6 +26,7 @@ fs.mkdirSync("artifacts", { recursive: true });
 for (const [file, name] of [
   ["ChainPay.sol", "ChainPay"],
   ["ChainPayV2.sol", "ChainPayV2"],
+  ["ChainPayEscrow.sol", "ChainPayEscrow"],
 ]) {
   fs.writeFileSync(
     `artifacts/${name}.json`,

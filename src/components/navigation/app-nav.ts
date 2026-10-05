@@ -8,6 +8,7 @@ import {
   ShieldCheck,
   UsersRound,
   Wallet,
+  Briefcase,
 } from "lucide-react";
 
 export const appNav = [
@@ -40,6 +41,14 @@ export const appNav = [
     label: "Activity",
     shortLabel: "Activity",
     icon: Activity,
+    mobile: true,
+    secondaryOnly: false,
+  },
+  {
+    href: "/contracts",
+    label: "Contracts",
+    shortLabel: "Contracts",
+    icon: Briefcase,
     mobile: true,
     secondaryOnly: false,
   },
@@ -88,5 +97,7 @@ export const appNav = [
 export function appNavActive(href: string, path: string) {
   if (href === "/requests")
     return path === href || path.startsWith("/request/");
+  if (href === "/contracts")
+    return path === href || path.startsWith("/contracts/");
   return path === href;
 }

@@ -29,6 +29,13 @@ import {
   updateProfile,
 } from "@/features/contact/server";
 import {
+  createEscrowDraft,
+  getEscrow,
+  listEscrows,
+  submitMilestone,
+  markDisputed,
+} from "@/features/escrow/server";
+import {
   challengeSchema,
   signatureSchema,
   idSchema,
@@ -39,6 +46,7 @@ import {
   contactSchema,
   profileSchema,
   slugSchema,
+  escrowDraftSchema,
 } from "@/lib/validation";
 import { AppError } from "@/lib/errors";
 import { themeSchema } from "@/lib/validation";
@@ -138,6 +146,29 @@ const handle = endpoint(async (request) => {
       return saveContact(user.id, contactSchema.parse(await body(request)), id);
     if (method === "DELETE") return removeContact(user.id, id);
   }
+  
+  // Escrow routes
+  if (path === "escrows") {
+    if (method === "GET") return listEscrows(user.id);
+    if (method === "POST")
+      return createEscrowDraft(user.id, escrowDraftSchema.parse(await body(request)));
+  }
+  if (parts[0] === "escrows" && parts.length >= 2) {
+    const escrowId = idSchema.parse(parts[1]);
+    if (parts.length === 2 && method === "GET") return getEscrow(escrowId);
+    
+    // Milestones
+    if (parts.length === 5 && parts[2] === "milestones" && parts[4] === "submit" && method === "POST") {
+      const milestoneId = idSchema.parse(parts[3]);
+      return submitMilestone(user.id, escrowId, milestoneId);
+    }
+    
+    // Dispute
+    if (parts.length === 3 && parts[2] === "dispute" && method === "POST") {
+      return markDisputed(user.id, escrowId);
+    }
+  }
+
   throw new AppError(404, "Endpoint not found.");
 });
 export { handle as GET, handle as POST, handle as PATCH, handle as DELETE };

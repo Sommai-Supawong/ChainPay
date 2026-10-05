@@ -67,6 +67,17 @@ export const signatureSchema = z.object({
   id: idSchema,
   signature: z.string().regex(/^0x[0-9a-fA-F]{130}$/),
 });
+
+export const escrowDraftSchema = z.object({
+  freelancerAddress: z.string().regex(/^0x[a-fA-F0-9]{40}$/, "Invalid Ethereum address").transform(a => a.toLowerCase()),
+  title: z.string().min(1).max(200),
+  description: z.string().max(1000).optional().default(""),
+  milestones: z.array(z.object({
+    title: z.string().min(1).max(200),
+    description: z.string().max(1000).optional().default(""),
+    amount: amountSchema,
+  })).min(1),
+});
 export type PaymentInput = z.input<typeof paymentSchema>;
 export type RequestInput = z.input<typeof requestSchema>;
 export type ContactInput = z.input<typeof contactSchema>;
