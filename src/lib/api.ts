@@ -83,8 +83,6 @@ export function endpoint(work: (request: Request) => Promise<unknown>) {
           requestId: crypto.randomUUID(),
           path: new URL(request.url).pathname,
           category: error instanceof Error ? error.name : "Unknown",
-          message: error instanceof Error ? error.message : String(error),
-          stack: error instanceof Error ? error.stack : undefined,
         }),
       );
       if (

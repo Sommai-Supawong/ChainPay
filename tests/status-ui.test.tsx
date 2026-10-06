@@ -23,6 +23,7 @@ describe("status and alert presentation", () => {
     ["expired", "muted", "หมดอายุ"],
     ["verified", "success", "ยืนยันแล้ว"],
     ["draft", "muted", "แบบร่าง"],
+    ["created", "muted", "สร้างแล้ว"],
     ["funded", "success", "ฝากเงินแล้ว"],
     ["in_progress", "active", "กำลังดำเนินการ"],
     ["submitted", "warning", "ส่งงานแล้ว"],
@@ -65,3 +66,18 @@ describe("status and alert presentation", () => {
     expect(html).toContain("<svg");
   });
 });
+
+describe("escrow contract explorer link", () => {
+  it("resolves the deployed Escrow contract to Sepolia block explorer", async () => {
+    const { escrowContractExplorerUrl } = await import("@/lib/blockchain/config");
+    const url = escrowContractExplorerUrl();
+    if (process.env.NEXT_PUBLIC_CHAINPAY_ESCROW_CONTRACT_ADDRESS) {
+      expect(url).toBe(
+        `https://sepolia.etherscan.io/address/${process.env.NEXT_PUBLIC_CHAINPAY_ESCROW_CONTRACT_ADDRESS}`,
+      );
+    } else {
+      expect(url).toBeNull();
+    }
+  });
+});
+

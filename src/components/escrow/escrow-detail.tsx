@@ -8,8 +8,14 @@ import { GlassCard, LoadingState, StatusAlert, StatusBadge, WalletAddress } from
 import { ConnectWallet } from "@/components/wallet/connect-wallet";
 import { fromWei, parseWeiString } from "@/lib/utils";
 import { useState, useEffect } from "react";
+import { ExternalLink } from "lucide-react";
 import { useConnection, useWriteContract, usePublicClient } from "wagmi";
-import { chain, escrowContractAddress } from "@/lib/blockchain/config";
+import {
+  chain,
+  escrowContractAddress,
+  escrowContractExplorerUrl,
+  explorerTx,
+} from "@/lib/blockchain/config";
 import { chainPayEscrowAbi } from "@/lib/blockchain/chainpay-escrow-abi";
 import { keccak256, toHex } from "viem";
 import type { EscrowModel, EscrowMilestoneModel } from "@/types/models";
@@ -67,6 +73,7 @@ export function EscrowDetail({ id, currentUserId }: { id: string; currentUserId:
   
   const isClient = e.clientId === currentUserId;
   const isFreelancer = e.freelancerId === currentUserId || account.address?.toLowerCase() === e.freelancerAddress.toLowerCase();
+  const contractExplorerUrl = escrowContractExplorerUrl();
 
   async function handleAction(
     type: "deposit" | "release" | "refund" | "dispute_resolved",
@@ -272,6 +279,31 @@ export function EscrowDetail({ id, currentUserId }: { id: string; currentUserId:
             <dt><T value="Freelancer" /></dt>
             <dd><WalletAddress address={e.freelancerAddress} full /></dd>
           </div>
+          <div>
+            <dt><T value="Smart Contract" /></dt>
+            <dd>
+              {contractExplorerUrl ? (
+                <a
+                  href={contractExplorerUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "4px",
+                    color: "var(--primary)",
+                    textDecoration: "underline",
+                  }}
+                  aria-label={t("View Smart Contract on block explorer")}
+                >
+                  <T value="View on explorer" />
+                  <ExternalLink size={14} />
+                </a>
+              ) : (
+                <T value="Configured on Sepolia" />
+              )}
+            </dd>
+          </div>
           <div style={{ gridColumn: "1 / -1", marginTop: "1rem" }}>
             <dt><T value="Contract status" /></dt>
             <dd><StatusBadge status={e.status} /></dd>
@@ -282,7 +314,22 @@ export function EscrowDetail({ id, currentUserId }: { id: string; currentUserId:
           <div className="card" style={{ marginTop: "1rem", padding: "1rem", background: "var(--background)" }}>
             <p className="small"><T value="Transaction Pending" /></p>
             <p className="small muted"><T value="Waiting for Sepolia confirmation..." /></p>
-            <WalletAddress address={verifying} full />
+            <a
+              href={explorerTx(verifying)}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "5px",
+                color: "var(--primary)",
+                marginTop: "0.25rem",
+              }}
+              aria-label={t("View on explorer")}
+            >
+              <WalletAddress address={verifying} full />
+              <ExternalLink size={14} />
+            </a>
           </div>
         )}
 

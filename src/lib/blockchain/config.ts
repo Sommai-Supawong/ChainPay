@@ -33,3 +33,13 @@ export function escrowContractAddress(): Address {
   }
   return value;
 }
+
+export function escrowContractExplorerUrl(): string | null {
+  try {
+    const address = escrowContractAddress();
+    return explorerAddress(address);
+  } catch {
+    return null;
+  }
+}
+
