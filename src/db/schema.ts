@@ -299,3 +299,19 @@ export const escrowTransactions = pgTable("escrow_transactions", {
   confirmedAt: timestamp("confirmed_at", { withTimezone: true }),
   ...dates(),
 });
+
+export const escrowSubmissions = pgTable('escrow_submissions', {
+  id: uuid().primaryKey().defaultRandom(),
+  milestoneId: uuid('milestone_id')
+    .notNull()
+    .references(() => escrowMilestones.id),
+  title: text().notNull(),
+  description: text().notNull(),
+  evidenceUrl: text('evidence_url'),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});

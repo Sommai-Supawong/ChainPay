@@ -23,6 +23,14 @@ describe("status and alert presentation", () => {
     ["expired", "muted", "หมดอายุ"],
     ["verified", "success", "ยืนยันแล้ว"],
     ["draft", "muted", "แบบร่าง"],
+    ["funded", "success", "ฝากเงินแล้ว"],
+    ["in_progress", "active", "กำลังดำเนินการ"],
+    ["submitted", "warning", "ส่งงานแล้ว"],
+    ["approved", "success", "อนุมัติแล้ว"],
+    ["released", "paid", "จ่ายเงินแล้ว"],
+    ["completed", "paid", "เสร็จสิ้น"],
+    ["disputed", "error", "มีข้อพิพาท"],
+    ["refunded", "muted", "คืนเงินแล้ว"],
   ])("renders %s with an icon, tone, and Thai label", (status, tone, label) => {
     const html = render("th", status);
     expect(html).toContain(`data-tone="${tone}"`);
@@ -32,6 +40,9 @@ describe("status and alert presentation", () => {
 
   it("keeps English labels and gives unexpected Thai errors a Thai fallback", () => {
     expect(render("en", "paid")).toContain("Paid");
+    expect(render("en", "funded")).toContain("Funded");
+    expect(render("en", "in_progress")).toContain("In Progress");
+    expect(render("en", "disputed")).toContain("Disputed");
     expect(translateError("th", "Unexpected RPC detail")).toBe(
       "เกิดข้อผิดพลาด โปรดลองอีกครั้ง",
     );

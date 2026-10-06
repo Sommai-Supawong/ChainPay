@@ -7,6 +7,12 @@ export const shortAddress = (value: string) =>
 export function eth(value: string) {
   return formatEther(parseEther(value));
 }
+export function parseWeiString(value: string | bigint): bigint {
+  return BigInt(value.toString().split('.')[0]);
+}
+export function fromWei(value: string | bigint) {
+  return formatEther(parseWeiString(value));
+}
 export function effectiveRequestStatus(
   status: string,
   expiresAt: Date | string | null,

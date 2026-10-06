@@ -73,6 +73,14 @@ const statusPresentation = {
   verified: { label: "Verified", icon: ShieldCheck, tone: "success" },
   draft: { label: "Draft", icon: FilePenLine, tone: "muted" },
   primary: { label: "Primary", icon: ShieldCheck, tone: "info" },
+  funded: { label: "Funded", icon: CheckCircle2, tone: "success" },
+  in_progress: { label: "In Progress", icon: Activity, tone: "active" },
+  submitted: { label: "Submitted", icon: Clock3, tone: "warning" },
+  approved: { label: "Approved", icon: BadgeCheck, tone: "success" },
+  released: { label: "Released", icon: CheckCircle2, tone: "paid" },
+  completed: { label: "Completed", icon: CheckCircle2, tone: "paid" },
+  disputed: { label: "Disputed", icon: TriangleAlert, tone: "error" },
+  refunded: { label: "Refunded", icon: Ban, tone: "muted" },
 } as const;
 
 export function StatusBadge({ status }: { status: string }) {

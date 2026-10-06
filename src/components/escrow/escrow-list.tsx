@@ -1,18 +1,18 @@
 "use client";
-import { T, useErrorTranslation, useLocale, useTranslation } from "@/i18n";
+import { T, useErrorTranslation } from "@/i18n";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { Briefcase, ArrowUpRight } from "lucide-react";
 import { api } from "@/lib/client-api";
-import { eth } from "@/lib/utils";
+import { fromWei } from "@/lib/utils";
 import { EmptyState, GlassCard, LoadingState, StatusAlert, StatusBadge } from "@/components/ui/primitives";
+import type { EscrowModel } from "@/types/models";
 
 export function EscrowList() {
-  const t = useTranslation();
   const errorText = useErrorTranslation();
   const query = useQuery({
     queryKey: ["escrows"],
-    queryFn: () => api<any[]>("escrows"),
+    queryFn: () => api<EscrowModel[]>("escrows"),
   });
 
   if (query.isPending) return <LoadingState text="Loading contracts…" />;
@@ -51,7 +51,7 @@ export function EscrowList() {
           </div>
           <h2>{e.title}</h2>
           <p className="request-amount">
-            {eth(e.totalAmount)}{" "}
+            {fromWei(e.totalAmount)}{" "}
             <span>
               <T value="ETH" />
             </span>

@@ -69,14 +69,20 @@ export const signatureSchema = z.object({
 });
 
 export const escrowDraftSchema = z.object({
-  freelancerAddress: z.string().regex(/^0x[a-fA-F0-9]{40}$/, "Invalid Ethereum address").transform(a => a.toLowerCase()),
-  title: z.string().min(1).max(200),
-  description: z.string().max(1000).optional().default(""),
+  freelancerAddress: addressSchema,
+  title: z.string().trim().min(1, "Contract title is required.").max(200, "Contract title is too long."),
+  description: z.string().trim().max(1000, "Description is too long.").optional().default(""),
   milestones: z.array(z.object({
-    title: z.string().min(1).max(200),
-    description: z.string().max(1000).optional().default(""),
+    title: z.string().trim().min(1, "Milestone title is required.").max(200, "Milestone title is too long."),
+    description: z.string().trim().max(1000, "Description is too long.").optional().default(""),
     amount: amountSchema,
-  })).min(1),
+  })).min(1, "Add at least one milestone."),
+});
+export const escrowTransactionSchema = z.object({
+  escrowId: idSchema,
+  hash: hashSchema,
+  type: z.enum(["deposit", "release", "refund", "dispute_resolved"]),
+  milestoneId: idSchema.optional(),
 });
 export type PaymentInput = z.input<typeof paymentSchema>;
 export type RequestInput = z.input<typeof requestSchema>;

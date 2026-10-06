@@ -33,7 +33,10 @@ import {
   getEscrow,
   listEscrows,
   submitMilestone,
+  approveMilestone,
   markDisputed,
+  submitEscrowTransaction,
+  verifyEscrowTransaction,
 } from "@/features/escrow/server";
 import {
   challengeSchema,
@@ -47,6 +50,7 @@ import {
   profileSchema,
   slugSchema,
   escrowDraftSchema,
+  escrowTransactionSchema,
 } from "@/lib/validation";
 import { AppError } from "@/lib/errors";
 import { themeSchema } from "@/lib/validation";
@@ -160,13 +164,37 @@ const handle = endpoint(async (request) => {
     // Milestones
     if (parts.length === 5 && parts[2] === "milestones" && parts[4] === "submit" && method === "POST") {
       const milestoneId = idSchema.parse(parts[3]);
-      return submitMilestone(user.id, escrowId, milestoneId);
+      const input = z.object({
+        title: z.string().min(1),
+        description: z.string().min(1),
+        evidenceUrl: z.string().url().optional().or(z.literal('')),
+      }).parse(await body(request));
+      return submitMilestone(user.id, escrowId, milestoneId, {
+        title: input.title,
+        description: input.description,
+        evidenceUrl: input.evidenceUrl || undefined,
+      });
+    }
+    if (parts.length === 5 && parts[2] === "milestones" && parts[4] === "approve" && method === "POST") {
+      const milestoneId = idSchema.parse(parts[3]);
+      return approveMilestone(user.id, escrowId, milestoneId);
     }
     
     // Dispute
     if (parts.length === 3 && parts[2] === "dispute" && method === "POST") {
       return markDisputed(user.id, escrowId);
     }
+  }
+
+  if (path === "escrow-transactions" && method === "POST") {
+    await rateLimit(`submit:${clientKey(request)}`, 60);
+    return submitEscrowTransaction(escrowTransactionSchema.parse(await body(request)));
+  }
+
+  if (parts[0] === "escrow-transactions" && parts.length === 3 && parts[2] === "verify" && method === "POST") {
+    const hash = hashSchema.parse(parts[1]);
+    await rateLimit(`verify:${clientKey(request)}`, 60);
+    return verifyEscrowTransaction(hash);
   }
 
   throw new AppError(404, "Endpoint not found.");

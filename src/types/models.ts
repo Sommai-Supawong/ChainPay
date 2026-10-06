@@ -58,3 +58,36 @@ export type ReceiptModel = {
   title: string;
   note: string | null;
 };
+
+export type EscrowMilestoneModel = {
+  id: string;
+  escrowId: string;
+  milestoneIndex: number;
+  title: string;
+  description: string;
+  amount: string;
+  status: string;
+  submittedAt: string | null;
+  releasedAt: string | null;
+  submission: {
+    title: string;
+    description: string;
+    evidenceUrl: string | null;
+  } | null;
+};
+
+export type EscrowModel = {
+  id: string;
+  clientId: string;
+  clientName: string | null;
+  clientAddress: string | null;
+  freelancerAddress: string;
+  freelancerId: string | null;
+  title: string;
+  description: string;
+  totalAmount: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  milestones: EscrowMilestoneModel[];
+};
